@@ -1,4 +1,16 @@
 Rails.application.routes.draw do
+  resources :venues, except: [:new, :edit]
+  resources :distributions, except: [:new, :edit]
+  resources :rooms, except: [:new, :edit]
+  resources :schedules, except: [:new, :edit]
+  resources :instructors, except: [:new, :edit]
+  resources :appointments, except: [:new, :edit]
+  resources :emails, except: [:new, :edit]
+  resources :cards, except: [:new, :edit]
+  resources :packs, except: [:new, :edit]
+  resources :purchases, except: [:new, :edit]
+  resources :users, except: [:new, :edit]
+  resources :roles, except: [:new, :edit]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

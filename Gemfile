@@ -5,12 +5,9 @@ gem 'rails', '4.2.5'
 
 gem 'rails-api'
 
-gem 'spring', :group => :development
-
-
-gem 'sqlite3'
-
-
+gem 'pg'
+gem 'state_machine'
+gem 'cancancan'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -26,3 +23,30 @@ gem 'sqlite3'
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
+
+group :development, :test do
+  gem 'spring'
+  # Call 'pry' anywhere in the code to stop execution and get a debugger console
+  gem 'pry-rails'
+  # Automatically call pry on exception
+  gem 'pry-rescue'
+  # Browse the stack on pry
+  gem 'pry-stack_explorer' 
+  # To reload UI changes
+  gem 'guard-livereload'
+end
+
+group :test do
+  # Testing framework
+  gem 'rspec-rails'
+  # Functional testing
+  gem 'capybara'
+  # Testing factories
+  gem "factory_girl_rails"
+  # Testing coverage
+  gem 'simplecov', :require => false
+  # Clean database after each test
+  gem 'database_cleaner'
+  # Manipulate time in tests
+  gem 'timecop'
+end

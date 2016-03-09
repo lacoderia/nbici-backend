@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  height: 1
+  width: 1
+  description: MyString
+  inactive_sits: MyText
+  active_sits: MyText
+  total_sits: 1
+
+two:
+  height: 1
+  width: 1
+  description: MyString
+  inactive_sits: MyText
+  active_sits: MyText
+  total_sits: 1

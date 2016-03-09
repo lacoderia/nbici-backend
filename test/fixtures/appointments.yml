@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  status: MyString
+  schedule_id: 1
+  bicycle_number: 1
+  start: 2016-03-09 20:29:00
+  description: MyString
+  anomaly: MyText
+
+two:
+  user_id: 1
+  status: MyString
+  schedule_id: 1
+  bicycle_number: 1
+  start: 2016-03-09 20:29:00
+  description: MyString
+  anomaly: MyText
