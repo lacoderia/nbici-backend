@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include ErrorSerializer
+  
   before_action :set_user, only: [:show, :update, :destroy]
 
   # GET /users
@@ -12,7 +14,11 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    render json: @user
+    if @user.errors.empty?
+      render json: @user
+    else
+      render json: ErrorSerializer.serialize(@user.errors)
+    end
   end
 
   # POST /users
@@ -23,7 +29,7 @@ class UsersController < ApplicationController
     if @user.save
       render json: @user, status: :created, location: @user
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: ErrorSerializer.serialize(@user.errors)
     end
   end
 
@@ -35,7 +41,7 @@ class UsersController < ApplicationController
     if @user.update(user_params)
       head :no_content
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: ErrorSerializer.serialize(@user.errors)
     end
   end
 
@@ -50,7 +56,12 @@ class UsersController < ApplicationController
   private
 
     def set_user
-      @user = User.find(params[:id])
+      begin
+        @user = User.find(params[:id])
+      rescue
+        @user = User.new
+        @user.errors.add(:not_found, "record not found")
+      end
     end
 
     def user_params
