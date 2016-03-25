@@ -21,7 +21,7 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
 
   # Authentication helpers
-  #config.include TestingSupport::DeviseHelpers
+  config.include TestingSupport::DeviseHelpers
 
   # Avoid having to write FactoryGirl.create
   config.include FactoryGirl::Syntax::Methods

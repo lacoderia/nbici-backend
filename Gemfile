@@ -2,18 +2,17 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.2.5'
 
-gem 'rails-api'
-
 gem 'pg'
 gem 'state_machine'
 gem 'cancancan'
 gem "active_model_serializers", "~> 0.8.0"
+gem 'devise'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
 # To use Jbuilder templates for JSON
-# gem 'jbuilder'
+# gem 'jbuilderR
 
 # Use unicorn as the app server
 # gem 'unicorn'

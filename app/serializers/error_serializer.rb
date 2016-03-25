@@ -4,12 +4,11 @@ module ErrorSerializer
     return if errors.nil?
 
     json = {}
-    new_hash = errors.to_hash(true).map do |k, v|
-      v.map do |msg|
-        { id: k, title: msg }
-      end
-    end.flatten
-    json[:errors] = new_hash
+    error_messages = []
+    errors.to_hash.each do |k, v|
+      error_messages << { id: k, title: v[0] }
+    end
+    json[:errors] = error_messages
     json
   end
 

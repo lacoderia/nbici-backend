@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  
   resources :venues, except: [:new, :edit]
   resources :distributions, except: [:new, :edit]
   resources :rooms, except: [:new, :edit]
@@ -9,7 +10,16 @@ Rails.application.routes.draw do
   resources :cards, except: [:new, :edit]
   resources :packs, except: [:new, :edit]
   resources :purchases, except: [:new, :edit]
+
+  devise_for :users, :controllers => {:registrations => "registrations", :sessions => "sessions", :passwords => "passwords"}, defaults: { format: :json }#, :skip => [:registrations]
+
   resources :users, except: [:new, :edit]
+  
+  devise_scope :user do
+    get 'logout', :to => "devise/sessions#destroy"
+    get 'session', :to => "sessions#get"
+  end
+
   resources :roles, except: [:new, :edit]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
