@@ -12,11 +12,19 @@ feature 'RegistrationsController' do
         expect(response['user']['first_name']).to eq new_user[:first_name]
         logout
 
-        # Validates invalid login
+        # Validates invalid login with correct email
         page = login_with_service user = { email: new_user[:email], password: 'invalidpassword' }
         response = JSON.parse(page.body)
         expect(page.status_code).to be 500
         expect(response['errors'][0]["title"]).to eql "El correo electrónico o la contraseña son incorrectos."
+
+        # Validates invalid login with incorrect email
+        page = login_with_service user = { email: "anotheremail@test.com", password: 'invalidpassword' }
+        response = JSON.parse(page.body)
+        expect(page.status_code).to be 500
+        expect(response['errors'][0]["title"]).to eql "El correo electrónico o la contraseña son incorrectos."
+
+        # Validates no session if user is not logged in
         page = get_session 
         response = JSON.parse(page.body)
         expect(page.status_code).to be 500
