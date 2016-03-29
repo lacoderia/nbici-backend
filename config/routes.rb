@@ -2,8 +2,12 @@ Rails.application.routes.draw do
   
   resources :venues, except: [:new, :edit]
   resources :distributions, except: [:new, :edit]
+  resources :schedules, except: [:new, :edit] do
+    collection do
+      get 'weekly_scope'
+    end
+  end
   resources :rooms, except: [:new, :edit]
-  resources :schedules, except: [:new, :edit]
   resources :instructors, except: [:new, :edit]
   resources :appointments, except: [:new, :edit]
   resources :emails, except: [:new, :edit]

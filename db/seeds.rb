@@ -10,7 +10,7 @@
 role_user = Role.create(name: 'user')
 
 #Users
-user = User.create(first_name: "Arnulfo", last_name: "Quimare", email: "usuario_prueba@email.com", classes_left: 2, last_class_purchased: Time.now, picture: "url", uid: "XID3423423", roles: [role_user])
+user = User.create(first_name: "Arnulfo", last_name: "Quimare", email: "usuario_prueba@email.com", classes_left: 2, last_class_purchased: Time.now, picture: "url", uid: "XID3423423", roles: [role_user], password: "cantbeblank")
 
 #Emails
 email = Email.create(user: user, email_status: "sent", email_type: "purchase")
@@ -36,10 +36,13 @@ instructor = Instructor.create(first_name: "Morenazo", last_name: "Nazo", email:
 venue = Venue.create(name: "Gimnasio SLP", description: "Gimnasio original")
 
 #Distributions
-distribution = Distribution.create(height: 5, width: 5, description: "cuadrado perfecto", inactive_seats: "{2,3,4,7,8,9}", active_seats: "{1,5,6,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25}", total_seats: 19)
+distribution = Distribution.create(height: 5, width: 5, description: "cuadrado perfecto", inactive_seats: "[2,3,4,7,8,9]", active_seats: "[1,5,6,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]", total_seats: 19)
 
 #Room
 room = Room.create(venue: venue, distribution: distribution, description: "Salón original")
 
 #Schedules
 schedule = Schedule.create(instructor: instructor, room: room, datetime: Time.now)
+
+#Appointment
+appointment = Appointment.create(user: user, schedule: schedule, bicycle_number: 4, status: 'BOOKED', start: Time.now, description: "Con mi maestro favorito")

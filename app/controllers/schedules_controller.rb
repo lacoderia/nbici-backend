@@ -1,4 +1,6 @@
 class SchedulesController < ApplicationController
+  include ErrorSerializer
+
   before_action :set_schedule, only: [:show, :update, :destroy]
 
   # GET /schedules
@@ -12,7 +14,11 @@ class SchedulesController < ApplicationController
   # GET /schedules/1
   # GET /schedules/1.json
   def show
-    render json: @schedule
+    if @user.errors.empty?
+      render json: @schedule
+    else
+      render json: ErrorSerializer.serialize(@schedule.errors)
+    end
   end
 
   # POST /schedules
@@ -23,7 +29,7 @@ class SchedulesController < ApplicationController
     if @schedule.save
       render json: @schedule, status: :created, location: @schedule
     else
-      render json: @schedule.errors, status: :unprocessable_entity
+      render json: ErrorSerializer.serialize(@schedule.errors)
     end
   end
 
@@ -35,7 +41,7 @@ class SchedulesController < ApplicationController
     if @schedule.update(schedule_params)
       head :no_content
     else
-      render json: @schedule.errors, status: :unprocessable_entity
+      render json: ErrorSerializer.serialize(@schedule.errors)
     end
   end
 
@@ -45,6 +51,15 @@ class SchedulesController < ApplicationController
     @schedule.destroy
 
     head :no_content
+  end
+
+  # CUSTOM ACTIONS
+  # GET /schedules/weekly_scope
+  # GET /schedules/weekly_scope.json
+  def weekly_scope
+    @schedules = Schedule.weekly_scope
+
+    render json: @schedules
   end
 
   private
