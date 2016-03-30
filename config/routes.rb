@@ -29,7 +29,7 @@ Rails.application.routes.draw do
 
   resources :roles, except: [:new, :edit]
   
-  match 'users', :to => "users#create", :via => [:post, :options]
+  match 'users', :to => "registrations#create", :via => [:post, :options]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
