@@ -15,16 +15,16 @@ Rails.application.routes.draw do
   resources :packs, except: [:new, :edit]
   resources :purchases, except: [:new, :edit]
 
-  devise_for :users, :controllers => {:registrations => "registrations", :sessions => "sessions", :passwords => "passwords"}, defaults: { format: :json }#, :skip => [:registrations]
+  mount_devise_token_auth_for 'User', :controllers => {:registrations => "registrations", :sessions => "sessions", :passwords => "passwords"}, defaults: { format: :json }#, :skip => [:registrations]
 
   resources :users, except: [:new, :edit]
   
   devise_scope :user do
-    match 'users/sign_up', :to => "devise/registrations#create", :via => [:post, :options]
-    match 'users/sign_in', :to => "devise/sessions#create", :via => [:post, :options]
-    match 'users/password', :to => "devise/passwords#create", :via => [:post, :options]
-    match 'users', :to => "devise/registrations#create", :via => [:post, :options]
-    get 'logout', :to => "devise/sessions#destroy"
+    match 'users/sign_up', :to => "registrations#create", :via => [:post, :options]
+    match 'users/sign_in', :to => "sessions#create", :via => [:post, :options]
+    match 'users/password', :to => "passwords#create", :via => [:post, :options]
+    match 'users', :to => "registrations#create", :via => [:post, :options]
+    get 'logout', :to => "sessions#destroy"
     get 'session', :to => "sessions#get"
   end
 

@@ -6,7 +6,7 @@ class CreateUsers < ActiveRecord::Migration
       t.integer :classes_left
       t.datetime :last_class_purchased
       t.string :picture
-      t.string :uid
+      #t.string :uid
 
       t.timestamps null: false
     end

@@ -1,6 +1,6 @@
 feature 'PasswordsController' do
 
-  let!(:user) { create(:user) }
+  let!(:user) {create(:user) }
 
   context 'Password recovery and change' do
 
@@ -8,7 +8,7 @@ feature 'PasswordsController' do
       password_recovery_request = { utf8: 'V', user: { email: user.email } }
       page1 = nil
       with_rack_test_driver do
-        page1 = page.driver.post "/users/password", password_recovery_request
+        page1 = page.driver.post user_password_path, password_recovery_request
       end
       response = JSON.parse(page1.body)
       token = response['token']
@@ -20,7 +20,7 @@ feature 'PasswordsController' do
       incorrect_password_reset_request = { utf8: 'V', user: { reset_password_token: token, password: new_password, password_confirmation: "20001000" } }
       page2 = nil
       with_rack_test_driver do
-        page2 = page.driver.put "/users/password", incorrect_password_reset_request
+        page2 = page.driver.put user_password_path, incorrect_password_reset_request
       end
       response = JSON.parse(page2.body)
       expect(page.status_code).to be 500
@@ -29,7 +29,7 @@ feature 'PasswordsController' do
       password_reset_request = { utf8: 'V', user: { reset_password_token: token, password: new_password, password_confirmation: new_password } }
       page3 = nil
       with_rack_test_driver do
-        page3 = page.driver.put "/users/password", password_reset_request
+        page3 = page.driver.put user_password_path, password_reset_request
       end
       response = JSON.parse(page3.body)
 
