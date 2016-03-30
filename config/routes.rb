@@ -23,13 +23,13 @@ Rails.application.routes.draw do
     match 'users/sign_up', :to => "devise/registrations#create", :via => [:post, :options]
     match 'users/sign_in', :to => "devise/sessions#create", :via => [:post, :options]
     match 'users/password', :to => "devise/passwords#create", :via => [:post, :options]
+    match 'users', :to => "devise/registrations#create", :via => [:post, :options]
     get 'logout', :to => "devise/sessions#destroy"
     get 'session', :to => "sessions#get"
   end
 
   resources :roles, except: [:new, :edit]
   
-  match 'users', :to => "registrations#create", :via => [:post, :options]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

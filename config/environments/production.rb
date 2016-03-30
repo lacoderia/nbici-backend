@@ -1,7 +1,7 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  ENV['HOST'] = ""
+  ENV['HOST'] = "servicios.coderia.mx"
   
   # Code is not reloaded between requests.
   config.cache_classes = true
@@ -79,9 +79,9 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
   
-  ENV['ADDRESS'] = ""
-  ENV['DOMAIN_NAME'] = ""
-  ENV['MAIL_USERNAME'] = ""
+  ENV['ADDRESS'] = "smtp.gmail.com"
+  ENV['DOMAIN_NAME'] = "coderia.mx"
+  ENV['MAIL_USERNAME'] = "benjamin@coderia.mx"
   ENV['MAIL_PASSWORD'] = ""
 
    config.action_mailer.smtp_settings = {

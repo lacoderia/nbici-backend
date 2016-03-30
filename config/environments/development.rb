@@ -41,9 +41,9 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
   
-  ENV['ADDRESS'] = ""
-  ENV['DOMAIN_NAME'] = ""
-  ENV['MAIL_USERNAME'] = ""
+  ENV['ADDRESS'] = "smtp.gmail.com"
+  ENV['DOMAIN_NAME'] = "coderia.mx"
+  ENV['MAIL_USERNAME'] = "benjamin@coderia.mx"
   ENV['MAIL_PASSWORD'] = ""
 
   config.action_mailer.smtp_settings = {
