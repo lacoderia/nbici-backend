@@ -17,7 +17,11 @@ Rails.application.routes.draw do
 
   mount_devise_token_auth_for 'User', :controllers => {:registrations => "registrations", :sessions => "sessions", :passwords => "passwords"}, defaults: { format: :json }#, :skip => [:registrations]
 
-  resources :users, except: [:new, :edit]
+  resources :users, except: [:new, :edit] do
+    collection do
+      get 'session'
+    end
+  end
   
   devise_scope :user do
     match 'users/sign_up', :to => "registrations#create", :via => [:post, :options]
@@ -25,7 +29,6 @@ Rails.application.routes.draw do
     match 'users/password', :to => "passwords#create", :via => [:post, :options]
     match 'users', :to => "registrations#create", :via => [:post, :options]
     get 'logout', :to => "sessions#destroy"
-    get 'session', :to => "sessions#get"
   end
 
   resources :roles, except: [:new, :edit]

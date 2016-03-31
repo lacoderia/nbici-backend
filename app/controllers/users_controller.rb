@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class UsersController < ApiController
   include ErrorSerializer
   
   before_action :set_user, only: [:show, :update, :destroy]
@@ -51,6 +51,17 @@ class UsersController < ApplicationController
     @user.destroy
 
     head :no_content
+  end
+
+  def session 
+    if current_user
+      @user = current_user
+      render json: user
+    else
+      user = User.new
+      user.errors.add(:no_session, "No se ha iniciado sesión.")
+      render json: ErrorSerializer.serialize(user.errors), status: 500
+    end
   end
 
   private

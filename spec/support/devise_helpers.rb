@@ -20,7 +20,7 @@ module TestingSupport
     end
 
     def get_session
-      visit(session_path)
+      visit(session_users_path)
       return page
     end
 
