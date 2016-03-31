@@ -7,6 +7,9 @@ feature 'SchedulesController' do
   let!(:schedule_past_week) { create(:schedule, datetime: starting_datetime - 1.day) }
   let!(:schedule_next_week) { create(:schedule, datetime: starting_datetime + 8.days) }
 
+  let!(:appointment_01) { create(:appointment, schedule: schedule_current_week_01, bicycle_number: 4) }
+  let!(:appointment_02) { create(:appointment, schedule: schedule_current_week_01, bicycle_number: 1) }
+
   context 'Get weekly schedules' do
 
     before do
@@ -30,6 +33,14 @@ feature 'SchedulesController' do
         response = JSON.parse(page.body)
         expect(response['schedules'].count).to eql 1
         expect(response['schedules'][0]['id']).to eql schedule_next_week.id
+
+    end
+
+    it 'should give the booked seats for a schedule' do
+
+      visit bookings_schedule_path(schedule_current_week_01.id)
+      response = JSON.parse(page.body)
+      expect(response["bookings"]["booked_seats"]).to eql "[1, 4]"
 
     end
 

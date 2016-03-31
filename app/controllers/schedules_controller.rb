@@ -1,7 +1,8 @@
 class SchedulesController < ApplicationController
   include ErrorSerializer
+  include BookingsSerializer
 
-  before_action :set_schedule, only: [:show, :update, :destroy]
+  before_action :set_schedule, only: [:show, :update, :destroy, :bookings]
 
   # GET /schedules
   # GET /schedules.json
@@ -54,12 +55,18 @@ class SchedulesController < ApplicationController
   end
 
   # CUSTOM ACTIONS
-  # GET /schedules/weekly_scope
-  # GET /schedules/weekly_scope.json
-  def weekly_scope
-    @schedules = Schedule.weekly_scope
 
-    render json: @schedules
+  # GET /schedules/weekly_scope
+  def weekly_scope
+    schedules = Schedule.weekly_scope
+
+    render json: schedules
+  end
+
+  # GET /schedules/(:id)/bookings
+  def bookings
+    bookings = @schedule.bookings
+    render json: BookingsSerializer.serialize(bookings)
   end
 
   private

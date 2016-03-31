@@ -1,7 +1,8 @@
 class ApiController < ActionController::Base
   include CanCan::ControllerAdditions
   include DeviseTokenAuth::Concerns::SetUserByToken
-  protect_from_forgery with: :null_session
+  #iskip_before_filter :verify_authenticity_token
+  #protect_from_forgery with: :null_session
   respond_to :json
 
   before_filter :cors_preflight_check

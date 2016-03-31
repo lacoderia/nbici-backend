@@ -8,5 +8,13 @@ class Schedule < ActiveRecord::Base
     end_day = start_day + 8.days
     Schedule.where("datetime >= ? AND datetime < ?", start_day, end_day)
   end
+
+  def bookings
+    booked_seats = []
+    self.appointments.each do |appointment|
+      booked_seats << appointment.bicycle_number
+    end
+    booked_seats.sort
+  end
   
 end
