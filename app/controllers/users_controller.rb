@@ -56,7 +56,7 @@ class UsersController < ApiController
   def session 
     if current_user
       @user = current_user
-      render json: user
+      render json: @user
     else
       user = User.new
       user.errors.add(:no_session, "No se ha iniciado sesión.")
