@@ -1,6 +1,6 @@
 class SchedulesController < ApplicationController
   include ErrorSerializer
-  include BookingsSerializer
+  include BookingSerializer
 
   before_action :set_schedule, only: [:show, :update, :destroy, :bookings]
 
@@ -66,7 +66,7 @@ class SchedulesController < ApplicationController
   # GET /schedules/(:id)/bookings
   def bookings
     bookings = @schedule.bookings
-    render json: BookingsSerializer.serialize(bookings)
+    render json: BookingSerializer.serialize(bookings)
   end
 
   private

@@ -1,6 +1,7 @@
-module BookingsSerializer
+module BookingSerializer
 
-  def BookingsSerializer.serialize(booked_seats)
+
+  def BookingSerializer.serialize(booked_seats)
     return if booked_seats.nil?
 
     bookings = {}

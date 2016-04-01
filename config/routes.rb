@@ -16,7 +16,11 @@ Rails.application.routes.draw do
   end
   resources :rooms, except: [:new, :edit]
   resources :instructors, except: [:new, :edit]
-  resources :appointments, except: [:new, :edit]
+  resources :appointments, except: [:new, :edit] do
+    collection do
+      post 'book'
+    end
+  end
   resources :emails, except: [:new, :edit]
   resources :cards, except: [:new, :edit] 
 
