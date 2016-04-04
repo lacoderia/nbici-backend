@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   resources :instructors, except: [:new, :edit]
   resources :appointments, except: [:new, :edit] do
     collection do
-      post 'book'
+      match 'book', :to => "appointments#book", :via => [:post, :options]
     end
   end
   resources :emails, except: [:new, :edit]
