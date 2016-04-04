@@ -8,6 +8,7 @@ gem 'cancancan'
 gem "active_model_serializers", "~> 0.8.0"
 gem 'devise'
 gem 'devise_token_auth'
+gem 'rack-cors', :require => 'rack/cors'
 #gem 'omniauth'
 
 # To use ActiveModel has_secure_password
