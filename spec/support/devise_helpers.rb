@@ -10,18 +10,31 @@ module TestingSupport
 
     def register_with_service user
       with_rack_test_driver do
-        page.driver.post user_registration_path, { user: user}
+        page.driver.post user_registration_path, { user: user }
       end
       return page
     end
 
     def logout
       visit(logout_path)
+      set_headers "", "", "", "", ""
     end
 
     def get_session
       visit(session_path)
       return page
+    end
+
+    def get_headers
+      [page.response_headers["access-token"], page.response_headers["uid"], page.response_headers["client"], page.response_headers["expiry"], page.response_headers["token-type"]]
+    end
+
+    def set_headers access_token, uid, client, expiry, token_type
+      page.driver.header "access-token", access_token
+      page.driver.header "uid", uid
+      page.driver.header "client", client
+      page.driver.header "expriy", expiry
+      page.driver.header "token-type", token_type      
     end
 
     #TODO: SETUP ADMIN 

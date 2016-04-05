@@ -14,6 +14,8 @@ class RegistrationsController < Devise::RegistrationsController
     @user = resource
     saved = @user.register
     if saved
+      new_auth_header = @user.create_new_auth_token
+      response.headers.merge!(new_auth_header)
       sign_in @user
       success @user
     else

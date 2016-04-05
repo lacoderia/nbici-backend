@@ -2,6 +2,7 @@ class AppointmentsController < ApplicationController
   include ErrorSerializer
   
   before_action :set_appointment, only: [:show, :update, :destroy]
+  before_action :authenticate_user!, only: [:book]
 
   # GET /appointments
   # GET /appointments.json
@@ -51,8 +52,8 @@ class AppointmentsController < ApplicationController
 
   # POST /appointments/book
   def book
-    #TODO: Check that the user in the params is the user with the session
     begin
+      ApiController.validate_user params[:user_id], current_user
       appointment = Appointment.book(params)
       if appointment.errors.empty?
         render json: appointment

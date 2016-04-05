@@ -10,6 +10,18 @@ feature 'RegistrationsController' do
         page = register_with_service new_user 
         response = JSON.parse(page.body)
         expect(response['user']['first_name']).to eq new_user[:first_name]
+
+        # Validates session after user creation
+        # Gets headers
+        access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+
+        # Sets headers
+        set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+        
+        page = get_session 
+        response = JSON.parse(page.body)
+        expect(response['user']['first_name']).to eql new_user[:first_name]
+        
         logout
 
         # Validates invalid login with correct email
@@ -23,21 +35,27 @@ feature 'RegistrationsController' do
         response = JSON.parse(page.body)
         expect(page.status_code).to be 500
         expect(response['errors'][0]["title"]).to eql "El correo electrónico o la contraseña son incorrectos."
+ 
+        # Validates correct login
+        page = login_with_service user = { email: new_user[:email], password: new_user[:password] }
+        response = JSON.parse(page.body)
+        expect(response['user']['first_name']).to eql new_user[:first_name]
 
-        # Validates no session if user is not logged in
+        # Validates session after login 
+        # Gets headers
+        access_token_2, uid_2, client_2, expiry_2, token_type_2 = get_headers
+        
+        # Validates no session if no headers are passed in
         page = get_session 
         response = JSON.parse(page.body)
         expect(page.status_code).to be 500
         expect(response['errors'][0]["title"]).to eql "No se ha iniciado sesión."
 
-        # Validates correct login
-        # TODO: FIX authentication
-        #page = login_with_service user = { email: new_user[:email], password: new_user[:password] }
-        #response = JSON.parse(page.body)
-        #expect(response['user']['first_name']).to eql new_user[:first_name]
-        #page = get_session 
-        #response = JSON.parse(page.body)
-        #expect(response['user']['first_name']).to eql new_user[:first_name]
+        # Sets headers
+        set_headers access_token_2, uid_2, client_2, expiry_2, token_type_2
+        page = get_session 
+        response = JSON.parse(page.body)
+        expect(response['user']['first_name']).to eql new_user[:first_name]
         
       end
 
