@@ -53,7 +53,7 @@ class AppointmentsController < ApplicationController
   # POST /appointments/book
   def book
     begin
-      ApiController.validate_user params[:user_id], current_user
+      params[:user_id] = current_user.id
       appointment = Appointment.book(params)
       if appointment.errors.empty?
         render json: appointment

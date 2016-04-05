@@ -4,7 +4,7 @@ feature 'PasswordsController' do
 
   context 'Password recovery and change' do
 
-    it 'should send the password recovery instructions' do
+    it 'Validates password recovery instructions and password reset' do
       password_recovery_request = { utf8: 'V', user: { email: user.email } }
       page1 = nil
       with_rack_test_driver do

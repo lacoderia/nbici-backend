@@ -13,7 +13,7 @@ feature 'AppointmentsController' do
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
       set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
 
-      new_appointment_request = {user_id: user_with_classes_left.id, schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}      
+      new_appointment_request = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}      
       with_rack_test_driver do
         page.driver.post book_appointments_path, new_appointment_request
       end
@@ -23,19 +23,12 @@ feature 'AppointmentsController' do
       user = User.find(user_with_classes_left.id)
       expect(user.classes_left).to be 1 
 
-      new_appointment_request = {user_id: user_with_classes_left.id, schedule_id: schedule.id, bicycle_number: 4, description: "Mi otra clase"}      
+      new_appointment_request = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi otra clase"}      
       with_rack_test_driver do
         page.driver.post book_appointments_path, new_appointment_request
       end
       response = JSON.parse(page.body)
       expect(response["errors"][0]["id"]).to eql "bicycle_already_booked"
-
-      new_appointment_request = {user_id: user_with_no_classes_left.id, schedule_id: schedule.id, bicycle_number: 2, description: "Mi otra clase"}      
-      with_rack_test_driver do
-        page.driver.post book_appointments_path, new_appointment_request
-      end
-      response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "Usuario de sesión es diferente a usuario de llamada."
 
     end
 
@@ -48,7 +41,7 @@ feature 'AppointmentsController' do
 
       #USER WITH NO CLASSES LEFT
       page = login_with_service user = { email: user_with_no_classes_left[:email], password: "12345678" }
-      new_appointment_request_no_classes = {user_id: user_with_no_classes_left.id, schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}
+      new_appointment_request_no_classes = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}
       with_rack_test_driver do
         page.driver.post book_appointments_path, new_appointment_request_no_classes
       end
@@ -58,7 +51,7 @@ feature 'AppointmentsController' do
 
       #RECENTLY CREATED USER WITH NO CLASSES LEFT DEFINED
       page = login_with_service user = { email: user_with_nil_classes_left[:email], password: "12345678" }
-      new_appointment_request_nil_classes = {user_id: user_with_nil_classes_left.id, schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}
+      new_appointment_request_nil_classes = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}
       with_rack_test_driver do
         page.driver.post book_appointments_path, new_appointment_request_nil_classes
       end
