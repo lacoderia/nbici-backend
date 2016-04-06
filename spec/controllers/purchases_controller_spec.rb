@@ -18,7 +18,7 @@ feature 'PurchasesController' do
       end
       
       response = JSON.parse(page.body)
-      expect(response["purchase"]["user_id"]).to be user_01.id
+      expect(response["purchase"]["user"]["id"]).to be user_01.id
 
       #Refresh de user
       user = User.find(user_01.id)
