@@ -15,8 +15,8 @@ class Appointment < ActiveRecord::Base
     transition 'FINALIZED' => 'ANOMALY', on: :report_anomaly
   end
 
-  def self.book params
-    user = User.find(params[:user_id])
+  def self.book params, current_user
+    user = current_user 
     schedule = Schedule.find(params[:schedule_id])
     bicycle_number = params[:bicycle_number].to_i
     description = params[:description]

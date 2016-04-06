@@ -5,6 +5,7 @@ FactoryGirl.define do
     first_name 'Test'
     last_name 'User'
     password '12345678'
+    phone '55439810'
     roles {[FactoryGirl.create(:role)]}
   end
 

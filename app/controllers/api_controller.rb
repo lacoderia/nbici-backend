@@ -1,7 +1,7 @@
 class ApiController < ActionController::Base
   include DeviseTokenAuth::Concerns::SetUserByToken
   include CanCan::ControllerAdditions
-  #iskip_before_filter :verify_authenticity_token
+  #skip_before_filter :verify_authenticity_token
   #protect_from_forgery with: :null_session
   respond_to :json
 

@@ -42,6 +42,8 @@ feature 'AppointmentsController' do
       #USER WITH NO CLASSES LEFT
       page = login_with_service user = { email: user_with_no_classes_left[:email], password: "12345678" }
       new_appointment_request_no_classes = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
       with_rack_test_driver do
         page.driver.post book_appointments_path, new_appointment_request_no_classes
       end
@@ -51,6 +53,8 @@ feature 'AppointmentsController' do
 
       #RECENTLY CREATED USER WITH NO CLASSES LEFT DEFINED
       page = login_with_service user = { email: user_with_nil_classes_left[:email], password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
       new_appointment_request_nil_classes = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}
       with_rack_test_driver do
         page.driver.post book_appointments_path, new_appointment_request_nil_classes

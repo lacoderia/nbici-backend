@@ -25,7 +25,11 @@ Rails.application.routes.draw do
   resources :cards, except: [:new, :edit] 
 
   resources :packs, except: [:new, :edit]
-  resources :purchases, except: [:new, :edit]
+  resources :purchases, except: [:new, :edit] do
+    collection do
+      match 'charge', :to => "purchases#charge", :via => [:post, :options]
+    end
+  end
 
   mount_devise_token_auth_for 'User', at: 'auth', :controllers => {:registrations => "registrations", :sessions => "sessions", :passwords => "passwords"}, defaults: { format: :json }#, :skip => [:registrations]
   

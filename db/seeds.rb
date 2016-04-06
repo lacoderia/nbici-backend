@@ -10,7 +10,7 @@
 role_user = Role.create(name: 'user')
 
 #Users
-user = User.create(first_name: "Arnulfo", last_name: "Quimare", email: "usuario_prueba@email.com", classes_left: 2, last_class_purchased: Time.now, picture: "url", uid: "XID3423423", roles: [role_user], password: "cantbeblank")
+user = User.create(first_name: "Arnulfo", last_name: "Quimare", email: "usuario_prueba@email.com", classes_left: 2, last_class_purchased: Time.now, picture: "url", uid: "XID3423423", roles: [role_user], password: "cantbeblank", phone: "55456792")
 
 #Emails
 email = Email.create(user: user, email_status: "sent", email_type: "purchase")
