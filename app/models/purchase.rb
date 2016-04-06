@@ -3,8 +3,6 @@ class Purchase < ActiveRecord::Base
   belongs_to :user
 
   def self.charge params, user
-
-    purchase = Purchase.new
     
     begin      
       pack = Pack.find(params[:pack_id])
@@ -36,7 +34,7 @@ class Purchase < ActiveRecord::Base
         }
       })
 
-      purchase.update_attributes(
+      purchase = Purchase.create(
         user: user,
         pack: pack,
         uid: charge.id,
@@ -53,11 +51,11 @@ class Purchase < ActiveRecord::Base
       user.update_attributes(classes_left: (user.classes_left.nil? ? 0 : user.classes_left)  + pack.classes, last_class_purchased: Time.zone.now)
 
     rescue Conekta::ParameterValidationError => e
-      purchase.errors.add(:error_validating_parameters, e.message)
+      raise e.message
     rescue Conekta::ProcessingError => e
-      purchase.errors.add(:error_charging_card, e.message)
+      raise e.message
     rescue Conekta::Error => e
-      purchase.errors.add(:non_normal_operation_flow, e.message)
+      raise e.message
     end
     return purchase
     

@@ -49,7 +49,7 @@ feature 'PurchasesController' do
       end
       
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["id"]).to eql "non_normal_operation_flow"
+      expect(response["errors"][0]["title"]).to eql "Object 123456782342 could not be found."
       
       # Incorrect pack
       new_purchase_request = {pack_id: 3, price: pack.price, token: card.uid}
@@ -58,7 +58,7 @@ feature 'PurchasesController' do
       end
       
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["id"]).to eql "error_creating_purchase"
+      expect(response["errors"][0]["title"]).to eql "Couldn't find Pack with 'id'=3"
 
       # Incorrect price
       new_purchase_request = {pack_id: pack.id, price: "200.00", token: card.uid}
@@ -78,7 +78,7 @@ feature 'PurchasesController' do
       end
       
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["id"]).to eql "error_validating_parameters"
+      expect(response["errors"][0]["title"]).to eql "Phone missing in details."
 
     end
     

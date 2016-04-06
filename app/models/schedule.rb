@@ -16,5 +16,9 @@ class Schedule < ActiveRecord::Base
     end
     booked_seats.sort
   end
+
+  def inactive_seats
+    eval(self.room.distribution.inactive_seats)
+  end
   
 end

@@ -28,7 +28,7 @@ feature 'AppointmentsController' do
         page.driver.post book_appointments_path, new_appointment_request
       end
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["id"]).to eql "bicycle_already_booked"
+      expect(response["errors"][0]["title"]).to eql "La bicicleta 4 ya fue seleccionada para la schedule #{schedule.id}."
 
     end
 
@@ -48,7 +48,7 @@ feature 'AppointmentsController' do
         page.driver.post book_appointments_path, new_appointment_request_no_classes
       end
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["id"]).to eql "no_classes_left"
+      expect(response["errors"][0]["title"]).to eql "El usuario no cuenta con suficientes clases disponibles."
       logout
 
       #RECENTLY CREATED USER WITH NO CLASSES LEFT DEFINED
@@ -60,8 +60,22 @@ feature 'AppointmentsController' do
         page.driver.post book_appointments_path, new_appointment_request_nil_classes
       end
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["id"]).to eql "no_classes_left"
+      expect(response["errors"][0]["title"]).to eql "El usuario no cuenta con suficientes clases disponibles."
       logout
+
+      #INACTIVE SEAT TRYING TO BE BOOKED
+      page = login_with_service user = { email: user_with_classes_left[:email], password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+      schedule.room.distribution.update_attribute(:inactive_seats, "[4]")
+
+      new_appointment_request = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}      
+      with_rack_test_driver do
+        page.driver.post book_appointments_path, new_appointment_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["errors"][0]["title"]).to eql "La bicicleta 4 está inactiva para la schedule #{schedule.id}."
 
     end
     
