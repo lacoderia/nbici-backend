@@ -7,6 +7,11 @@ class Purchase < ActiveRecord::Base
     begin      
       pack = Pack.find(params[:pack_id])
       amount = params[:price].to_i * 100
+      card = Card.find_by_uid(params[:token])
+
+      unless card
+        raise "Tarjeta no encontrada o registrada."
+      end
 
       unless pack.price == params[:price].to_f or pack.special_price == params[:price].to_f
         raise "El precio enviado es diferente al precio del paquete."
@@ -14,17 +19,16 @@ class Purchase < ActiveRecord::Base
 
       description = pack.description
       currency = "MXN"
-      card = params[:token]
 
       charge = Conekta::Charge.create({
         amount: amount,
         currency: currency,
         description: description,
-        card: card,
+        card: card.uid,
         details: {
-          name: "#{user.first_name} #{user.last_name}",
+          name: card.name,
           email: user.email,
-          phone: user.phone,
+          phone: card.phone,
           line_items: [{
             name: description,
             description: "Paquete nbici",

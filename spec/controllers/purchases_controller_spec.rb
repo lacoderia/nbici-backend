@@ -49,7 +49,7 @@ feature 'PurchasesController' do
       end
       
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "Object 123456782342 could not be found."
+      expect(response["errors"][0]["title"]).to eql "Tarjeta no encontrada o registrada."
       
       # Incorrect pack
       new_purchase_request = {pack_id: 3, price: pack.price, token: card.uid}
@@ -70,8 +70,8 @@ feature 'PurchasesController' do
       expect(response["errors"][0]["title"]).to eql "El precio enviado es diferente al precio del paquete."
 
       # Incorrect user params
-      u = User.find(user_01.id)
-      u.update_attribute(:phone, "22")
+      c = Card.find(card.id)
+      c.update_attribute(:phone, "22")
       new_purchase_request = {pack_id: pack.id, price: pack.price, token: card.uid}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request

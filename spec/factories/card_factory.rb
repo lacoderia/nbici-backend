@@ -9,6 +9,8 @@ FactoryGirl.define do
     exp_month "12"
     exp_year "17"
     address "ADDRESS"
+    name "Card Name"
+    phone '56789123'
   end
 
 end
