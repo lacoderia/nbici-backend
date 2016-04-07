@@ -30,11 +30,11 @@ class NbiciMailer < ActionMailer::Base
 
   def send_email email_name, user, data
     begin
-      mail = NbiciMailer.send(email_name, user, obj)
+      mail = NbiciMailer.send(email_name, user, data)
       mail.deliver_now
       Email.create(user: user, email_status: "sent", email_type: email_name.to_s)
-    rescue
-      Email.create(user: user, email_status: "error", email_type: email_name.to_s)
+    rescue Exception => e
+      Email.create(user: user, email_status: e.message, email_type: email_name.to_s)
     end
   end
 
