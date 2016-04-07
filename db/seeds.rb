@@ -20,7 +20,7 @@ pack_1 = Pack.create(description: "1 clase", classes: 1, price: 140.00, special_
 pack_2 = Pack.create(description: "5 clases", classes: 5, price: 650.00)
 pack_3 = Pack.create(description: "10 clases", classes: 10, price: 1200.00)
 pack_4 = Pack.create(description: "25 clases", classes: 25, price: 2875.00)
-pack_5 = Pack.create(description: "50 clases", classes: 50, price: 5500.00)
+pack_5 = Pack.create(description: "50 clases", classes: 50, price: 5000.00)
 
 
 #Purchases

@@ -16,7 +16,7 @@ class RegistrationsController < Devise::RegistrationsController
     if saved
       new_auth_header = @user.create_new_auth_token
       response.headers.merge!(new_auth_header)
-      NbiciMailer.welcome(@user).deliver_now
+      NbiciMailer.send_email(:welcome, @user, nil)
       sign_in @user
       success @user
     else
