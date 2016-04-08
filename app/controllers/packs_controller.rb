@@ -54,6 +54,6 @@ class PacksController < ApplicationController
     end
 
     def pack_params
-      params.require(:pack).permit(:description, :classes, :price, :special_price)
+      params.require(:pack).permit(:description, :classes, :price, :special_price, :expiration)
     end
 end

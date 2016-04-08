@@ -16,11 +16,11 @@ user = User.create(first_name: "Arnulfo", last_name: "Quimare", email: "usuario_
 email = Email.create(user: user, email_status: "sent", email_type: "purchase")
 
 #Packs
-pack_1 = Pack.create(description: "1 clase", classes: 1, price: 140.00, special_price: 100.00)
-pack_2 = Pack.create(description: "5 clases", classes: 5, price: 650.00)
-pack_3 = Pack.create(description: "10 clases", classes: 10, price: 1200.00)
-pack_4 = Pack.create(description: "25 clases", classes: 25, price: 2875.00)
-pack_5 = Pack.create(description: "50 clases", classes: 50, price: 5000.00)
+pack_1 = Pack.create(description: "1 clase", classes: 1, price: 140.00, special_price: 100.00, expiration: 15)
+pack_2 = Pack.create(description: "5 clases", classes: 5, price: 650.00, expiration: 30)
+pack_3 = Pack.create(description: "10 clases", classes: 10, price: 1200.00, expiration: 90)
+pack_4 = Pack.create(description: "25 clases", classes: 25, price: 2875.00, expiration: 180)
+pack_5 = Pack.create(description: "50 clases", classes: 50, price: 5000.00, expiration: 365)
 
 
 #Purchases
