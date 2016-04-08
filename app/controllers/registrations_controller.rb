@@ -14,9 +14,10 @@ class RegistrationsController < Devise::RegistrationsController
     @user = resource
     saved = @user.register
     if saved
+      @user.save
+      SendEmailJob.set(wait: 2.seconds).perform_later("welcome", @user, nil)
       new_auth_header = @user.create_new_auth_token
       response.headers.merge!(new_auth_header)
-      NbiciMailer.send_email(:welcome, @user, nil)
       sign_in @user
       success @user
     else

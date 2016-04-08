@@ -28,14 +28,4 @@ class NbiciMailer < ActionMailer::Base
     mail(to: @user.email, subject: "Tus clases expirarán pronto")
   end
 
-  def send_email email_name, user, data
-    begin
-      mail = NbiciMailer.send(email_name, user, data)
-      mail.deliver_now
-      Email.create(user: user, email_status: "sent", email_type: email_name.to_s)
-    rescue Exception => e
-      Email.create(user: user, email_status: e.message, email_type: email_name.to_s)
-    end
-  end
-
 end

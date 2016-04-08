@@ -10,6 +10,8 @@ gem 'devise'
 gem 'devise_token_auth'
 gem 'rack-cors', :require => 'rack/cors'
 gem 'conekta'
+gem 'delayed_job_active_record'
+gem 'pry-remote', :require => 'pry-remote'
 #gem 'omniauth'
 
 # To use ActiveModel has_secure_password
