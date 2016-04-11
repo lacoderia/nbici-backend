@@ -36,7 +36,7 @@ instructor = Instructor.create(first_name: "Morenazo", last_name: "Nazo", email:
 venue = Venue.create(name: "Gimnasio SLP", description: "Gimnasio original")
 
 #Distributions
-distribution = Distribution.create(height: 6, width: 9, description: "distribucion actual", inactive_seats: "[2,3,4,5,6,7,8,9,12,13,14,15,16,17,22,23,24,25,27,28,32,33,36,37,38,44,45,46,47,48,49,52,53,54]", active_seats: "[1,10,11,18,19,20,21,26,29,30,31,34,35,39,40,41,42,43,50,51]", total_seats: 20)
+distribution = Distribution.create(height: 6, width: 9, description: "distribucion actual", inactive_seats: "[2,3,4,5,6,7,8,12,13,14,15,16,18,22,23,24,27,28,32,35,36,37,38,43,44,45,46,47,48,49,51,52,53,54]", active_seats: "[1,9,10,11,17,19,20,21,25,26,29,30,31,33,34,39,40,41,42,50]", total_seats: 20)
 
 #Room
 room = Room.create(venue: venue, distribution: distribution, description: "Salón original")
