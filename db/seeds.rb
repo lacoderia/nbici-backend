@@ -36,13 +36,13 @@ instructor = Instructor.create(first_name: "Morenazo", last_name: "Nazo", email:
 venue = Venue.create(name: "Gimnasio SLP", description: "Gimnasio original")
 
 #Distributions
-distribution = Distribution.create(height: 5, width: 5, description: "cuadrado perfecto", inactive_seats: "[2,3,4,7,8,9]", active_seats: "[1,5,6,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]", total_seats: 19)
+distribution = Distribution.create(height: 6, width: 9, description: "distribucion actual", inactive_seats: "[2,3,4,5,6,7,8,9,12,13,14,15,16,17,22,23,24,25,27,28,32,33,36,37,38,44,45,46,47,48,49,52,53,54]", active_seats: "[1,10,11,18,19,20,21,26,29,30,31,34,35,39,40,41,42,43,50,51]", total_seats: 20)
 
 #Room
 room = Room.create(venue: venue, distribution: distribution, description: "Salón original")
 
 #Schedules
-schedule = Schedule.create(instructor: instructor, room: room, datetime: Time.now)
+schedule = Schedule.create(instructor: instructor, room: room, datetime: Time.now.beginning_of_day + 10.hours + 3.days)
 
 #Appointment
-appointment = Appointment.create(user: user, schedule: schedule, bicycle_number: 4, status: 'BOOKED', start: Time.now, description: "Con mi maestro favorito")
+appointment = Appointment.create(user: user, schedule: schedule, bicycle_number: 10, status: 'BOOKED', start: Time.now.beginning_of_day + 10.hours + 3.days, description: "Con mi maestro favorito")
