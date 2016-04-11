@@ -30,6 +30,7 @@ gem 'pry-remote', :require => 'pry-remote'
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
 group :development, :test do
+  gem 'rspec-activejob'
   gem 'spring'
   # Call 'pry' anywhere in the code to stop execution and get a debugger console
   gem 'pry-rails'

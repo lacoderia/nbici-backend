@@ -1,5 +1,5 @@
-class SendEmailJob < ActiveJob::Base
-  queue_as :emails
+class SendReminderJob < ActiveJob::Base
+  queue_as :reminders
 
   def perform(email_name, user, data)
     begin

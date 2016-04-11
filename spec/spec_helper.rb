@@ -6,6 +6,7 @@ SimpleCov.start
 
 require 'rails/test_help'
 require 'rspec/rails'
+require 'rspec/active_job'
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'factory_girl'
@@ -19,6 +20,9 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
+
+  # Active Job
+  config.include(RSpec::ActiveJob)
 
   # Authentication helpers
   config.include TestingSupport::DeviseHelpers
@@ -54,6 +58,9 @@ RSpec.configure do |config|
 
   config.after(:each) do
     DatabaseCleaner.clean
+    # clean out the queue after each spec
+    ActiveJob::Base.queue_adapter.enqueued_jobs = []
+    ActiveJob::Base.queue_adapter.performed_jobs = []
   end
 
   config.after(:suite) do

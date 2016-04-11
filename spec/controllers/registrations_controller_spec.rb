@@ -21,6 +21,7 @@ feature 'RegistrationsController' do
         page = get_session 
         response = JSON.parse(page.body)
         expect(response['user']['first_name']).to eql new_user[:first_name]
+        expect(SendEmailJob).to have_been_enqueued.with("welcome", global_id(User.last), nil)
         
         logout
 
@@ -66,6 +67,7 @@ feature 'RegistrationsController' do
         page = register_with_service new_user
         response = JSON.parse(page.body)
         expect(response['user']['first_name']).to eq new_user[:first_name]
+        expect(SendEmailJob).to have_been_enqueued.with("welcome", global_id(User.last), nil)
         logout
         
         page = register_with_service new_user 

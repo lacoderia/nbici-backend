@@ -22,6 +22,7 @@ feature 'AppointmentsController' do
       expect(response["appointment"]["booked_seats"]).to eq "[4]"
       user = User.find(user_with_classes_left.id)
       expect(user.classes_left).to be 1 
+      expect(SendEmailJob).to have_been_enqueued.with("booking", global_id(user_with_classes_left), global_id(Appointment.last))
 
       new_appointment_request = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi otra clase"}      
       with_rack_test_driver do

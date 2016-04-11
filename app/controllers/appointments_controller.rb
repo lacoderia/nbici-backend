@@ -7,6 +7,7 @@ class AppointmentsController < ApiController
   def book
     begin
       appointment = Appointment.book(params, current_user)
+      SendEmailJob.set(wait: 1.seconds).perform_later("booking", current_user, appointment)
       render json: appointment
     rescue Exception => e
       appointment = Appointment.new

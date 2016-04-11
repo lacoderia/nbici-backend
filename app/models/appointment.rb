@@ -4,6 +4,7 @@ class Appointment < ActiveRecord::Base
 
   STATUSES = [
     'BOOKED',
+    'CANCELLED',
     'FINALIZED',
     'ANOMALY'
   ]
@@ -12,6 +13,7 @@ class Appointment < ActiveRecord::Base
   
   state_machine :status, :initial => 'BOOKED' do
     transition 'BOOKED' => 'FINALIZED', on: :finalize
+    transition 'BOOKED' => 'CANCELLED', on: :cancel
     transition 'FINALIZED' => 'ANOMALY', on: :report_anomaly
   end
 
