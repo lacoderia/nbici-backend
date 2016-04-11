@@ -14,7 +14,7 @@ def get_users_with_expiring_classes
   users_query = User.joins(:emails, :purchases => :pack).where("last_class_purchased < ? AND ((email.email_type != ? AND emails.email_status = ?) OR (emails.email_type = ? AND emails.email_status = ? AND emails.created_at <  ? )", Time.zone.now, "expiration_reminder", "sent", "expriation_reminder", "sent", Time.zone.now - 7.days).group(:id)
   #Traverse the user array to get the ones that satisfy the next condition
   users = []
-  users_query.each do |user|
+  users_query.each do |user|
     last_purchase_expiration_days = user.purchases.last.pack.expiration    
     if user.last_class_purchased <= (Time.zone.now - last_purchase_expiration_days.days)
       users << user
