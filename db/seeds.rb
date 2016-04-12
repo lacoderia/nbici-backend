@@ -42,7 +42,13 @@ distribution = Distribution.create(height: 6, width: 10, description: "distribuc
 room = Room.create(venue: venue, distribution: distribution, description: "Salón original")
 
 #Schedules
-schedule = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 10.hours + 3.days)
+schedule_1 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 10.hours + 3.days)
+schedule_2 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 11.hours + 3.days)
+schedule_3 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 12.hours + 3.days)
+
+schedule_4 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 10.hours + 4.days)
+schedule_5 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 11.hours + 5.days)
+schedule_6 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 12.hours + 6.days)
 
 #Appointment
-appointment = Appointment.create(user: user, schedule: schedule, bicycle_number: 10, status: 'BOOKED', start: Time.zone.now.beginning_of_day + 10.hours + 3.days, description: "Con mi maestro favorito")
+appointment = Appointment.create(user: user, schedule: schedule_1, bicycle_number: 10, status: 'BOOKED', start: Time.zone.now.beginning_of_day + 10.hours + 3.days, description: "Con mi maestro favorito")
