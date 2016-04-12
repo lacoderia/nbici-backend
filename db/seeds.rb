@@ -42,7 +42,7 @@ distribution = Distribution.create(height: 6, width: 10, description: "distribuc
 room = Room.create(venue: venue, distribution: distribution, description: "Salón original")
 
 #Schedules
-schedule = Schedule.create(instructor: instructor, room: room, datetime: Time.now.beginning_of_day + 10.hours + 3.days)
+schedule = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 10.hours + 3.days)
 
 #Appointment
-appointment = Appointment.create(user: user, schedule: schedule, bicycle_number: 10, status: 'BOOKED', start: Time.now.beginning_of_day + 10.hours + 3.days, description: "Con mi maestro favorito")
+appointment = Appointment.create(user: user, schedule: schedule, bicycle_number: 10, status: 'BOOKED', start: Time.zone.now.beginning_of_day + 10.hours + 3.days, description: "Con mi maestro favorito")
