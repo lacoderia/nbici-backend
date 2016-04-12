@@ -623,7 +623,7 @@
                         
                           <h1><%= @user.first_name %>, tu reservación está lista.</h1>
 
-                          <p><%= @appointment.schedule.datetime.strftime("%d/%m/%Y %H:%M") %>, con <%= @appointment.schedule.instructor.first_name %><br>
+                          <p><%= @appointment.start.strftime("%d/%m/%Y %H:%M") %>, con <%= @appointment.schedule.instructor.first_name %><br>
 ¡El viaje comienza ahora! Actívate N bici.</p>
 
                         </td>
