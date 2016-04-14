@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require_relative "../../config/environment"
 
-User.send_classes_left_reminder
+User.expire_classes
 
-User.send_expiration_reminder
+Appointments.finalize

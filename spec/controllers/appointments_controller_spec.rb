@@ -1,14 +1,52 @@
 feature 'AppointmentsController' do
 
-  let!(:schedule) { create(:schedule) }
-  let!(:user_with_classes_left) { create(:user, classes_left: 2, last_class_purchased: Time.zone.now) }
-  let!(:user_with_no_classes_left) { create(:user, classes_left: 0, last_class_purchased: Time.zone.now) }
+  let!(:starting_datetime) { Time.zone.parse('01 Jan 2016 00:00:00') }  
+  
+  let!(:schedule) { create(:schedule, datetime: starting_datetime + 1.hour) }
+  let!(:user_with_classes_left) { create(:user, classes_left: 2, last_class_purchased: starting_datetime) }
+  let!(:user_with_no_classes_left) { create(:user, classes_left: 0, last_class_purchased: starting_datetime) }
   let!(:user_with_nil_classes_left) { create(:user) }
 
-  context 'Create a new appointment' do
+  context 'Create new appointments' do
+
+    before do
+      Timecop.freeze(starting_datetime)
+    end
+
+    it 'should expire appointments' do
+
+      page = login_with_service user = { email: user_with_classes_left[:email], password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_appointment_request = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}      
+      with_rack_test_driver do
+        page.driver.post book_appointments_path, new_appointment_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["appointment"]["booked_seats"]).to eq "[4]"
+      appointment = Appointment.find(response["appointment"]["id"])
+      expect(appointment.status).to eql "BOOKED"
+
+      Timecop.travel(starting_datetime + 2.hours)
+      Appointment.finalize
+      
+      appointment = Appointment.find(response["appointment"]["id"])
+      expect(appointment.status).to eql "FINALIZED"
+      
+      #Can't book past schedules
+      new_appointment_request = {schedule_id: schedule.id, bicycle_number: 2, description: "Mi otra clase"}      
+      with_rack_test_driver do
+        page.driver.post book_appointments_path, new_appointment_request
+      end
+      response = JSON.parse(page.body)
+      expect(response["errors"][0]["title"]).to eql "La clase ya está fuera de horario."
+      
+    end
 
     it 'should create successfully an appointment and error on creating one with the same bicycle or with another user_id' do
-        
+      
       page = login_with_service user = { email: user_with_classes_left[:email], password: "12345678" }
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
       set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
@@ -34,6 +72,7 @@ feature 'AppointmentsController' do
     end
 
     it 'checks for errors on users with no classes left' do
+      Timecop.travel(starting_datetime)
       #USER WITH NO SESSION
       with_rack_test_driver do
         page.driver.post book_appointments_path, {} 

@@ -17,12 +17,24 @@ class Appointment < ActiveRecord::Base
     transition 'FINALIZED' => 'ANOMALY', on: :report_anomaly
   end
 
+  def self.finalize
+    appointments_to_finalize = Appointment.where("start < ?", Time.zone.now - 1.hour)
+    appointments_to_finalize.each do |appointment|
+      appointment.finalize!
+    end
+  end
+
   def self.book params, current_user
+
     user = current_user 
     schedule = Schedule.find(params[:schedule_id])
     bicycle_number = params[:bicycle_number].to_i
     description = params[:description]
     appointment = Appointment.new
+    
+    if schedule.datetime <= Time.zone.now
+      raise "La clase ya está fuera de horario."
+    end
 
     if (user.classes_left and user.classes_left >= 1) and (not schedule.bookings.index(bicycle_number))
 
