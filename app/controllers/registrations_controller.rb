@@ -15,7 +15,7 @@ class RegistrationsController < Devise::RegistrationsController
     saved = @user.register
     if saved
       @user.save
-      SendEmailJob.set(wait: 1.seconds).perform_later("welcome", @user, nil)
+      SendEmailJob.perform_later("welcome", @user, nil)
       new_auth_header = @user.create_new_auth_token
       response.headers.merge!(new_auth_header)
       sign_in @user
