@@ -49,6 +49,7 @@ feature 'RemindersController' do
 
     #FOR TESTING EXPIRING CLASSES LEFT
     let!(:user_with_expiring_classes_30_days) { create(:user, classes_left: 2, last_class_purchased: starting_datetime) }
+    let!(:card) { create(:card, user: user_with_expiring_classes_30_days) }
     let!(:user_with_expiring_classes_180_days) { create(:user, classes_left: 15, last_class_purchased: starting_datetime) }
     let!(:pack_30_days){ create(:pack, classes: 5, price: 650.00, expiration: 30) }
     let!(:purchase_01){ create(:purchase, pack: pack_30_days, user: user_with_expiring_classes_30_days, amount: 65000) }
@@ -100,7 +101,20 @@ feature 'RemindersController' do
       
       #It should send another reminding email
       Timecop.travel(starting_datetime + 172.days + 1.minute)
+
+      #It should not send the email to a user that bought classes but they are not expiring 
+      login_with_service user = { email: user_with_expiring_classes_30_days.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_purchase_request = {pack_id: pack_30_days.id, price: pack_30_days.price, token: card.uid}      
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+      
+      response = JSON.parse(page.body)
       expect(User.with_expiring_classes.size).to eql 1
+      expect(User.with_expiring_classes[0].id).to eql user_with_expiring_classes_180_days.id
       
       perform_enqueued_jobs { User.send_expiration_reminder }      
 

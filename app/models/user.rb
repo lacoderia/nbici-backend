@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
 
   #Gets users with 1 class left and that have no classes_left_remider emails, or that it has a reminder email but sent more than a week ago
   def self.with_one_class_left
-    User.joins("LEFT OUTER JOIN emails ON emails.user_id = users.id").where("classes_left = ? AND ((emails is null OR (emails.email_type != ? AND emails.email_status = ?)) OR (emails is not null AND NOT EXISTS (SELECT * from emails INNER JOIN user ON users.id = emails.user_id  WHERE email_type = ? AND email_status = ? AND created_at < ? AND created_at > ?)))", 1, "classes_left_reminder", "sent", "classes_left_reminder", "sent", Time.zone.now, Time.zone.now - 7.days).group("users.id").to_a
+    User.select("users.*, users.id AS user_id").joins("LEFT OUTER JOIN emails ON emails.user_id = users.id").where("classes_left = ? AND ((emails is null OR (emails.email_type != ? AND emails.email_status = ?)) OR (emails is not null AND NOT EXISTS (SELECT * FROM emails INNER JOIN user ON users.id = emails.user_id  WHERE emails.user_id = user_id AND email_type = ? AND email_status = ? AND created_at < ? AND created_at > ?)))", 1, "classes_left_reminder", "sent", "classes_left_reminder", "sent", Time.zone.now, Time.zone.now - 7.days).group("users.id").to_a
   end
 
   def self.send_expiration_reminder
@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
   #Gets users with purchases and that have no expiration_reminder emails, or that it has a reminder email but sent more than a week ago
   def self.with_expiring_classes
     #TODO: create all the logic inside the SQL query
-    users_query = User.joins("LEFT OUTER JOIN emails ON emails.user_id = users.id INNER JOIN purchases ON purchases.user_id = users.id").where("classes_left > ? AND last_class_purchased < ? AND ((emails is null OR (emails.email_type != ? AND emails.email_status = ?)) OR (emails is not null AND NOT EXISTS (SELECT * from emails INNER JOIN user ON users.id = emails.user_id WHERE email_type = ? AND email_status = ? AND created_at < ? AND created_at > ?)))", 0, Time.zone.now, "expiration_reminder", "sent", "expiration_reminder", "sent", Time.zone.now, Time.zone.now - 7.days).group(:id)
+    users_query = User.select("users.*, users.id AS user_id").joins("LEFT OUTER JOIN emails ON emails.user_id = users.id INNER JOIN purchases ON purchases.user_id = users.id").where("classes_left > ? AND last_class_purchased < ? AND ((emails is null OR (emails.email_type != ? AND emails.email_status = ?)) OR (emails is not null AND NOT EXISTS (SELECT * FROM emails INNER JOIN user ON users.id = emails.user_id WHERE emails.user_id = user_id AND email_type = ? AND email_status = ? AND created_at < ? AND created_at > ?)))", 0, Time.zone.now, "expiration_reminder", "sent", "expiration_reminder", "sent", Time.zone.now, Time.zone.now - 7.days).group(:id)
     users = []
     users_query.each do |user|
       user_classes_expiration = user.last_class_purchased + user.purchases.last.pack.expiration.days
