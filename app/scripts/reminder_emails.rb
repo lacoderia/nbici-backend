@@ -1,6 +1,12 @@
 #!/usr/bin/env ruby
 require_relative "../../config/environment"
 
-User.send_classes_left_reminder
+logger = Logger.new('../../log/reminder_emails.log', 5, 1024000)
 
-User.send_expiration_reminder
+begin
+  User.send_classes_left_reminder
+  User.send_expiration_reminder
+  logger.info("Successfully completed")
+rescue Exception => e
+  logger.error("Errored #{e.message}")
+end
