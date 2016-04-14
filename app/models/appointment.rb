@@ -18,7 +18,7 @@ class Appointment < ActiveRecord::Base
   end
 
   def self.finalize
-    appointments_to_finalize = Appointment.where("start < ?", Time.zone.now - 1.hour)
+    appointments_to_finalize = Appointment.where("status = ? AND start < ?", "BOOKED", Time.zone.now - 1.hour)
     appointments_to_finalize.each do |appointment|
       appointment.finalize!
     end
