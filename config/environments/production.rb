@@ -2,6 +2,7 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   ENV['HOST'] = "servicios.coderia.mx"
+  ENV['WP_HOST'] = "n-bici.com"
   ENV['CONEKTA_KEY'] = 'key_8Rsb4vxpEbDj9MTsaHzwKg'
   
   # Code is not reloaded between requests.
