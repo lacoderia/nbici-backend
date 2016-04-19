@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require_relative "../../config/environment"
 
-logger = Logger.new('../../log/expire_and_finalize.log', 5, 1024000)
+logger = Logger.new('/home/deploy/nbici-backend/log/expire_and_finalize.log', 5, 1024000)
 
 begin
   User.expire_classes

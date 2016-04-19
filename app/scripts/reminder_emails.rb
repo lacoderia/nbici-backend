@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require_relative "../../config/environment"
 
-logger = Logger.new('../../log/reminder_emails.log', 5, 1024000)
+logger = Logger.new('/home/deploy/nbici-backend/log/reminder_emails.log', 5, 1024000)
 
 begin
   User.send_classes_left_reminder
