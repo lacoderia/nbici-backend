@@ -40,7 +40,8 @@ feature 'SchedulesController' do
 
       visit bookings_schedule_path(schedule_current_week_01.id)
       response = JSON.parse(page.body)
-      expect(response["bookings"]["booked_seats"]).to eql "[1, 4]"
+      expect(response["bookings"]["booked_seats"][0]["number"]).to eql 1
+      expect(response["bookings"]["booked_seats"][1]["number"]).to eql 4
 
     end
 

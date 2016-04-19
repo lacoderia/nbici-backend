@@ -5,7 +5,7 @@ module BookingSerializer
     return if booked_seats.nil?
 
     bookings = {}
-    bookings[:bookings] = {booked_seats: booked_seats.to_s}
+    bookings[:bookings] = {booked_seats: booked_seats}
     bookings
   end
 

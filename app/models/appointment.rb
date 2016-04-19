@@ -35,18 +35,18 @@ class Appointment < ActiveRecord::Base
     if schedule.datetime <= Time.zone.now
       raise "La clase ya está fuera de horario."
     end
+      
+    if not schedule.bicycle_exists?(bicycle_number)
+      raise "La bicicleta #{bicycle_number} no existe para la schedule #{schedule.id}."
+    end
 
-    if (user.classes_left and user.classes_left >= 1) and (not schedule.bookings.index(bicycle_number))
-
-      if schedule.inactive_seats.index(bicycle_number)
-        raise "La bicicleta #{bicycle_number} está inactiva para la schedule #{schedule.id}."
-      end
+    if (user.classes_left and user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
 
       schedule.appointments << appointment = Appointment.create(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
       user.update_attribute(:classes_left, user.classes_left - 1)
     elsif not user.classes_left or user.classes_left == 0 
       raise "El usuario no cuenta con suficientes clases disponibles."
-    elsif schedule.bookings.index(bicycle_number)
+    elsif schedule.bookings.find{|bicycle| bicycle.number == bicycle_number}
       raise "La bicicleta #{bicycle_number} ya fue seleccionada para la schedule #{schedule.id}."
     end
     appointment

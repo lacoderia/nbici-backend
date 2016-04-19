@@ -10,15 +10,25 @@ class Schedule < ActiveRecord::Base
   end
 
   def bookings
-    booked_seats = []
+    booked_bicycles = []
+    active_bicycles = Bicycle.to_bicycle_array(self.room.distribution.active_seats)
     self.appointments.each do |appointment|
-      booked_seats << appointment.bicycle_number
+      booked_bicycles << active_bicycles.find{|bicycle| bicycle.number == appointment.bicycle_number}
     end
-    booked_seats.sort
+    booked_bicycles.sort_by{|bicycle| bicycle.number}
   end
 
   def inactive_seats
     eval(self.room.distribution.inactive_seats)
+  end
+
+  def bicycle_exists? bicycle_number
+    active_bicycles = Bicycle.to_bicycle_array(self.room.distribution.active_seats)
+    if active_bicycles.find{|bicycle| bicycle.number == bicycle_number}
+      return true
+    else
+      return false
+    end    
   end
   
 end

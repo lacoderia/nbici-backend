@@ -25,7 +25,7 @@ feature 'AppointmentsController' do
       end
       
       response = JSON.parse(page.body)
-      expect(response["appointment"]["booked_seats"]).to eq "[4]"
+      expect(response["appointment"]["booked_seats"][0]["number"]).to eq 4
       appointment = Appointment.find(response["appointment"]["id"])
       expect(appointment.status).to eql "BOOKED"
 
@@ -57,7 +57,7 @@ feature 'AppointmentsController' do
       end
       
       response = JSON.parse(page.body)
-      expect(response["appointment"]["booked_seats"]).to eq "[4]"
+      expect(response["appointment"]["booked_seats"][0]["number"]).to eq 4
       user = User.find(user_with_classes_left.id)
       expect(user.classes_left).to be 1 
       expect(SendEmailJob).to have_been_enqueued.with("booking", global_id(user_with_classes_left), global_id(Appointment.last))
@@ -103,19 +103,18 @@ feature 'AppointmentsController' do
       expect(response["errors"][0]["title"]).to eql "El usuario no cuenta con suficientes clases disponibles."
       logout
 
-      #INACTIVE SEAT TRYING TO BE BOOKED
+      #UNEXISTANT SEAT TRYING TO BE BOOKED
       page = login_with_service user = { email: user_with_classes_left[:email], password: "12345678" }
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
       set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
-      schedule.room.distribution.update_attribute(:inactive_seats, "[4]")
 
-      new_appointment_request = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}      
+      new_appointment_request = {schedule_id: schedule.id, bicycle_number: 5, description: "Mi primera clase"}      
       with_rack_test_driver do
         page.driver.post book_appointments_path, new_appointment_request
       end
       
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "La bicicleta 4 está inactiva para la schedule #{schedule.id}."
+      expect(response["errors"][0]["title"]).to eql "La bicicleta 5 no existe para la schedule #{schedule.id}."
 
     end
     
