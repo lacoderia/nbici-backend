@@ -14,9 +14,20 @@ feature 'PasswordsController' do
       token = response['token']
       expect(token.length).to be > 1
       
+      #Incorrect email
+      incorrect_password_recovery_request = { utf8: 'V', user: { email: "another@email.com" } }
+      page1 = nil
+      with_rack_test_driver do
+        page1 = page.driver.post user_password_path, incorrect_password_recovery_request
+      end
+      response = JSON.parse(page1.body)
+      expect(page.status_code).to be 500
+      expect(response['errors'][0]["title"]).to eql "No se encontró usuario con ese email."
+
+      #Incorrect password reset
       old_password = user.password
       new_password = "10002000"
-
+      
       incorrect_password_reset_request = { utf8: 'V', user: { reset_password_token: token, password: new_password, password_confirmation: "20001000" } }
       page2 = nil
       with_rack_test_driver do
@@ -24,8 +35,8 @@ feature 'PasswordsController' do
       end
       response = JSON.parse(page2.body)
       expect(page.status_code).to be 500
-      expect(response['errors'][0]["id"]).to eql "password_confirmation"
-
+      expect(response['errors'][0]["title"]).to eql "doesn't match Password"
+      
       password_reset_request = { utf8: 'V', user: { reset_password_token: token, password: new_password, password_confirmation: new_password } }
       page3 = nil
       with_rack_test_driver do

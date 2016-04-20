@@ -7,15 +7,23 @@ class PasswordsController < Devise::PasswordsController
 
   def create
     self.resource = User.find_by_email(resource_params['email'])
+
+    if self.resource
     
-    yield resource if block_given?
+      yield resource if block_given?
 
-    token = resource.send_reset_password_instructions
+      token = resource.send_reset_password_instructions
 
-    if successfully_sent?(resource)
-      success resource, token
+      if successfully_sent?(resource)
+        success resource, token
+      else
+        resource.errors.add(:reset_email_not_sent, "No se pudo enviar el password reset para el usuario.")
+        error resource
+      end
+
     else
-      resource.errors.add(:reset_email_not_sent, "No se pudo enviar el password reset para el usuario.")
+      resource = User.new
+      resource.errors.add(:no_user_found, "No se encontró usuario con ese email.")
       error resource
     end
   end
