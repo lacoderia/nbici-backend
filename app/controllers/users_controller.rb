@@ -1,56 +1,22 @@
 class UsersController < ApiController
   include ErrorSerializer
+
+  before_action :authenticate_user!
   
   before_action :set_user, only: [:show, :update, :destroy]
-
-  # GET /users
-  # GET /users.json
-  def index
-    @users = User.all
-
-    render json: @users
-  end
-
-  # GET /users/1
-  # GET /users/1.json
-  def show
-    if @user.errors.empty?
-      render json: @user
-    else
-      render json: ErrorSerializer.serialize(@user.errors)
-    end
-  end
-
-  # POST /users
-  # POST /users.json
-  def create
-    @user = User.new(user_params)
-
-    if @user.save
-      render json: @user, status: :created, location: @user
-    else
-      render json: ErrorSerializer.serialize(@user.errors)
-    end
-  end
 
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
-    @user = User.find(params[:id])
-
     if @user.update(user_params)
-      head :no_content
+      if user_params[:password]
+        signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+        sign_in(@user)
+      end
+      render json: @user
     else
       render json: ErrorSerializer.serialize(@user.errors)
     end
-  end
-
-  # DELETE /users/1
-  # DELETE /users/1.json
-  def destroy
-    @user.destroy
-
-    head :no_content
   end
 
   private
@@ -65,6 +31,6 @@ class UsersController < ApiController
     end
 
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :classes_left, :last_class_purchased, :picture, :uid, :active)
+      params.require(:user).permit(:first_name, :last_name, :email, :classes_left, :last_class_purchased, :picture, :uid, :active, :password, :password_confirmation)
     end
 end

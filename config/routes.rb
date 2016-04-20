@@ -41,6 +41,8 @@ Rails.application.routes.draw do
     get 'session', :to => "sessions#get"
   end
 
+  resources :users, except: [:new, :edit]
+
   resources :roles, except: [:new, :edit]
   
   # The priority is based upon order of creation: first created -> highest priority.
