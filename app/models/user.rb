@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   has_many :cards
   has_many :appointments
   has_many :purchases
-
+  
   def role?(role)
     return !!self.roles.find_by_name(role)
   end

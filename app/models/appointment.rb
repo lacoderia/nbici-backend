@@ -37,7 +37,7 @@ class Appointment < ActiveRecord::Base
     end
       
     if not schedule.bicycle_exists?(bicycle_number)
-      raise "La bicicleta #{bicycle_number} no existe para la schedule #{schedule.id}."
+      raise "Esa bicicleta no existe, por favor intenta nuevamente."
     end
 
     if (user.classes_left and user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
@@ -45,9 +45,9 @@ class Appointment < ActiveRecord::Base
       schedule.appointments << appointment = Appointment.create(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
       user.update_attribute(:classes_left, user.classes_left - 1)
     elsif not user.classes_left or user.classes_left == 0 
-      raise "El usuario no cuenta con suficientes clases disponibles."
+      raise "Ya no tienes clases disponibles, adquiere más para continuar."
     elsif schedule.bookings.find{|bicycle| bicycle.number == bicycle_number}
-      raise "La bicicleta #{bicycle_number} ya fue seleccionada para la schedule #{schedule.id}."
+      raise "La bicicleta ya fue reservada, por favor intenta con otra."
     end
     appointment
   end

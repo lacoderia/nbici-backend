@@ -67,7 +67,7 @@ feature 'AppointmentsController' do
         page.driver.post book_appointments_path, new_appointment_request
       end
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "La bicicleta 4 ya fue seleccionada para la schedule #{schedule.id}."
+      expect(response["errors"][0]["title"]).to eql "La bicicleta ya fue reservada, por favor intenta con otra."
 
     end
 
@@ -88,7 +88,7 @@ feature 'AppointmentsController' do
         page.driver.post book_appointments_path, new_appointment_request_no_classes
       end
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "El usuario no cuenta con suficientes clases disponibles."
+      expect(response["errors"][0]["title"]).to eql "Ya no tienes clases disponibles, adquiere más para continuar."
       logout
 
       #RECENTLY CREATED USER WITH NO CLASSES LEFT DEFINED
@@ -100,7 +100,7 @@ feature 'AppointmentsController' do
         page.driver.post book_appointments_path, new_appointment_request_nil_classes
       end
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "El usuario no cuenta con suficientes clases disponibles."
+      expect(response["errors"][0]["title"]).to eql "Ya no tienes clases disponibles, adquiere más para continuar."
       logout
 
       #UNEXISTANT SEAT TRYING TO BE BOOKED
@@ -114,7 +114,7 @@ feature 'AppointmentsController' do
       end
       
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "La bicicleta 5 no existe para la schedule #{schedule.id}."
+      expect(response["errors"][0]["title"]).to eql "Esa bicicleta no existe, por favor intenta nuevamente."
 
     end
     
