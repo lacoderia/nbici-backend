@@ -17,6 +17,16 @@ class Appointment < ActiveRecord::Base
     transition 'FINALIZED' => 'ANOMALY', on: :report_anomaly
   end
 
+  def cancel_with_time_check
+
+    if Time.zone.now < (self.start - 24.hours)
+      self.cancel!
+      self.user.update_attribute(:classes_left, self.user.classes_left + 1)
+    else
+      raise "Sólo se pueden cancelar clases con 24 horas de anticipación."
+    end    
+  end
+
   def self.finalize
     appointments_to_finalize = Appointment.where("status = ? AND start < ?", "BOOKED", Time.zone.now - 1.hour)
     appointments_to_finalize.each do |appointment|

@@ -20,6 +20,9 @@ Rails.application.routes.draw do
     collection do
       match 'book', :to => "appointments#book", :via => [:post, :options]
     end
+    member do
+      get 'cancel', :to => "appointments#cancel"
+    end
   end
   resources :emails, except: [:new, :edit]
   resources :cards, except: [:new, :edit] 

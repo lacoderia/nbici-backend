@@ -24,9 +24,10 @@ class UsersController < ApiController
     def set_user
       begin
         @user = User.find(params[:id])
-      rescue
+      rescue Exception => e
         @user = User.new
-        @user.errors.add(:not_found, "record not found")
+        @user.errors.add(:not_found, "Usuario no encontrado.")
+        render json: ErrorSerializer.serialize(@user.errors), status: 500
       end
     end
 

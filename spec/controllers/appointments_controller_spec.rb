@@ -13,6 +13,53 @@ feature 'AppointmentsController' do
       Timecop.freeze(starting_datetime)
     end
 
+    it 'should test cancel appointment conditions' do
+
+      #Creating appointment
+      page = login_with_service user = { email: user_with_classes_left[:email], password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_appointment_request = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}      
+      with_rack_test_driver do
+        page.driver.post book_appointments_path, new_appointment_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["appointment"]["booked_seats"][0]["number"]).to eq 4
+      appointment = Appointment.find(response["appointment"]["id"])
+      expect(appointment.status).to eql "BOOKED"
+      user = User.find(response["appointment"]["user_id"])
+      expect(user.classes_left).to eql 1
+
+      #Error cancelling appointment
+      Timecop.travel(starting_datetime - 23.hours)
+      
+      visit cancel_appointment_path(appointment.id)
+      response = JSON.parse(page.body)
+      expect(page.status_code).to be 500
+      expect(response["errors"][0]["title"]).to eql "Sólo se pueden cancelar clases con 24 horas de anticipación."
+
+      #Error calling an appointment_id that doesn't exist
+      
+      visit cancel_appointment_path(2003)
+      response = JSON.parse(page.body)
+      expect(page.status_code).to be 500
+      expect(response["errors"][0]["title"]).to eql "Clase no encontrada."
+
+      #Success cancelling appointment
+      Timecop.travel(starting_datetime - 23.hours - 1.minute)
+      
+      visit cancel_appointment_path(appointment.id)
+      response = JSON.parse(page.body)
+      user = User.find(response["appointment"]["user_id"])
+      expect(user.classes_left).to eql 2
+      expect(response["appointment"]["booked_seats"]).to eq []
+      appointment = Appointment.find(response["appointment"]["id"])
+      expect(appointment.status).to eql "CANCELLED"
+
+    end
+
     it 'should expire appointments' do
 
       page = login_with_service user = { email: user_with_classes_left[:email], password: "12345678" }
