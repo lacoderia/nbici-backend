@@ -6,7 +6,7 @@ class Distribution < ActiveRecord::Base
       room = Room.find(room_id)
       return room.distribution
     rescue
-      return nil
+      raise "No hay salón con ese id."
     end
   end
   
