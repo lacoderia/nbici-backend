@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require_relative "../../config/environment"
+require_relative "../config/environment"
 
 logger = Logger.new('/home/deploy/nbici-backend/log/reminder_emails.log', 5, 1024000)
 
