@@ -44,11 +44,16 @@ class Card < ActiveRecord::Base
   end
 
   def self.get_primary_for_user current_user 
-    Card.where("user_id = ? and cards.primary = ?", current_user.id, true)[0]
+    cards = Card.where("user_id = ? and cards.primary = ?", current_user.id, true)
+    if cards.empty?
+      return {}
+    else
+      return cards.first
+    end
   end
 
   def self.get_all_for_user current_user
-    Card.where("user_id = ?", current_user.id)
+    Card.where("user_id = ?", current_user.id).to_a
   end
 
 end
