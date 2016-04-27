@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160414001217) do
+ActiveRecord::Schema.define(version: 20160426182538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,9 +38,10 @@ ActiveRecord::Schema.define(version: 20160414001217) do
     t.datetime "exp_year"
     t.string   "name"
     t.text     "address"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.string   "phone"
+    t.boolean  "primary",    default: false
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -169,6 +170,8 @@ ActiveRecord::Schema.define(version: 20160414001217) do
     t.string   "email"
     t.json     "tokens"
     t.string   "phone"
+    t.string   "conekta_customer_id"
+    t.string   "conekta_id"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree

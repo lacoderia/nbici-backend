@@ -1,12 +1,12 @@
 Rails.application.routes.draw do
   
   resources :venues, except: [:new, :edit]
-  resources :distributions, except: [:new, :edit] do
+  resources :distributions do
     collection do
       get 'by_room_id'
     end
   end
-  resources :schedules, except: [:new, :edit] do
+  resources :schedules do
     member do
       get 'bookings'
     end
@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   end
   resources :rooms, except: [:new, :edit]
   resources :instructors, except: [:new, :edit]
-  resources :appointments, except: [:new, :edit] do
+  resources :appointments do
     collection do
       match 'book', :to => "appointments#book", :via => [:post, :options]
     end
@@ -25,10 +25,18 @@ Rails.application.routes.draw do
     end
   end
   resources :emails, except: [:new, :edit]
-  resources :cards, except: [:new, :edit] 
+  resources :cards do 
+    collection do
+      match 'register_for_user', :to => 'cards#register_for_user', :via => [:post, :options]
+      match 'delete_for_user', :to => 'cards#delete_for_user', :via => [:post, :options]
+      match 'set_primary_for_user', :to => 'cards#set_primary_for_user', :via => [:post, :options]
+      get 'get_primary_for_user', :to => 'cards#get_primary_for_user'
+      get 'get_all_for_user', :to => 'cards#get_all_for_user'
+    end
+  end
 
   resources :packs, except: [:new, :edit]
-  resources :purchases, except: [:new, :edit] do
+  resources :purchases do
     collection do
       match 'charge', :to => "purchases#charge", :via => [:post, :options]
     end
@@ -44,7 +52,7 @@ Rails.application.routes.draw do
     get 'session', :to => "sessions#get"
   end
 
-  resources :users, except: [:new, :edit]
+  resources :users
 
   resources :roles, except: [:new, :edit]
   

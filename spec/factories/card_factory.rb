@@ -11,6 +11,7 @@ FactoryGirl.define do
     address "ADDRESS"
     name "Card Name"
     phone '56789123'
+    primary false
   end
 
 end

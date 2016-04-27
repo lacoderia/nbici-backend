@@ -24,6 +24,20 @@ class User < ActiveRecord::Base
       true
     end
   end
+  
+  #CONEKTA
+  def get_or_create_conekta_customer
+    if self.conekta_id 
+      customer = Conekta::Customer.find(self.conekta_id)      
+    else
+      customer = Conekta::Customer.create({
+        name: "#{self.first_name} #{self.last_name}",
+        email: self.email
+      })
+      self.update_attribute(:conekta_id, customer.id)
+    end
+    return customer
+  end
 
   #EXPIRE CLASSES
   def self.expire_classes
@@ -37,7 +51,7 @@ class User < ActiveRecord::Base
         user.purchases.last.update_attribute(:expired, true)
       end      
     end
-  end
+  end 
 
   #REMINDERS
   def self.send_classes_left_reminder

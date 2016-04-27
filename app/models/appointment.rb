@@ -52,7 +52,7 @@ class Appointment < ActiveRecord::Base
 
     if (user.classes_left and user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
 
-      schedule.appointments << appointment = Appointment.create(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
+      schedule.appointments << appointment = Appointment.create!(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
       user.update_attribute(:classes_left, user.classes_left - 1)
     elsif not user.classes_left or user.classes_left == 0 
       raise "Ya no tienes clases disponibles, adquiere más para continuar."
