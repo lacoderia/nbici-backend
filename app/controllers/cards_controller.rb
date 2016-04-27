@@ -1,4 +1,4 @@
-class CardsController < ApplicationController
+class CardsController < ApiController 
   include ErrorSerializer
   
   before_action :authenticate_user!, only: [:register_for_user, :delete_for_user, :set_primary_for_user, :get_primary_for_user, :get_all_for_user]
