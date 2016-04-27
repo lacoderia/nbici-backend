@@ -3,7 +3,7 @@ Rails.application.configure do
 
   ENV['HOST'] = "servicios.coderia.mx"
   ENV['WP_HOST'] = "n-bici.com"
-  ENV['CONEKTA_KEY'] = 'key_8Rsb4vxpEbDj9MTsaHzwKg'
+  ENV['CONEKTA_KEY'] = 'key_5RX7V5fz7TMCqypQWJuPnA'
   
   # Code is not reloaded between requests.
   config.cache_classes = true
