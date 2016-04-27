@@ -12,6 +12,7 @@ FactoryGirl.define do
     name "Card Name"
     phone '56789123'
     primary false
+    brand "VISA"
   end
 
 end

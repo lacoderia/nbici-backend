@@ -6,7 +6,7 @@ class Card < ActiveRecord::Base
   def self.register_for_user current_user, token, phone
     conekta_customer = current_user.get_or_create_conekta_customer
     conekta_card = conekta_customer.create_card(:token => token)
-    card = Card.create!(user: current_user, uid: conekta_card.id, object: 'card', name: conekta_card.name, phone: phone, last4:conekta_card.last4, exp_month: conekta_card.exp_month, exp_year: conekta_card.exp_year, active: conekta_card.active, primary: current_user.cards.empty?)
+    card = Card.create!(user: current_user, uid: conekta_card.id, object: 'card', name: conekta_card.name, phone: phone, last4:conekta_card.last4, exp_month: conekta_card.exp_month, exp_year: conekta_card.exp_year, active: conekta_card.active, primary: current_user.cards.empty?, brand: conekta_card.brand)
     return card
   end
 
