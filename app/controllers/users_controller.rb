@@ -3,7 +3,7 @@ class UsersController < ApiController
 
   before_action :authenticate_user!
   
-  before_action :set_user, only: [:show, :update, :destroy]
+  before_action :set_user, only: [:update]
 
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
@@ -22,13 +22,7 @@ class UsersController < ApiController
   private
 
     def set_user
-      begin
-        @user = User.find(params[:id])
-      rescue Exception => e
-        @user = User.new
-        @user.errors.add(:not_found, "Usuario no encontrado.")
-        render json: ErrorSerializer.serialize(@user.errors), status: 500
-      end
+      @user = User.find(params[:id])
     end
 
     def user_params

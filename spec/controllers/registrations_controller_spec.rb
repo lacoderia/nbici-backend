@@ -1,4 +1,5 @@
 feature 'RegistrationsController' do
+  include ActiveJob::TestHelper
   
   describe 'registration process' do
     context 'user creation' do 
@@ -22,6 +23,8 @@ feature 'RegistrationsController' do
         response = JSON.parse(page.body)
         expect(response['user']['first_name']).to eql new_user[:first_name]
         expect(SendEmailJob).to have_been_enqueued.with("welcome", global_id(User.last), nil)
+      
+        perform_enqueued_jobs { SendEmailJob.perform_later("welcome", User.last, nil) } 
         
         logout
 

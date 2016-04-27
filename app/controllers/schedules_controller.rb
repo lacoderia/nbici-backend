@@ -23,7 +23,4 @@ class SchedulesController < ApplicationController
       @schedule = Schedule.find(params[:id])
     end
 
-    def schedule_params
-      params.require(:schedule).permit(:instructor_id, :room_id, :datetime)
-    end
 end

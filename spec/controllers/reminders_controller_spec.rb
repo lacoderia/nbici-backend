@@ -9,7 +9,7 @@ feature 'RemindersController' do
     let!(:schedule) { create(:schedule) }
     let!(:user_with_1_classes_left) { create(:user, classes_left: 2) }
   
-    it 'should get classes_left_reminder', perform_enqueued: true do
+    it 'should get classes_left_reminder' do
       
       Timecop.travel(starting_datetime)
             

@@ -3,6 +3,7 @@ class Bicycle
 
   attr_accessor :position, :number
 
+  #USED in seeds.rb
   def self.to_string_array bicycle_array
 
     result = "["

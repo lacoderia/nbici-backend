@@ -1,4 +1,5 @@
 feature 'PurchasesController' do
+  include ActiveJob::TestHelper
 
   let!(:user_01) { create(:user) }
   let!(:pack) { create(:pack) }
@@ -20,6 +21,8 @@ feature 'PurchasesController' do
       response = JSON.parse(page.body)
       expect(response["purchase"]["user"]["id"]).to be user_01.id
       expect(SendEmailJob).to have_been_enqueued.with("purchase", global_id(user_01), global_id(Purchase.last))
+        
+      perform_enqueued_jobs { SendEmailJob.perform_later("purchase", user_01, Purchase.last) } 
 
       #Refresh de user
       user = User.find(user_01.id)

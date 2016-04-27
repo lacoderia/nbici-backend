@@ -1,4 +1,5 @@
 feature 'AppointmentsController' do
+  include ActiveJob::TestHelper
 
   let!(:starting_datetime) { Time.zone.parse('01 Jan 2016 00:00:00') }  
   
@@ -41,7 +42,6 @@ feature 'AppointmentsController' do
       expect(response["errors"][0]["title"]).to eql "Sólo se pueden cancelar clases con 24 horas de anticipación."
 
       #Error calling an appointment_id that doesn't exist
-      
       visit cancel_appointment_path(2003)
       response = JSON.parse(page.body)
       expect(page.status_code).to be 500
@@ -108,6 +108,8 @@ feature 'AppointmentsController' do
       user = User.find(user_with_classes_left.id)
       expect(user.classes_left).to be 1 
       expect(SendEmailJob).to have_been_enqueued.with("booking", global_id(user_with_classes_left), global_id(Appointment.last))
+      
+      perform_enqueued_jobs { SendEmailJob.perform_later("booking", user_with_classes_left, Appointment.last) } 
 
       new_appointment_request = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi otra clase"}      
       with_rack_test_driver do
