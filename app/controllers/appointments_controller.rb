@@ -1,7 +1,7 @@
 class AppointmentsController < ApiController 
   include ErrorSerializer
   
-  before_action :authenticate_user!, only: [:book, :cancel]
+  before_action :authenticate_user!, only: [:book, :cancel, :weekly_scope_for_user, :historic_for_user]
   
   before_action :set_appointment, only: [:cancel]
 
@@ -27,6 +27,16 @@ class AppointmentsController < ApiController
       appointment.errors.add(:error_creating_appointment, e.message)
       render json: ErrorSerializer.serialize(appointment.errors), status: 500
     end
+  end
+
+  def weekly_scope_for_user
+    @appointments = Appointment.weekly_scope_for_user(current_user)
+    render json: @appointments
+  end
+
+  def historic_for_user
+    @appointments = Appointment.historic_for_user(current_user)
+    render json: @appointments
   end
 
   private

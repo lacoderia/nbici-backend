@@ -7,6 +7,15 @@ FactoryGirl.define do
     bicycle_number 4
     start Time.zone.now
     description "Buena clase"
-  end
+    
+    trait :cancelled do
+      status "CANCELLED"
+    end
+    
+    trait :finalized do
+      status "FINALIZED"
+    end
+
+  end 
 
 end

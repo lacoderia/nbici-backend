@@ -61,4 +61,15 @@ class Appointment < ActiveRecord::Base
     end
     appointment
   end
+
+  def self.weekly_scope_for_user current_user
+    start_day = Time.zone.now
+    end_day = start_day + 7.days
+    Appointment.where("user_id = ? AND start >= ? AND start < ?", current_user.id, start_day, end_day).to_a
+  end
+
+  def self.historic_for_user current_user
+    start_day = Time.zone.now
+    Appointment.where("user_id = ? AND start < ?", current_user.id, start_day).to_a    
+  end
 end

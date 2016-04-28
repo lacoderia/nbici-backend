@@ -2,6 +2,7 @@ feature 'CardsController' do
 
   let!(:user_01){create(:user)}
   let!(:user_02){create(:user)}
+  let!(:user_03){create(:user)}
   let!(:card_for_user_02){create(:card, user: user_02, uid: "tok_test_mastercard_4444", primary: true)}
 
   context 'REST api operations integrated with Conekta' do
@@ -83,6 +84,23 @@ feature 'CardsController' do
       expect(response["cards"].size).to eql 2
       expect(response["cards"][0]["last4"]).to eql "0005"
       expect(response["cards"][1]["last4"]).to eql "5100"
+
+      logout
+
+      #Login with a user that has no cards registered
+      page = login_with_service user = { email: user_03[:email], password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      #Get primary card
+      visit get_primary_for_user_cards_path
+      response = JSON.parse(page.body)
+      expect(response).to be {}
+
+      #Get all cards
+      visit get_all_for_user_cards_path
+      response = JSON.parse(page.body)
+      expect(response["cards"]).to eql []
 
     end
 

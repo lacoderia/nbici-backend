@@ -1,14 +1,97 @@
 feature 'AppointmentsController' do
   include ActiveJob::TestHelper
 
-  let!(:starting_datetime) { Time.zone.parse('01 Jan 2016 00:00:00') }  
+  let!(:starting_datetime){Time.zone.parse('01 Jan 2016 00:00:00')}
   
-  let!(:schedule) { create(:schedule, datetime: starting_datetime + 1.hour) }
-  let!(:user_with_classes_left) { create(:user, classes_left: 2, last_class_purchased: starting_datetime) }
-  let!(:user_with_no_classes_left) { create(:user, classes_left: 0, last_class_purchased: starting_datetime) }
-  let!(:user_with_nil_classes_left) { create(:user) }
+  context 'Querying for appointments' do
+    
+    let!(:user_with_classes){create(:user)}
+    let!(:user_with_no_classes){create(:user)}
+    
+    #Schedules
+    let!(:future_sch_01){create(:schedule, datetime: starting_datetime + 1.hour)}
+    let!(:future_sch_02){create(:schedule, datetime: starting_datetime + 1.day)}
+    let!(:future_sch_03){create(:schedule, datetime: starting_datetime + 6.days + 23.hours)}
+    let!(:future_sch_04){create(:schedule, datetime: starting_datetime + 7.days)}
 
-  context 'Create new appointments' do
+    let!(:past_sch_01){create(:schedule, datetime: starting_datetime - 1.hour)}
+    let!(:past_sch_02){create(:schedule, datetime: starting_datetime - 1.day)}
+    let!(:past_sch_03){create(:schedule, datetime: starting_datetime - 6.days)}
+    let!(:past_sch_04){create(:schedule, datetime: starting_datetime - 7.days)}
+
+    #Appointments
+    let!(:future_app_01){create(:appointment, user: user_with_classes, schedule: future_sch_01, start: future_sch_01.datetime)}
+    let!(:future_app_02){create(:appointment, :cancelled, user: user_with_classes, schedule: future_sch_02, start: future_sch_02.datetime)}
+    let!(:future_app_03){create(:appointment, user: user_with_classes, schedule: future_sch_03, start: future_sch_03.datetime)}
+    let!(:future_app_04){create(:appointment, user: user_with_classes, schedule: future_sch_04, start: future_sch_04.datetime)}
+
+    let!(:past_app_01){create(:appointment, :finalized, user: user_with_classes, schedule: past_sch_01, start: past_sch_01.datetime)}
+    let!(:past_app_02){create(:appointment, :finalized, user: user_with_classes, schedule: past_sch_02, start: past_sch_02.datetime)}
+    let!(:past_app_03){create(:appointment, :finalized, user: user_with_classes, schedule: past_sch_03, start: past_sch_03.datetime)}
+    let!(:past_app_04){create(:appointment, :finalized, user: user_with_classes, schedule: past_sch_04, start: past_sch_04.datetime)}
+
+    before do
+      Timecop.freeze(starting_datetime)
+    end
+
+    it 'should get historic and weekly appointments' do
+
+      #Requires login
+      visit weekly_scope_for_user_appointments_path
+      expect(page.status_code).to be 401
+
+      visit historic_for_user_appointments_path
+      expect(page.status_code).to be 401
+
+      #Login
+      page = login_with_service user = { email: user_with_classes[:email], password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      #Weekly scope
+      visit weekly_scope_for_user_appointments_path
+      response = JSON.parse(page.body)
+      expect(response["appointments"].size).to eql 3
+      expect(response["appointments"][0]["id"]).to eql future_app_01.id
+      expect(response["appointments"][1]["id"]).to eql future_app_02.id
+      expect(response["appointments"][2]["id"]).to eql future_app_03.id
+      
+      #Historic appointments
+      visit historic_for_user_appointments_path
+      response = JSON.parse(page.body)
+      expect(response["appointments"].size).to eql 4
+      expect(response["appointments"][0]["id"]).to eql past_app_01.id
+      expect(response["appointments"][1]["id"]).to eql past_app_02.id
+      expect(response["appointments"][2]["id"]).to eql past_app_03.id
+      expect(response["appointments"][3]["id"]).to eql past_app_04.id
+
+      logout
+      
+      #Login with another user
+      page = login_with_service user = { email: user_with_no_classes[:email], password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+      
+      #Weekly scope
+      visit weekly_scope_for_user_appointments_path
+      response = JSON.parse(page.body)
+      expect(response["appointments"]).to eql []
+
+      #Historic appointments
+      visit historic_for_user_appointments_path
+      response = JSON.parse(page.body)
+      expect(response["appointments"]).to eql []
+
+    end
+
+  end
+
+  context 'Creating and cancelling appointments' do
+  
+    let!(:schedule) { create(:schedule, datetime: starting_datetime + 1.hour) }
+    let!(:user_with_classes_left) { create(:user, classes_left: 2, last_class_purchased: starting_datetime) }
+    let!(:user_with_no_classes_left) { create(:user, classes_left: 0, last_class_purchased: starting_datetime) }
+    let!(:user_with_nil_classes_left) { create(:user) }
 
     before do
       Timecop.freeze(starting_datetime)
