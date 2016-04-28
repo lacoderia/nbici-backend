@@ -141,7 +141,7 @@ feature 'CardsController' do
         page.driver.post delete_for_user_cards_path, delete_card_request
       end
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "El usuario necesita tener una tarjeta como mínimo."
+      expect(response["errors"][0]["title"]).to eql "Necesitas tener una tarjeta como mínimo."
 
       #Trying to modify a card that is not owned by the logged user
       change_primary_request = {card_uid: card_for_user_02.uid} 

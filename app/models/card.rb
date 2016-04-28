@@ -13,7 +13,7 @@ class Card < ActiveRecord::Base
   def self.delete_for_user current_user, card_uid 
 
     if current_user.cards.size == 1
-      raise "El usuario necesita tener una tarjeta como mínimo."
+      raise "Necesitas tener una tarjeta como mínimo."
     end
 
     conekta_customer = current_user.get_or_create_conekta_customer
@@ -24,6 +24,8 @@ class Card < ActiveRecord::Base
         if card.primary
           card.delete
           current_user.cards.first.update_attribute(:primary, true) 
+        else
+          card.delete
         end
         conekta_card.delete
         break
