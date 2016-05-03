@@ -43,9 +43,12 @@ Rails.application.routes.draw do
       match 'charge', :to => "purchases#charge", :via => [:post, :options]
     end
   end
-
-  mount_devise_token_auth_for 'User', at: 'auth', :controllers => {:registrations => "registrations", :sessions => "sessions", :passwords => "passwords"}, defaults: { format: :json }#, :skip => [:registrations]
   
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
+  
+  mount_devise_token_auth_for 'User', at: 'auth', :controllers => {:registrations => "registrations", :sessions => "sessions", :passwords => "passwords"}, defaults: { format: :json }#, :skip => [:registrations]
+
   devise_scope :user do
     match 'users/sign_up', :to => "registrations#create", :via => [:post, :options]
     match 'users/sign_in', :to => "sessions#create", :via => [:post, :options]
@@ -53,7 +56,7 @@ Rails.application.routes.draw do
     get 'logout', :to => "sessions#destroy"
     get 'session', :to => "sessions#get"
   end
-
+  
   resources :users
 
   resources :roles, except: [:new, :edit]
@@ -63,6 +66,7 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
+  root to: "admin/dashboard#index"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

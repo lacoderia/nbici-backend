@@ -37,28 +37,27 @@ venue = Venue.create(name: "Gimnasio SLP", description: "Gimnasio original")
 
 #Bicycles
 bicycle1 = Bicycle.new(position:1, number:1)
-bicycle2 = Bicycle.new(position:2, number:2)
-bicycle3 = Bicycle.new(position:3, number:3)
-bicycle4 = Bicycle.new(position:4, number:4)
-bicycle5 = Bicycle.new(position:5, number:5)
-bicycle6 = Bicycle.new(position:7, number:6)
-bicycle7 = Bicycle.new(position:8, number:7)
-bicycle8 = Bicycle.new(position:9, number:8)
+bicycle2 = Bicycle.new(position:13, number:2)
+bicycle3 = Bicycle.new(position:25, number:3)
+bicycle4 = Bicycle.new(position:37, number:4)
+bicycle5 = Bicycle.new(position:39, number:5)
+bicycle6 = Bicycle.new(position:29, number:6)
+bicycle7 = Bicycle.new(position:19, number:7)
+bicycle8 = Bicycle.new(position:20, number:8)
 bicycle9 = Bicycle.new(position:10, number:9)
-bicycle10 = Bicycle.new(position:11, number:10)
-bicycle11 = Bicycle.new(position:12, number:11)
-bicycle12 = Bicycle.new(position:13, number:12)
-bicycle13 = Bicycle.new(position:14, number:13)
-bicycle14 = Bicycle.new(position:15, number:14)
-bicycle15 = Bicycle.new(position:17, number:15)
-bicycle16 = Bicycle.new(position:18, number:16)
-bicycle17 = Bicycle.new(position:19, number:17)
-bicycle18 = Bicycle.new(position:21, number:18)
-bicycle19 = Bicycle.new(position:22, number:19)
-bicycle20 = Bicycle.new(position:23, number:20)
+bicycle10 = Bicycle.new(position:34, number:10)
+bicycle11 = Bicycle.new(position:46, number:11)
+bicycle12 = Bicycle.new(position:58, number:12)
+bicycle13 = Bicycle.new(position:70, number:13)
+bicycle14 = Bicycle.new(position:61, number:14)
+bicycle15 = Bicycle.new(position:62, number:15)
+bicycle16 = Bicycle.new(position:52, number:16)
+bicycle17 = Bicycle.new(position:42, number:17)
+bicycle18 = Bicycle.new(position:67, number:18)
+bicycle19 = Bicycle.new(position:79, number:19)
 
 #Distributions
-distribution = Distribution.create(height: 3, width: 10, description: "distribucion actual", inactive_seats: "[6,16,20,24,25,26,27,28,29,30]", active_seats: Bicycle.to_string_array([bicycle1,bicycle2,bicycle3,bicycle4,bicycle5,bicycle6,bicycle7,bicycle8,bicycle9,bicycle10,bicycle11,bicycle12,bicycle13,bicycle14,bicycle15,bicycle16,bicycle17,bicycle18,bicycle19,bicycle20]), total_seats: 20)
+distribution = Distribution.create(height: 8, width: 11, description: "distribucion actual", inactive_seats: "", active_seats: Bicycle.to_string_array([bicycle1,bicycle2,bicycle3,bicycle4,bicycle5,bicycle6,bicycle7,bicycle8,bicycle9,bicycle10,bicycle11,bicycle12,bicycle13,bicycle14,bicycle15,bicycle16,bicycle17,bicycle18,bicycle19]), total_seats: 19)
 
 #Room
 room = Room.create(venue: venue, distribution: distribution, description: "Salón original")
@@ -108,6 +107,8 @@ schedule_40 = Schedule.create(instructor: instructor, room: room, datetime: Time
 schedule_41 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 11.hours + 5.days)
 schedule_42 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 12.hours + 5.days)
 
-
 #Appointment
-appointment = Appointment.create(user: user, schedule: schedule_1, bicycle_number: 10, status: 'BOOKED', start: Time.zone.now.beginning_of_day + 10.hours + 3.days, description: "Con mi maestro favorito")
+appointment = Appointment.create(user: user, schedule: schedule_1, bicycle_number: 1, status: 'BOOKED', start: schedule_1.datetime, description: "Con mi maestro favorito")
+
+#Active Admin User
+AdminUser.create!(email: 'admin@n-bici.com', password: 'password', password_confirmation: 'password')

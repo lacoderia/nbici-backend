@@ -12,6 +12,9 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'conekta'
 gem 'delayed_job_active_record'
 gem 'pry-remote', :require => 'pry-remote'
+
+gem 'activeadmin', github: 'activeadmin'
+gem 'active_admin_datetimepicker'
 #gem 'omniauth'
 
 # To use ActiveModel has_secure_password
