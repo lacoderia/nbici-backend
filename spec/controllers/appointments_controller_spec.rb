@@ -60,10 +60,10 @@ feature 'AppointmentsController' do
       visit historic_for_user_appointments_path
       response = JSON.parse(page.body)
       expect(response["appointments"].size).to eql 4
-      expect(response["appointments"][0]["id"]).to eql past_app_01.id
-      expect(response["appointments"][1]["id"]).to eql past_app_02.id
-      expect(response["appointments"][2]["id"]).to eql past_app_03.id
-      expect(response["appointments"][3]["id"]).to eql past_app_04.id
+      expect(response["appointments"][0]["id"]).to eql past_app_04.id
+      expect(response["appointments"][1]["id"]).to eql past_app_03.id
+      expect(response["appointments"][2]["id"]).to eql past_app_02.id
+      expect(response["appointments"][3]["id"]).to eql past_app_01.id
 
       logout
       

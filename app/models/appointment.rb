@@ -73,6 +73,6 @@ class Appointment < ActiveRecord::Base
 
   def self.historic_for_user current_user
     start_day = Time.zone.now
-    Appointment.where("user_id = ? AND start < ?", current_user.id, start_day).to_a    
+    Appointment.where("user_id = ? AND start < ?", current_user.id, start_day).limit(25).order(id: :desc).to_a    
   end
 end
