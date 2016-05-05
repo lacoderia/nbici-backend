@@ -6,11 +6,19 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-#Roles
-role_user = Role.create(name: 'user')
-
 #Users
-user = User.create(first_name: "Arnulfo", last_name: "Quimare", email: "usuario_prueba@email.com", classes_left: 2, last_class_purchased: Time.now, picture: "url", uid: "XID3423423", roles: [role_user], password: "cantbeblank", phone: "55456792")
+user = User.create(first_name: "Arnulfo", last_name: "Quimare", email: "usuario_prueba@email.com", classes_left: 2, last_class_purchased: Time.now, picture: "url", uid: "XID3423423", password: "cantbeblank", phone: "55456792")
+
+#Roles
+role_instructor = Role.create(name: 'instructor')
+role_super_admin = Role.create(name: 'super_admin')
+
+#Active Admin User
+AdminUser.create!(email: 'admin@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_super_admin])
+
+#Instructors
+admin_user_instructor = AdminUser.create!(email: 'morenazo@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor])
+instructor = Instructor.create(first_name: "Morenazo", last_name: "Nazo", picture: "url", bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", quote: "¡Yo soy tu maestro!", admin_user: admin_user_instructor)
 
 #Emails
 email = Email.create(user: user, email_status: "sent", email_type: "purchase")
@@ -28,9 +36,6 @@ puchase = Purchase.create(pack: pack_1, user: user, uid: "523dd8f6aef87843860000
 
 #Cards
 card = Card.create(user: user, uid: "tok_test_visa_4242", object: 'card', name:'Thomas Logan', phone: '45321345', last4:'4242', exp_month:'12', exp_year:'17', active:true, address: "{'street1':'250 Alexis St', 'street2': null, 'street3': null, 'city':'Red Deer', 'state':'Alberta', 'zip':'T4N 0B8', 'country':'Canada'}", primary: true, brand: "VISA")
-
-#Instructors
-instructor = Instructor.create(first_name: "Morenazo", last_name: "Nazo", email: "morenazo@nazo.com", picture: "url", bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", quote: "¡Yo soy tu maestro!")
 
 #Venues
 venue = Venue.create(name: "Gimnasio SLP", description: "Gimnasio original")
@@ -109,6 +114,3 @@ schedule_42 = Schedule.create(instructor: instructor, room: room, datetime: Time
 
 #Appointment
 appointment = Appointment.create(user: user, schedule: schedule_1, bicycle_number: 1, status: 'BOOKED', start: schedule_1.datetime, description: "Con mi maestro favorito")
-
-#Active Admin User
-AdminUser.create!(email: 'admin@n-bici.com', password: 'password', password_confirmation: 'password')

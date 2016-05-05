@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160428225215) do
+ActiveRecord::Schema.define(version: 20160505003615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,11 @@ ActiveRecord::Schema.define(version: 20160428225215) do
 
   add_index "admin_users", ["email"], name: "index_admin_users_on_email", unique: true, using: :btree
   add_index "admin_users", ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "admin_users_roles", id: false, force: :cascade do |t|
+    t.integer "admin_user_id"
+    t.integer "role_id"
+  end
 
   create_table "appointments", force: :cascade do |t|
     t.integer  "user_id"
@@ -116,12 +121,12 @@ ActiveRecord::Schema.define(version: 20160428225215) do
   create_table "instructors", force: :cascade do |t|
     t.string   "first_name"
     t.string   "last_name"
-    t.string   "email"
     t.string   "picture"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.text     "bio"
     t.string   "quote"
+    t.integer  "admin_user_id"
   end
 
   create_table "packs", force: :cascade do |t|
@@ -204,7 +209,6 @@ ActiveRecord::Schema.define(version: 20160428225215) do
     t.string   "email"
     t.json     "tokens"
     t.string   "phone"
-    t.string   "conekta_customer_id"
     t.string   "conekta_id"
   end
 

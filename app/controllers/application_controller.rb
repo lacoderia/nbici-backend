@@ -11,4 +11,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def access_denied(exception)
+    redirect_to "/422.html", :alert => exception.message
+  end
+
 end
