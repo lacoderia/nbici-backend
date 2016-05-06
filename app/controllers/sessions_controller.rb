@@ -37,17 +37,6 @@ class SessionsController < Devise::SessionsController
     end
   end
 
-  def destroy
-    if current_user
-      sign_out current_user
-      render json: {}, status: :ok
-    else
-      @user = User.new
-      @user.errors.add(:no_session, "No se ha iniciado sesión.")
-      error @user
-    end
-  end
-
   def success user
     render json: user
   end
