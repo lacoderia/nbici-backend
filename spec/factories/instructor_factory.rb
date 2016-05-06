@@ -6,7 +6,9 @@ FactoryGirl.define do
     picture "picture_url"
     quote "Hola"
     bio "Soy buenísimo"
-    association :admin_user, factory: :admin_user
+    after(:create) do |instructor, evaluator|
+      create_list(:admin_user, 1, :with_instructor, instructor: instructor)
+    end
   end
 
 end

@@ -12,13 +12,18 @@ user = User.create(first_name: "Arnulfo", last_name: "Quimare", email: "usuario_
 #Roles
 role_instructor = Role.create(name: 'instructor')
 role_super_admin = Role.create(name: 'super_admin')
+role_front_desk = Role.create(name: 'front_desk')
+
+#Instructors
+instructor = Instructor.create(first_name: "Morenazo", last_name: "Nazo", picture: "url", bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", quote: "¡Yo soy tu maestro!")
+
+admin_user_instructor = AdminUser.create!(email: 'morenazo@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor)
 
 #Active Admin User
 AdminUser.create!(email: 'admin@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_super_admin])
 
-#Instructors
-admin_user_instructor = AdminUser.create!(email: 'morenazo@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor])
-instructor = Instructor.create(first_name: "Morenazo", last_name: "Nazo", picture: "url", bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", quote: "¡Yo soy tu maestro!", admin_user: admin_user_instructor)
+#Front desk
+AdminUser.create!(email: 'info@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_front_desk])
 
 #Emails
 email = Email.create(user: user, email_status: "sent", email_type: "purchase")

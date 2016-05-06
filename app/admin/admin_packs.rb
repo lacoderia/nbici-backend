@@ -7,21 +7,21 @@ ActiveAdmin.register Pack, :as => "Paquetes" do
   config.filters = false
 
   index :title => "Paquetes" do
-    column :description	
-    column :classes
-    column :price
-    column :special_price
-    column :expiration
+    column "Descripción", :description
+    column "Clases", :classes
+    column "Precio", :price
+    column "Precio especial", :special_price
+    column "Días de expiración", :expiration
     actions :defaults => true
   end
 
   form do |f|
     f.inputs "Detalles de paquetes" do
-      f.input :description
-      f.input :classes
-      f.input :price
-      f.input :special_price
-      f.input :expiration
+      f.input :description, label: "Descripción"
+      f.input :classes, label: "Clases"
+      f.input :price, label: "Precio"
+      f.input :special_price, label: "Precio especial"
+      f.input :expiration, label: "Días de expiración"
     end
     f.actions
   end

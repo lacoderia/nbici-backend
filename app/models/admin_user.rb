@@ -5,7 +5,9 @@ class AdminUser < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   
   has_and_belongs_to_many :roles
-  has_one :instructor
+  belongs_to :instructor
+  
+  accepts_nested_attributes_for :roles
 
   def role?(role)
     return !!self.roles.find_by_name(role)
