@@ -6,7 +6,7 @@ class Purchase < ActiveRecord::Base
     
     pack = Pack.find(params[:pack_id])
     amount = params[:price].to_i * 100
-    card = Card.find_by_uid(params[:token])
+    card = Card.find_by_uid(params[:uid])
 
     unless card
       raise "Tarjeta no encontrada o registrada."

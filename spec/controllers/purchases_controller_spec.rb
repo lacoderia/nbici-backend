@@ -13,7 +13,7 @@ feature 'PurchasesController' do
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
       set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
 
-      new_purchase_request = {pack_id: pack.id, price: pack.price, token: card.uid}      
+      new_purchase_request = {pack_id: pack.id, price: pack.price, uid: card.uid}      
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
@@ -33,7 +33,7 @@ feature 'PurchasesController' do
     it 'validates purchase errors' do
 
       # Non logged user
-      new_purchase_request = {pack_id: pack.id, price: pack.price, token: card.uid}
+      new_purchase_request = {pack_id: pack.id, price: pack.price, uid: card.uid}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
@@ -47,7 +47,7 @@ feature 'PurchasesController' do
 
       # Incorrect requests
       # Incorrect token
-      new_purchase_request = {pack_id: pack.id, price: pack.price, token: "123456782342"}
+      new_purchase_request = {pack_id: pack.id, price: pack.price, uid: "123456782342"}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
@@ -56,7 +56,7 @@ feature 'PurchasesController' do
       expect(response["errors"][0]["title"]).to eql "Tarjeta no encontrada o registrada."
       
       # Incorrect pack
-      new_purchase_request = {pack_id: 3, price: pack.price, token: card.uid}
+      new_purchase_request = {pack_id: 3, price: pack.price, uid: card.uid}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
@@ -65,7 +65,7 @@ feature 'PurchasesController' do
       expect(response["errors"][0]["title"]).to eql "Couldn't find Pack with 'id'=3"
 
       # Incorrect price
-      new_purchase_request = {pack_id: pack.id, price: "200.00", token: card.uid}
+      new_purchase_request = {pack_id: pack.id, price: "200.00", uid: card.uid}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
@@ -76,7 +76,7 @@ feature 'PurchasesController' do
       # Incorrect user params
       c = Card.find(card.id)
       c.update_attribute(:phone, "22")
-      new_purchase_request = {pack_id: pack.id, price: pack.price, token: card.uid}
+      new_purchase_request = {pack_id: pack.id, price: pack.price, uid: card.uid}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
