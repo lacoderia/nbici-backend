@@ -53,7 +53,7 @@ Rails.application.routes.draw do
     match 'users/sign_up', :to => "registrations#create", :via => [:post, :options]
     match 'users/sign_in', :to => "sessions#create", :via => [:post, :options]
     match 'users/password', :to => "passwords#create", :via => [:post, :options]
-    get 'logout', :to => "sessions#destroy"
+    match 'logout', :to => "sessions#destroy", :via => [:get, :options]
     get 'session', :to => "sessions#get"
   end
   
