@@ -15,8 +15,4 @@ class ApplicationController < ActionController::Base
     redirect_to "/422.html", :alert => exception.message
   end
 
-  def after_sign_out_path_for(resource_or_scope)
-    ENV['WP_HOST']
-  end
-
 end
