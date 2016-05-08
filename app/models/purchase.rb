@@ -2,6 +2,8 @@ class Purchase < ActiveRecord::Base
   belongs_to :pack
   belongs_to :user
 
+  scope :with_users_and_appointments, -> {joins(:user)}
+
   def self.charge params, user
     
     pack = Pack.find(params[:pack_id])

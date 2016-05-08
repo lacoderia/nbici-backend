@@ -3,6 +3,8 @@ class Schedule < ActiveRecord::Base
   belongs_to :room
   has_many :appointments
 
+  scope :for_payments, -> {joins(:appointments, :instructor).where("appointments.status = ?", "FINALIZED").group_by{|schedule| schedule.datetime.to_date}}
+  
   def self.weekly_scope
     start_day = Time.zone.now.beginning_of_day
     end_day = start_day + 8.days

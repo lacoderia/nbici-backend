@@ -12,7 +12,6 @@ class AdminAbility
     elsif admin_user.role? :front_desk
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, Appointment
-      cannot :read, ScheduleForInstructor
     end
  
   end

@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
   has_many :appointments
   has_many :purchases
   
+  scope :with_appointments_summary, -> {select("users.*, COUNT(CASE WHEN appointments.status = 'BOOKED' THEN 1 END) as booked, COUNT(CASE WHEN appointments.status = 'CANCELLED' THEN 1 END) as cancelled, COUNT(CASE WHEN appointments.status = 'FINALIZED' THEN 1 END) as finalized").joins(:appointments).group("users.id")}
+
   def role?(role)
     return !!self.roles.find_by_name(role)
   end
