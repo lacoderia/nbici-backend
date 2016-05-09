@@ -3,7 +3,7 @@ class Schedule < ActiveRecord::Base
   belongs_to :room
   has_many :appointments
 
-  scope :for_instructor_payments, -> {select("schedules.*, COUNT(appointments.*) as app_num").joins(:appointments, :instructor).where("appointments.status = ?", "FINALIZED").group("schedules.id").group_by{|schedule| schedule.datetime.to_date.to_s}}
+  #scope :for_instructor_payments, -> {select("schedules.*, COUNT(appointments.*) as app_num").joins(:appointments, :instructor).where("appointments.status = ?", "FINALIZED").group("schedules.id").group_by{|schedule| schedule.datetime.to_date.to_s}}
   
   def self.weekly_scope
     start_day = Time.zone.now.beginning_of_day

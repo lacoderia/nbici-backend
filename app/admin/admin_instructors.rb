@@ -2,10 +2,20 @@ ActiveAdmin.register Instructor, :as => "Instructores" do
 
   actions :all, :except => [:show]
 
-  permit_params :first_name, :last_name, :picture, :quote, :bio, admin_user_attributes: [:email, :password, :password_confirmation, :role_ids]
+  permit_params :first_name, :last_name, :picture, :quote, :bio, admin_user_attributes: [:id, :email, :password, :password_confirmation, :role_ids]
 
   config.filters = false
 
+  controller do
+    def update
+      if params[:instructor][:admin_user_attributes][:password].blank?
+        params[:instructor][:admin_user_attributes].delete("password")
+        params[:instructor][:admin_user_attributes].delete("password_confirmation")
+      end
+      super
+    end
+  end
+  
   index :title => "Instructores" do
     column "Nombre", :first_name	
     column "Apellido", :last_name

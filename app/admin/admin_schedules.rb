@@ -4,7 +4,9 @@ ActiveAdmin.register Schedule, :as => "Clases" do
 
   permit_params :datetime, :room_id, :instructor_id
 
-  config.filters = false
+  filter :datetime, :label => "Horario"
+  
+  filter :instructor_first_name, :label => "Nombre de instructor", :as => :string
   
   config.sort_order = "datetime_asc"
 
@@ -13,8 +15,14 @@ ActiveAdmin.register Schedule, :as => "Clases" do
     column "Instructor" do |schedule|
       "#{schedule.instructor.first_name} #{schedule.instructor.last_name}"
     end
-    column "Número de registrados" do |schedule|
+    column "Reservados" do |schedule|
       schedule.appointments.booked.count
+    end
+    column "Cancelados" do |schedule|
+      schedule.appointments.cancelled.count
+    end
+    column "Confirmados" do |schedule|
+      schedule.appointments.finalized.count
     end
     actions :defaults => true
   end
@@ -27,8 +35,14 @@ ActiveAdmin.register Schedule, :as => "Clases" do
       row "Instructor" do
         "#{schedule.instructor.first_name} #{schedule.instructor.last_name}"
       end
-      row "Registrados" do
-        schedule.appointments.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" }.join("<br/>").html_safe
+      row "Reservados" do
+        schedule.appointments.booked.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" }.join("<br/>").html_safe
+      end
+      row "Cancelados" do
+        schedule.appointments.cancelled.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" }.join("<br/>").html_safe
+      end
+      row "Confirmados" do
+        schedule.appointments.finalized.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" }.join("<br/>").html_safe
       end
     end
   end
