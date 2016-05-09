@@ -8,7 +8,7 @@ ActiveAdmin.register Schedule, :as => "Clases" do
   
   filter :instructor_first_name, :label => "Nombre de instructor", :as => :string
   
-  config.sort_order = "datetime_asc"
+  config.sort_order = "datetime_desc"
 
   index :title => "Clases" do
     column "Horario", :datetime
