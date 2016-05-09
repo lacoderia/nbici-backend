@@ -8,7 +8,7 @@ ActiveAdmin.register ScheduleForInstructor, :as => "Clases_de_entrenadores" do
   
   controller do
     def scoped_collection
-      ScheduleForInstructor.for_instructor(current_admin_user.id)
+      ScheduleForInstructor.for_instructor(current_admin_user.instructor.id)
     end
   end
 
