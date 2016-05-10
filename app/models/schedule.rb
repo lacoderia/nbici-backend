@@ -14,10 +14,16 @@ class Schedule < ActiveRecord::Base
   def bookings
     booked_bicycles = []
     active_bicycles = Bicycle.to_bicycle_array(self.room.distribution.active_seats)
-    self.appointments.where("status = ?", "BOOKED").each do |appointment|
+    self.appointments.booked.each do |appointment|
       booked_bicycles << active_bicycles.find{|bicycle| bicycle.number == appointment.bicycle_number}
     end
     booked_bicycles.sort_by{|bicycle| bicycle.number}
+  end
+  
+  def available_seats
+    total_seats = self.room.distribution.total_seats
+    booked_seats = self.appointments.booked.count
+    return total_seats - booked_seats
   end
 
   def inactive_seats

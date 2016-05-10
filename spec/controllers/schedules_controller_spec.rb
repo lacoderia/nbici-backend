@@ -24,6 +24,8 @@ feature 'SchedulesController' do
         expect(response['schedules'][0]['id']).to eql schedule_current_week_01.id
         expect(response['schedules'][1]['id']).to eql schedule_current_week_02.id
         expect(Schedule.count).to eql 4
+        expect(response['schedules'][0]['available_seats']).to eql 2
+        expect(response['schedules'][1]['available_seats']).to eql 4
 
         # Entrando la siguiente semana 
         one_week_after = starting_datetime + 8.days
