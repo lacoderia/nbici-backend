@@ -2,7 +2,7 @@ ActiveAdmin.register Appointment, :as => "Clientes_del_dia" do
   
   actions :all, :except => [:show, :new, :destroy, :update, :edit]
 
-  filter :start, :as => :date_time_range, :label => "Horario", datepicker_options: {min_date: Time.zone.now.beginning_of_day, max_date: Time.zone.now.end_of_day}
+  filter :start, :as => :date_time_range, :label => "Horario", datepicker_options: {min_date: Time.zone.now.beginning_of_day, max_date: Time.zone.now.end_of_day + 1.day}
   
   filter :schedule_instructor_first_name, :as => :string, :label => "Nombre del instructor"
   
@@ -10,9 +10,22 @@ ActiveAdmin.register Appointment, :as => "Clientes_del_dia" do
 
   config.sort_order = 'start_asc, bicycle_number_asc'
 
+  before_filter only: :index do
+    # when arriving through top navigation
+    if params.keys == ["controller", "action"]
+      extra_params = {"q" => {"start_gteq" => Time.zone.now.beginning_of_day, "start_lteq" => Time.zone.now.end_of_day}}
+
+      # make sure data is filtered and filters show correctly
+      params.merge! extra_params
+
+      # make sure downloads and scopes use the default filter
+      request.query_parameters.merge! extra_params
+    end
+  end
+
   controller do
     def scoped_collection
-      Appointment.today_with_users
+      Appointment.all_with_users_and_schedules
     end
   end
 

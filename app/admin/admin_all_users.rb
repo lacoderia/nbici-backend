@@ -44,14 +44,6 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
         end
       end
 
-
-      #f.has_many :credit_modifications, allow_destroy: false, new_record: 'Nueva modificación' do |t|
-      #  if t.object.new_record?
-      #    t.input :credits, :as => :number
-      #    t.input :reason
-      #  end
-      #end
-      
       f.input :classes_left, as: :hidden, input_html: {value: f.object.classes_left}
       f.actions    
     end
