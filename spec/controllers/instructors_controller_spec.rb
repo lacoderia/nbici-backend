@@ -21,6 +21,13 @@ feature 'InstructorsController' do
       expect(response["instructors"].count).to eql 2
       expect(response["instructors"][0]["quote"]).to eql "YES EN INGLES"
       expect(response["instructors"][1]["quote"]).to eql "OUI EN FRANCES"
+
+      #For inactive instructors
+      instructor_01.update_attribute(:active, false)
+      visit instructors_path
+      response = JSON.parse(page.body)
+      expect(response["instructors"].count).to eql 1
+      
     end
 
     it 'should get the instructors with the weeky schedules' do

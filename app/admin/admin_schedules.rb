@@ -8,6 +8,8 @@ ActiveAdmin.register Schedule, :as => "Clases" do
   
   filter :instructor_first_name, :label => "Nombre de instructor", :as => :string
   
+  filter :instructor_active, :label => "¿Instructor activo?", :as => :boolean
+  
   config.sort_order = "datetime_desc"
 
   index :title => "Clases" do
@@ -68,7 +70,7 @@ ActiveAdmin.register Schedule, :as => "Clases" do
   form do |f|
     f.inputs "Detalles de clases" do
       f.input :datetime, label: "Horario"
-      f.input :instructor, label: "Instructor", :collection => Instructor.all, :as => :select, :member_label => Proc.new { |i| "#{i.first_name} #{i.last_name}" } 
+      f.input :instructor, label: "Instructor", :collection => Instructor.active, :as => :select, :member_label => Proc.new { |i| "#{i.first_name} #{i.last_name}" } 
       f.input :room, label: "Cuarto", :collection => Room.all, :as => :select, :member_label => Proc.new { |r| "#{r.description}" } 
     end
     f.actions
