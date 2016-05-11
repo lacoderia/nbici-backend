@@ -4,7 +4,7 @@ ActiveAdmin.register ScheduleForInstructor, :as => "Clases_de_entrenadores" do
 
   config.filters = false
   
-  config.sort_order = "datetime_asc"
+  config.sort_order = "datetime_desc"
   
   controller do
     def scoped_collection
@@ -15,11 +15,34 @@ ActiveAdmin.register ScheduleForInstructor, :as => "Clases_de_entrenadores" do
   index :title => "Clases programadas" do
     
     column "Horario", :datetime
-    column "Número de registrados" do |schedule|
+    column "Reservados" do |schedule|
       schedule.appointments.booked.count
     end
-
+    column "Cancelados" do |schedule|
+      schedule.appointments.cancelled.count
+    end
+    column "Confirmados" do |schedule|
+      schedule.appointments.finalized.count
+    end
     actions :defaults => true
+  end
+
+  csv do
+    column "Horario" do |schedule|
+      schedule.datetime
+    end
+    column "Instructor" do |schedule|
+      "#{schedule.instructor.first_name} #{schedule.instructor.last_name}"
+    end
+    column "Reservados" do |schedule|
+      schedule.appointments.booked.count
+    end
+    column "Cancelados" do |schedule|
+      schedule.appointments.cancelled.count
+    end
+    column "Confirmados" do |schedule|
+      schedule.appointments.finalized.count
+    end
   end
 
   show do |schedule|
@@ -27,8 +50,14 @@ ActiveAdmin.register ScheduleForInstructor, :as => "Clases_de_entrenadores" do
       row "Horario" do
         schedule.datetime
       end
-      row "Registrados" do
-        schedule.appointments.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" }.join("<br/>").html_safe
+      row "Reservados" do
+        schedule.appointments.booked.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" }.join("<br/>").html_safe
+      end
+      row "Cancelados" do
+        schedule.appointments.cancelled.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" }.join("<br/>").html_safe
+      end
+      row "Confirmados" do
+        schedule.appointments.finalized.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" }.join("<br/>").html_safe
       end
     end
   end

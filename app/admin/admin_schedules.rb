@@ -27,6 +27,24 @@ ActiveAdmin.register Schedule, :as => "Clases" do
     actions :defaults => true
   end
 
+  csv do
+    column "Horario" do |schedule|
+      schedule.datetime
+    end
+    column "Instructor" do |schedule|
+      "#{schedule.instructor.first_name} #{schedule.instructor.last_name}"
+    end
+    column "Reservados" do |schedule|
+      schedule.appointments.booked.count
+    end
+    column "Cancelados" do |schedule|
+      schedule.appointments.cancelled.count
+    end
+    column "Confirmados" do |schedule|
+      schedule.appointments.finalized.count
+    end
+  end
+
   show do |schedule|
     attributes_table do
       row "Horario" do
