@@ -30,7 +30,12 @@ ActiveAdmin.register Instructor, :as => "Instructores" do
 
   form do |f|
     f.inputs "Detalles de cuenta" do
-      f.has_many :admin_user, heading: 'Correo electrónico', allow_destroy: false, new_record: 'Agrega email y password' do |t|
+      1.times do
+        if f.object.new_record?
+          f.object.build_admin_user
+        end
+      end
+      f.fields_for :admin_user do |t|
         instructor_role = Role.find_by_name(:instructor)
         t.input :email
         t.input :password

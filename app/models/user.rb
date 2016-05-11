@@ -11,6 +11,9 @@ class User < ActiveRecord::Base
   has_many :cards
   has_many :appointments
   has_many :purchases
+  has_many :credit_modifications
+  
+  accepts_nested_attributes_for :credit_modifications
   
   scope :with_appointments_summary, -> {select("users.*, COUNT(CASE WHEN appointments.status = 'BOOKED' THEN 1 END) as booked, COUNT(CASE WHEN appointments.status = 'CANCELLED' THEN 1 END) as cancelled, COUNT(CASE WHEN appointments.status = 'FINALIZED' THEN 1 END) as finalized").joins(:appointments).group("users.id")}
 
