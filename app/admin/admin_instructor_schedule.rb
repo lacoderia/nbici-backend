@@ -51,13 +51,13 @@ ActiveAdmin.register ScheduleForInstructor, :as => "Clases_de_entrenadores" do
         schedule.datetime
       end
       row "Reservados" do
-        schedule.appointments.booked.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" }.join("<br/>").html_safe
+        schedule.appointments.booked.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" if appointment.user  }.join("<br/>").html_safe
       end
       row "Cancelados" do
-        schedule.appointments.cancelled.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" }.join("<br/>").html_safe
+        schedule.appointments.cancelled.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" if appointment.user  }.join("<br/>").html_safe
       end
       row "Confirmados" do
-        schedule.appointments.finalized.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" }.join("<br/>").html_safe
+        schedule.appointments.finalized.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" if appointment.user  }.join("<br/>").html_safe
       end
     end
   end
