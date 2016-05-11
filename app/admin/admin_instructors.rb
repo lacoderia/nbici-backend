@@ -2,7 +2,7 @@ ActiveAdmin.register Instructor, :as => "Instructores" do
 
   actions :all, :except => [:show]
 
-  permit_params :first_name, :last_name, :picture, :quote, :bio, admin_user_attributes: [:id, :email, :password, :password_confirmation, :role_ids]
+  permit_params :first_name, :last_name, :picture, :picture_2, :quote, :bio, admin_user_attributes: [:id, :email, :password, :password_confirmation, :role_ids]
 
   config.filters = false
 
@@ -23,6 +23,7 @@ ActiveAdmin.register Instructor, :as => "Instructores" do
       instructor.admin_user.email
     end
     column "Foto", :picture
+    column "Foto_2", :picture_2
     column "Cita", :quote
     column "Bio", :bio
     actions :defaults => true
@@ -47,6 +48,7 @@ ActiveAdmin.register Instructor, :as => "Instructores" do
       f.input :first_name, label: "Nombre"
       f.input :last_name, label: "Apellido"
       f.input :picture, label: "Foto"
+      f.input :picture_2, label: "Foto_2"
       f.input :quote, label: "Cita"
       f.input :bio, label: "Bio"
     f.actions

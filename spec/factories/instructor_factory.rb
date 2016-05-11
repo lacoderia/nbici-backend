@@ -4,6 +4,7 @@ FactoryGirl.define do
     first_name 'Morenazo'
     last_name "Nazo"
     picture "picture_url"
+    picture_2 "picture_2_url"
     quote "Hola"
     bio "Soy buenísimo"
     after(:create) do |instructor, evaluator|

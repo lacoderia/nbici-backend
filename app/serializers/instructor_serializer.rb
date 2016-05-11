@@ -1,5 +1,5 @@
 class InstructorSerializer < ActiveModel::Serializer
-  attributes :id, :first_name, :last_name, :email, :picture, :quote, :bio, :weekly_schedules
+  attributes :id, :first_name, :last_name, :email, :picture, :picture_2, :quote, :bio, :weekly_schedules
 
   def email
     object.admin_user.email
