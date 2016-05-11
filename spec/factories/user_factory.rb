@@ -8,6 +8,8 @@ FactoryGirl.define do
     password_confirmation '12345678'
     phone '55439810'
     roles {[FactoryGirl.create(:role)]}
+    #Only modifications through the admin
+    credit_modifications []
   end
 
 end
