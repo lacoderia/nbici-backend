@@ -15,9 +15,34 @@ role_super_admin = Role.create(name: 'super_admin')
 role_front_desk = Role.create(name: 'front_desk')
 
 #Instructors
-instructor = Instructor.create(first_name: "Morenazo", last_name: "Nazo", picture: "url", picture_2: "url_2", bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", quote: "¡Yo soy tu maestro!")
 
-admin_user_instructor = AdminUser.create!(email: 'morenazo@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor)
+#Ale
+instructor_ale = Instructor.create(first_name: "Ale", last_name: "", picture: "", picture_2: "", bio: "", quote: "Train with style!")
+AdminUser.create!(email: 'ale@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor_ale)
+
+instructor_samuel = Instructor.create(first_name: "Samuel", last_name: "", picture: "", picture_2: "", bio: "", quote: "Pain is temporary, pride is forever.")
+AdminUser.create!(email: 'samuel@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor_samuel)
+
+instructor_maca = Instructor.create(first_name: "Maca", last_name: "", picture: "", picture_2: "", bio: "", quote: "Por siempre se compone de ahoras.")
+AdminUser.create!(email: 'maca@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor_maca)
+
+instructor_isa = Instructor.create(first_name: "Isa", last_name: "", picture: "", picture_2: "", bio: "", quote: "Deja que la música te haga volar!")
+AdminUser.create!(email: 'isa@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor_isa)
+
+instructor_geor = Instructor.create(first_name: "Geor", last_name: "", picture: "", picture_2: "", bio: "", quote: "Sé siempre la mejor versión de ti mismo.")
+AdminUser.create!(email: 'geor@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor_geor)
+
+instructor_miguel = Instructor.create(first_name: "Miguel", last_name: "", picture: "", picture_2: "", bio: "", quote: "Sé el cambio que deseas ver en el mundo.")
+AdminUser.create!(email: 'miguel@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor_miguel)
+
+instructor_marilu = Instructor.create(first_name: "Marilú", last_name: "", picture: "", picture_2: "", bio: "", quote: "Cambia tu cuerpo, tu mente, tu actitud y tu humor.")
+AdminUser.create!(email: 'marilu@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor_marilu)
+
+instructor_diana = Instructor.create(first_name: "Diana", last_name: "", picture: "", picture_2: "", bio: "", quote: "Que todo fluya y que nada influya.")
+AdminUser.create!(email: 'diana@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor_diana)
+
+instructor_sofi = Instructor.create(first_name: "Sofi", last_name: "", picture: "", picture_2: "", bio: "", quote: "Mueve al ritmo de la música todo tu cuerpo.")
+AdminUser.create!(email: 'sofi@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor_sofi)
 
 #Active Admin User
 AdminUser.create!(email: 'admin@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_super_admin])
@@ -73,49 +98,76 @@ distribution = Distribution.create(height: 8, width: 11, description: "distribuc
 room = Room.create(venue: venue, distribution: distribution, description: "Salón original")
 
 #Schedules
-schedule_1 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 6.hours + 1.days)
-schedule_2 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 7.hours + 1.days)
-schedule_3 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 8.hours + 1.days)
-schedule_4 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 9.hours + 1.days)
-schedule_5 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 10.hours + 1.days)
-schedule_6 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 17.hours + 1.days)
-schedule_7 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 18.hours + 1.days)
-schedule_8 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 19.hours + 1.days)
-schedule_9 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 20.hours + 1.days)
 
-schedule_10 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 6.hours + 2.days)
-schedule_11 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 7.hours + 2.days)
-schedule_12 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 8.hours + 2.days)
-schedule_13 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 9.hours + 2.days)
-schedule_14 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 10.hours + 2.days)
-schedule_15 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 17.hours + 2.days)
-schedule_16 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 18.hours + 2.days)
-schedule_17 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 19.hours + 2.days)
-schedule_18 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 20.hours + 2.days)
+monday = Time.zone.now.beginning_of_day + 4.days
+tuesday = monday + 1.day 
+wednesday = tuesday + 1.day
+thursday = wednesday + 1.day
+friday = thursday + 1.day
+saturday = friday + 1.day
 
-schedule_20 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 6.hours + 3.days)
-schedule_21 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 7.hours + 3.days)
-schedule_22 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 8.hours + 3.days)
-schedule_23 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 9.hours + 3.days)
-schedule_24 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 10.hours + 3.days)
-schedule_25 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 17.hours + 3.days)
-schedule_26 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 18.hours + 3.days)
-schedule_27 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 19.hours + 3.days)
-schedule_28 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 20.hours + 3.days)
+#Monday
+Schedule.create(instructor: instructor_ale, room: room, datetime: monday + 6.hours + 15.minutes)
+Schedule.create(instructor: instructor_samuel, room: room, datetime: monday + 7.hours)
+Schedule.create(instructor: instructor_maca, room: room, datetime: monday + 8.hours)
+Schedule.create(instructor: instructor_isa, room: room, datetime: monday + 9.hours)
+Schedule.create(instructor: instructor_geor, room: room, datetime: monday + 10.hours)
+Schedule.create(instructor: instructor_miguel, room: room, datetime: monday + 17.hours)
+Schedule.create(instructor: instructor_marilu, room: room, datetime: monday + 18.hours)
+Schedule.create(instructor: instructor_diana, room: room, datetime: monday + 19.hours)
+Schedule.create(instructor: instructor_sofi, room: room, datetime: monday + 20.hours)
+Schedule.create(instructor: instructor_diana, room: room, datetime: monday + 21.hours)
 
-schedule_30 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 6.hours + 4.days)
-schedule_31 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 7.hours + 4.days)
-schedule_32 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 8.hours + 4.days)
-schedule_33 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 9.hours + 4.days)
-schedule_34 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 10.hours + 4.days)
-schedule_35 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 17.hours + 4.days)
-schedule_36 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 18.hours + 4.days)
-schedule_37 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 19.hours + 4.days)
-schedule_38 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 20.hours + 4.days)
+#Tuesday
+Schedule.create(instructor: instructor_samuel, room: room, datetime: tuesday + 6.hours + 15.minutes)
+Schedule.create(instructor: instructor_ale, room: room, datetime: tuesday + 7.hours)
+Schedule.create(instructor: instructor_isa, room: room, datetime: tuesday + 8.hours)
+Schedule.create(instructor: instructor_maca, room: room, datetime: tuesday + 9.hours)
+Schedule.create(instructor: instructor_geor, room: room, datetime: tuesday + 10.hours)
+Schedule.create(instructor: instructor_isa, room: room, datetime: tuesday + 17.hours)
+Schedule.create(instructor: instructor_miguel, room: room, datetime: tuesday + 18.hours)
+Schedule.create(instructor: instructor_sofi, room: room, datetime: tuesday + 19.hours)
+Schedule.create(instructor: instructor_diana, room: room, datetime: tuesday + 20.hours)
+Schedule.create(instructor: instructor_geor, room: room, datetime: tuesday + 21.hours)
 
-schedule_40 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 10.hours + 5.days)
-schedule_41 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 11.hours + 5.days)
-schedule_42 = Schedule.create(instructor: instructor, room: room, datetime: Time.zone.now.beginning_of_day + 12.hours + 5.days)
+#Wednesday
+Schedule.create(instructor: instructor_isa, room: room, datetime: wednesday + 6.hours + 15.minutes)
+Schedule.create(instructor: instructor_samuel, room: room, datetime: wednesday + 7.hours)
+Schedule.create(instructor: instructor_maca, room: room, datetime: wednesday + 8.hours)
+Schedule.create(instructor: instructor_geor, room: room, datetime: wednesday + 9.hours)
+Schedule.create(instructor: instructor_isa, room: room, datetime: wednesday + 10.hours)
+Schedule.create(instructor: instructor_miguel, room: room, datetime: wednesday + 17.hours)
+Schedule.create(instructor: instructor_marilu, room: room, datetime: wednesday + 18.hours)
+Schedule.create(instructor: instructor_diana, room: room, datetime: wednesday + 19.hours)
+Schedule.create(instructor: instructor_sofi, room: room, datetime: wednesday + 20.hours)
+Schedule.create(instructor: instructor_ale, room: room, datetime: wednesday + 21.hours)
+
+#Thursday
+Schedule.create(instructor: instructor_ale, room: room, datetime: thursday + 6.hours + 15.minutes)
+Schedule.create(instructor: instructor_isa, room: room, datetime: thursday + 7.hours)
+Schedule.create(instructor: instructor_geor, room: room, datetime: thursday + 8.hours)
+Schedule.create(instructor: instructor_maca, room: room, datetime: thursday + 9.hours)
+Schedule.create(instructor: instructor_geor, room: room, datetime: thursday + 10.hours)
+Schedule.create(instructor: instructor_isa, room: room, datetime: thursday + 17.hours)
+Schedule.create(instructor: instructor_diana, room: room, datetime: thursday + 18.hours)
+Schedule.create(instructor: instructor_marilu, room: room, datetime: thursday + 19.hours)
+Schedule.create(instructor: instructor_ale, room: room, datetime: thursday + 20.hours)
+Schedule.create(instructor: instructor_miguel, room: room, datetime: thursday + 21.hours)
+
+#Friday
+Schedule.create(instructor: instructor_samuel, room: room, datetime: friday + 6.hours + 15.minutes)
+Schedule.create(instructor: instructor_maca, room: room, datetime: friday + 7.hours)
+Schedule.create(instructor: instructor_isa, room: room, datetime: friday + 8.hours)
+Schedule.create(instructor: instructor_geor, room: room, datetime: friday + 9.hours)
+Schedule.create(instructor: instructor_isa, room: room, datetime: friday + 10.hours)
+Schedule.create(instructor: instructor_geor, room: room, datetime: friday + 17.hours)
+Schedule.create(instructor: instructor_miguel, room: room, datetime: friday + 18.hours)
+Schedule.create(instructor: instructor_diana, room: room, datetime: friday + 19.hours)
+
+#Saturday
+Schedule.create(instructor: instructor_isa, room: room, datetime: saturday + 10.hours)
+Schedule.create(instructor: instructor_geor, room: room, datetime: saturday + 11.hours)
+Schedule.create(instructor: instructor_ale, room: room, datetime: saturday + 12.hours)
 
 #Appointment
 appointment = Appointment.create(user: user, schedule: schedule_1, bicycle_number: 1, status: 'BOOKED', start: schedule_1.datetime, description: "Con mi maestro favorito")
