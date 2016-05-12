@@ -62,10 +62,10 @@ pack_5 = Pack.create(description: "50 clases", classes: 50, price: 5000.00, expi
 
 
 #Purchases
-puchase = Purchase.create(pack: pack_1, user: user, uid: "523dd8f6aef8784386000001", object:"charge", livemode: false, status: "paid", description: "Stogies", amount: 200, currency: "MXN", payment_method: "{'object':'card_payment', 'name':'Thomas Logan', 'exp_month':'12', 'exp_year':'15'}", details: "{'name':'Arnulfo Quimare', 'phone':'403-342-0642', 'email':'logan@x-men.org'}")
+#puchase = Purchase.create(pack: pack_1, user: user, uid: "523dd8f6aef8784386000001", object:"charge", livemode: false, status: "paid", description: "Stogies", amount: 200, currency: "MXN", payment_method: "{'object':'card_payment', 'name':'Thomas Logan', 'exp_month':'12', 'exp_year':'15'}", details: "{'name':'Arnulfo Quimare', 'phone':'403-342-0642', 'email':'logan@x-men.org'}")
 
 #Cards
-card = Card.create(user: user, uid: "tok_test_visa_4242", object: 'card', name:'Thomas Logan', phone: '45321345', last4:'4242', exp_month:'12', exp_year:'17', active:true, address: "{'street1':'250 Alexis St', 'street2': null, 'street3': null, 'city':'Red Deer', 'state':'Alberta', 'zip':'T4N 0B8', 'country':'Canada'}", primary: true, brand: "VISA")
+#card = Card.create(user: user, uid: "tok_test_visa_4242", object: 'card', name:'Thomas Logan', phone: '45321345', last4:'4242', exp_month:'12', exp_year:'17', active:true, address: "{'street1':'250 Alexis St', 'street2': null, 'street3': null, 'city':'Red Deer', 'state':'Alberta', 'zip':'T4N 0B8', 'country':'Canada'}", primary: true, brand: "VISA")
 
 #Venues
 venue = Venue.create(name: "Gimnasio SLP", description: "Gimnasio original")
@@ -170,4 +170,4 @@ Schedule.create(instructor: instructor_geor, room: room, datetime: saturday + 11
 Schedule.create(instructor: instructor_ale, room: room, datetime: saturday + 12.hours)
 
 #Appointment
-appointment = Appointment.create(user: user, schedule: schedule_1, bicycle_number: 1, status: 'BOOKED', start: schedule_1.datetime, description: "Con mi maestro favorito")
+#appointment = Appointment.create(user: user, schedule: schedule_1, bicycle_number: 1, status: 'BOOKED', start: schedule_1.datetime, description: "Con mi maestro favorito")
