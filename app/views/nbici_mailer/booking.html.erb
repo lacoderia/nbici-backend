@@ -623,7 +623,7 @@
                         
                             <h1><%= @user.first_name %>, tu reservación está lista.</h1>
 
-                            <p><%= @appointment.start.strftime("%d/%m/%Y %H:%M") %>, bici número <%= @appointment.bicycle_number %> con <%= @appointment.schedule.instructor.first_name %><br><br>
+                            <p><%= @appointment.start.strftime("%d/%m/%Y %I:%M%p") %>, bici número <%= @appointment.bicycle_number %> con <%= @appointment.schedule.instructor.first_name %><br><br>
                             No olvides llegar 10 min antes de la clase, es indispensable la puntualidad ya que no podrás entrar a la clase una vez que ésta haya iniciado.</p>
                             <p>¡Nos vemos en la bici!</p>
 
