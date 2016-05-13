@@ -38,7 +38,7 @@ AdminUser.create!(email: 'miguel@n-bici.com', password: 'password', password_con
 instructor_marilu = Instructor.create(first_name: "Marilú", last_name: "", picture: "http://www.n-bici.com/wp-content/uploads/2016/05/m.png", picture_2: "http://www.n-bici.com/wp-content/uploads/2016/05/m.png", bio: "", quote: "Cambia tu cuerpo, tu mente, tu actitud y tu humor.")
 AdminUser.create!(email: 'marilu@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor_marilu)
 
-instructor_diana = Instructor.create(first_name: "Diana", last_name: "", picture: "http://www.n-bici.com/wp-content/uploads/2016/05/diana.png", picture_2: "", bio: "http://www.n-bici.com/wp-content/uploads/2016/05/diana.png", quote: "Que todo fluya y que nada influya.")
+instructor_diana = Instructor.create(first_name: "Diana", last_name: "", picture: "http://www.n-bici.com/wp-content/uploads/2016/05/diana.png", picture_2: "http://www.n-bici.com/wp-content/uploads/2016/05/diana.png", bio: "", quote: "Que todo fluya y que nada influya.")
 AdminUser.create!(email: 'diana@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_instructor], instructor: instructor_diana)
 
 instructor_sofi = Instructor.create(first_name: "Sofia V", last_name: "", picture: "http://www.n-bici.com/wp-content/uploads/2016/05/sofiav.png", picture_2: "http://www.n-bici.com/wp-content/uploads/2016/05/sofiav.png", bio: "", quote: "Mueve al ritmo de la música todo tu cuerpo.")
