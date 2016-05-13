@@ -13,6 +13,10 @@ FactoryGirl.define do
     phone '56789123'
     primary false
     brand "VISA"
+
+    trait :no_funds do
+      uid "tok_test_insufficient_funds"
+    end
   end
 
 end

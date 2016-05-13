@@ -4,6 +4,7 @@ feature 'PurchasesController' do
   let!(:user_01) { create(:user) }
   let!(:pack) { create(:pack) }
   let!(:card) { create(:card, user: user_01) }
+  let!(:card_no_funds) { create(:card, :no_funds, user: user_01) }
 
   context 'Create a new purchase' do
 
@@ -82,7 +83,16 @@ feature 'PurchasesController' do
       end
       
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "Phone missing in details."
+      expect(response["errors"][0]["title"]).to eql "Falta el teléfono en el campo 'details."
+
+      #No funds
+      new_purchase_request = {pack_id: pack.id, price: pack.price, uid: card_no_funds.uid}      
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+      
+      response = JSON.parse(page.body) 
+      expect(response["errors"][0]["title"]).to eql "Esta tarjeta no tiene suficientes fondos para completar la compra."
 
     end
     
