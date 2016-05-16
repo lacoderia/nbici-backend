@@ -15,13 +15,13 @@ ActiveAdmin.register User, :as => "Resumen_clases_por_usuario" do
     column "Nombre", :first_name
     column "Apellido", :last_name
     column "Clases restantes", :classes_left
-    column "Reservadas", :sortable => 'users["booked"]' do |user|
+    column "Reservadas", :sortable => 'booked' do |user|
       user["booked"]
     end
-    column "Canceladas", :sortable => 'users["cancelled"]' do |user|
+    column "Canceladas", :sortable => 'cancelled' do |user|
       user["cancelled"]
     end
-    column "Finalizadas", :sortable => 'users["finalized"]' do |user|
+    column "Finalizadas", :sortable => 'finalized' do |user|
       user["finalized"]
     end
   end
