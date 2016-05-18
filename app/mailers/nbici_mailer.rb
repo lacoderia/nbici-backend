@@ -1,5 +1,5 @@
 class NbiciMailer < ActionMailer::Base
-  default from: "\"n-bici\" <contacto@n-bici.mx>"
+  default from: "\"n-bici\" <contacto@n-bici.com>", reply_to: "Geor Nbici <geor@n-bici.com>" 
 
   def welcome user, data = nil
     @user = user
