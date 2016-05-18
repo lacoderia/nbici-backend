@@ -19,6 +19,7 @@ class Appointment < ActiveRecord::Base
 
   scope :today_with_users, -> {where("start >= ? AND start <= ?", Time.zone.now.beginning_of_day, Time.zone.now.end_of_day).includes(:user, :schedule => :instructor)}
   scope :all_with_users_and_schedules, ->{includes(:user, :schedule => :instructor)}
+  scope :not_cancelled_with_users_and_schedules, ->{where("status != ?", 'CANCELLED').includes(:user, :schedule => :instructor)}
   scope :booked, -> {where("status = ?", 'BOOKED')}
   scope :finalized, -> {where("status = ?", 'FINALIZED')}
   scope :cancelled, -> {where("status = ?", 'CANCELLED')}

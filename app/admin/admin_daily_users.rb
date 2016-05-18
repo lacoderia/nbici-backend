@@ -25,7 +25,7 @@ ActiveAdmin.register Appointment, :as => "Clientes_del_dia" do
 
   controller do
     def scoped_collection
-      Appointment.all_with_users_and_schedules
+      Appointment.not_cancelled_with_users_and_schedules
     end
   end
 
