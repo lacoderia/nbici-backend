@@ -15,7 +15,7 @@ ActiveAdmin.register Schedule, :as => "Clases" do
   index :title => "Clases" do
     column "Horario", :datetime
     column "Instructor" do |schedule|
-      "#{schedule.instructor.first_name} #{schedule.instructor.last_name}"
+      "#{schedule.instructor.first_name} #{schedule.instructor.last_name}" if schedule.instructor
     end
     column "Reservados" do |schedule|
       schedule.appointments.booked.count
