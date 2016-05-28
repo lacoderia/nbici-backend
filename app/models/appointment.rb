@@ -35,6 +35,23 @@ class Appointment < ActiveRecord::Base
     end    
   end
 
+  def edit_bicycle_number bicycle_number
+    
+    if not self.schedule.bicycle_exists?(bicycle_number)
+      raise "Esa bicicleta no existe, por favor intenta nuevamente."
+    end
+      
+    if self.schedule.bookings.find{|bicycle| bicycle.number == bicycle_number}
+      raise "La bicicleta ya fue reservada, por favor intenta con otra."
+    end
+
+    if Time.zone.now < (self.start - 1.hour)
+      self.update_attribute(:bicycle_number, bicycle_number)
+    else
+      raise "Sólo se pueden cambiar los lugares con una hora de anticipación."
+    end
+  end
+
   def self.finalize
     appointments_to_finalize = Appointment.where("status = ? AND start < ?", "BOOKED", Time.zone.now - 1.hour)
     appointments_to_finalize.each do |appointment|

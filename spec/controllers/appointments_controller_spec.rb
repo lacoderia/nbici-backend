@@ -86,7 +86,7 @@ feature 'AppointmentsController' do
 
   end
 
-  context 'Creating and cancelling appointments' do
+  context 'Creating, editing, and cancelling appointments' do
   
     let!(:schedule) { create(:schedule, datetime: starting_datetime + 1.hour) }
     let!(:user_with_classes_left) { create(:user, classes_left: 2, last_class_purchased: starting_datetime) }
@@ -95,6 +95,60 @@ feature 'AppointmentsController' do
 
     before do
       Timecop.freeze(starting_datetime)
+    end
+
+    it 'should test edit bicycle number in an appointment' do
+      page = login_with_service user = { email: user_with_classes_left[:email], password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_appointment_request = {schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase"}      
+      with_rack_test_driver do
+        page.driver.post book_appointments_path, new_appointment_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["appointment"]["booked_seats"][0]["number"]).to eq 4
+      appointment = Appointment.find(response["appointment"]["id"])
+      expect(appointment.status).to eql "BOOKED"
+      user = User.find(response["appointment"]["user_id"])
+      expect(user.classes_left).to eql 1
+
+      #Error editing bicycle number
+      edit_bicycle_appointment_request = {bicycle_number: 6}
+      with_rack_test_driver do
+        page.driver.post edit_bicycle_number_appointment_path(appointment.id), edit_bicycle_appointment_request 
+      end
+      response = JSON.parse(page.body)
+      expect(page.status_code).to be 500
+      expect(response["errors"][0]["title"]).to eql "Esa bicicleta no existe, por favor intenta nuevamente."
+
+      edit_bicycle_appointment_request = {bicycle_number: 4}
+      with_rack_test_driver do
+        page.driver.post edit_bicycle_number_appointment_path(appointment.id), edit_bicycle_appointment_request 
+      end
+      response = JSON.parse(page.body)
+      expect(page.status_code).to be 500
+      expect(response["errors"][0]["title"]).to eql "La bicicleta ya fue reservada, por favor intenta con otra."
+
+      edit_bicycle_appointment_request = {bicycle_number: 1}
+      with_rack_test_driver do
+        page.driver.post edit_bicycle_number_appointment_path(appointment.id), edit_bicycle_appointment_request 
+      end
+      response = JSON.parse(page.body)
+      expect(page.status_code).to be 500
+      expect(response["errors"][0]["title"]).to eql "Sólo se pueden cambiar los lugares con una hora de anticipación."
+
+      #Error cancelling appointment
+      Timecop.travel(starting_datetime - 1.hours)
+      edit_bicycle_appointment_request = {bicycle_number: 1}
+      with_rack_test_driver do
+        page.driver.post edit_bicycle_number_appointment_path(appointment.id), edit_bicycle_appointment_request 
+      end
+      response = JSON.parse(page.body)
+      expect(response["appointment"]["bicycle_number"]).to eql 1
+      expect(response["appointment"]["schedule"]["id"]).to eql appointment.schedule.id
+
     end
 
     it 'should test cancel appointment conditions' do

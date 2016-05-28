@@ -3,7 +3,7 @@ class AppointmentsController < ApiController
   
   before_action :authenticate_user!, only: [:book, :cancel, :weekly_scope_for_user, :historic_for_user]
   
-  before_action :set_appointment, only: [:cancel]
+  before_action :set_appointment, only: [:cancel, :edit_bicycle_number]
 
   # POST /appointments/book
   def book
@@ -25,6 +25,17 @@ class AppointmentsController < ApiController
     rescue Exception => e
       appointment = Appointment.new
       appointment.errors.add(:error_creating_appointment, e.message)
+      render json: ErrorSerializer.serialize(appointment.errors), status: 500
+    end
+  end
+
+  def edit_bicycle_number
+    begin
+      @appointment.edit_bicycle_number(params[:bicycle_number].to_i)
+      render json: @appointment      
+    rescue Exception => e
+      appointment = Appointment.new
+      appointment.errors.add(:error_editing_appointment, e.message)
       render json: ErrorSerializer.serialize(appointment.errors), status: 500
     end
   end
