@@ -628,7 +628,7 @@
                         
                         <td valign="top" class="mcnTextContent" style="padding-top:9px; padding-right: 18px; padding-bottom: 9px; padding-left: 18px;">
                         
-                            <h1><%= @user.first_name %>, se ha realizado satisfactoriamente tu compra.</h1>
+                            <h1><%= @user.first_name.split.map(&:capitalize).join(' ') %>, se ha realizado satisfactoriamente tu compra.</h1>
 
                             <p><%= @purchase.pack.description %> - $<%= "%.2f" % (@purchase.amount/100.00) %><br>
                             ¡El viaje comienza ahora! Actívate N bici.</p>

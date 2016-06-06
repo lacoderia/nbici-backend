@@ -621,7 +621,7 @@
                         
                         <td valign="top" class="mcnTextContent" style="padding-top:9px; padding-right: 18px; padding-bottom: 9px; padding-left: 18px;">
                         
-                            <h1><%= @user.first_name %>, tu reservación está lista.</h1>
+                            <h1><%= @user.first_name.split.map(&:capitalize).join(' ') %>, tu reservación está lista.</h1>
 
                             <p><%= @appointment.start.strftime("%d/%m/%Y %I:%M%p") %>, bici número <%= @appointment.bicycle_number %> con <%= @appointment.schedule.instructor.first_name %><br><br>
                             No olvides llegar 10 min antes de la clase, ya que una vez comenzada la clase no podrás ingresar al salón.</p>

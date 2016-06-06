@@ -621,7 +621,7 @@
                         
                         <td valign="top" class="mcnTextContent" style="padding-top:9px; padding-right: 18px; padding-bottom: 9px; padding-left: 18px;">
                         
-                            <h1><%= @user.first_name %>, ¡tus clases expirarán pronto!</h1>
+                            <h1><%= @user.first_name.split.map(&:capitalize).join(' ') %>, ¡tus clases expirarán pronto!</h1>
 
                             <p>Todavía tienes tiempo de activarte. Si quieres extender tu periodo comprando más clases, <a class="mc-template-link" href="http://n-bici.com/compra-de-paquetes/">puedes adquirir más aquí</a>.<br>
 ¡El viaje comienza ahora! Actívate N bici.</p>

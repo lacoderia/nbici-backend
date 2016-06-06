@@ -621,7 +621,7 @@
                         
                         <td valign="top" class="mcnTextContent" style="padding-top:9px; padding-right: 18px; padding-bottom: 9px; padding-left: 18px;">
                         
-                            <h1>¡No pierdas el ritmo <%= @user.first_name %>!</h1>
+                            <h1>¡No pierdas el ritmo <%= @user.first_name.split.map(&:capitalize).join(' ') %>!</h1>
 
                             <p>Esperamos que estés disfrutando tu experiencia N bici.<a class="mc-template-link" href="http://n-bici.com/compra-de-paquetes/">Puedes adquirir más clases aquí</a>.<br>
 ¡El viaje comienza ahora! Actívate N bici.</p>
