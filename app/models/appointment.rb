@@ -48,7 +48,7 @@ class Appointment < ActiveRecord::Base
     if Time.zone.now < (self.start - 1.hour)
       self.update_attribute(:bicycle_number, bicycle_number)
     else
-      raise "Sólo se pueden cambiar los lugares con una hora de anticipación."
+      raise "Sólo se pueden cambiar los lugares con al menos una hora de anticipación."
     end
   end
 

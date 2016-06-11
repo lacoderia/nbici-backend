@@ -137,7 +137,7 @@ feature 'AppointmentsController' do
       end
       response = JSON.parse(page.body)
       expect(page.status_code).to be 500
-      expect(response["errors"][0]["title"]).to eql "Sólo se pueden cambiar los lugares con una hora de anticipación."
+      expect(response["errors"][0]["title"]).to eql "Sólo se pueden cambiar los lugares con al menos una hora de anticipación."
 
       #Error cancelling appointment
       Timecop.travel(starting_datetime - 1.hours)

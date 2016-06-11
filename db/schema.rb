@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160511232621) do
+ActiveRecord::Schema.define(version: 20160610213319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 20160511232621) do
     t.integer "user_id"
     t.integer "credits"
     t.text    "reason"
+    t.integer "pack_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
