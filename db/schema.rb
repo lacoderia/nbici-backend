@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160610213319) do
+ActiveRecord::Schema.define(version: 20160613231006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,6 +126,14 @@ ActiveRecord::Schema.define(version: 20160610213319) do
     t.datetime "updated_at",   null: false
   end
 
+  create_table "expirations", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "classes_left"
+    t.datetime "last_class_purchased"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
   create_table "instructors", force: :cascade do |t|
     t.string   "first_name"
     t.string   "last_name"
@@ -219,6 +227,7 @@ ActiveRecord::Schema.define(version: 20160610213319) do
     t.json     "tokens"
     t.string   "phone"
     t.string   "conekta_id"
+    t.datetime "expiration_date"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree

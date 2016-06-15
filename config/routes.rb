@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :expirations
   resources :venues, except: [:new, :edit]
   resources :distributions do
     collection do

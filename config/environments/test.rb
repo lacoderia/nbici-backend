@@ -2,7 +2,7 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   ENV['HOST'] = "localhost:3000"
-  ENV['WP_HOST'] = "n-bici.com"
+  ENV['WP_HOST'] = "localhost:3000"
   ENV['CONEKTA_KEY'] = 'key_5RX7V5fz7TMCqypQWJuPnA'
 
   # The test environment is used exclusively to run your application's

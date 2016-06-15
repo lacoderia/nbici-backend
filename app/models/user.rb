@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :roles
 
   has_many :emails
+  has_many :expirations
   has_many :cards
   has_many :appointments
   has_many :purchases
@@ -49,15 +50,16 @@ class User < ActiveRecord::Base
   #EXPIRE CLASSES
   def self.expire_classes
     #TODO: create all the logic inside the SQL query
-    users_with_purchases_and_classes_left = User.joins(:purchases).where("classes_left > ?", 0)
 
-    users_with_purchases_and_classes_left.each do |user|
-      user_classes_expiration = user.last_class_purchased + user.purchases.last.pack.expiration.days
-      if user_classes_expiration <= Time.zone.now
+    #BY PURCHASE
+    users_with_classes_left = User.where("classes_left > ?", 0)
+    users_with_classes_left.each do |user|
+      if user.expiration_date <= Time.zone.now
+        Expiration.create(user_id: user.id, classes_left: user.classes_left, last_class_purchased: user.last_class_purchased)
         user.update_attribute(:classes_left, 0)
-        user.purchases.last.update_attribute(:expired, true)
       end      
     end
+ 
   end 
 
   #REMINDERS
@@ -86,14 +88,28 @@ class User < ActiveRecord::Base
     users_query = User.select("users.*, users.id AS user_id").joins("LEFT OUTER JOIN emails ON emails.user_id = users.id INNER JOIN purchases ON purchases.user_id = users.id").where("classes_left > ? AND last_class_purchased < ? AND (emails is null OR (NOT EXISTS (SELECT * FROM emails INNER JOIN user ON users.id = emails.user_id WHERE emails.user_id = user_id AND email_type = ? AND email_status = ? AND emails.created_at < ? AND emails.created_at > ?)))", 0, Time.zone.now, "expiration_reminder", "sent", Time.zone.now, Time.zone.now - 7.days).group(:id)
     users = []
     users_query.each do |user|
-      user_classes_expiration = user.last_class_purchased + user.purchases.last.pack.expiration.days
       user_tolerance_for_remaining_classes = Time.zone.now + user.classes_left.days
-      if user_classes_expiration <= user_tolerance_for_remaining_classes
+      if user.expiration_date and (user.expiration_date <= user_tolerance_for_remaining_classes)
         users << user
       end
     end
     return users
   
+  end
+
+  def self.create_expiration_date_for_users_with_purchases 
+
+    users_with_purchases = User.joins(:purchases)
+    users_with_purchases.each do |user|
+      day_count = 0
+      user.purchases.each do |purchase|
+        day_count += purchase.pack.expiration
+      end
+      
+      user.expiration_date = user.last_class_purchased + day_count.days
+      user.save!
+    end
+
   end
 
 end

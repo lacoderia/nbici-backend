@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  classes_left: 1
+  last_class_purchased: 2016-06-13 18:10:06
+
+two:
+  user_id: 1
+  classes_left: 1
+  last_class_purchased: 2016-06-13 18:10:06

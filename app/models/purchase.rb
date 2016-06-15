@@ -53,7 +53,19 @@ class Purchase < ActiveRecord::Base
       details: charge.details
     )
 
-    user.update_attributes(classes_left: (user.classes_left.nil? ? 0 : user.classes_left)  + pack.classes, last_class_purchased: Time.zone.now)
+    if user.expiration_date
+      if user.expiration_date <= Time.zone.now
+        expiration_date = Time.zone.now + pack.expiration.days
+      else
+        expiration_date = user.expiration_date + pack.expiration.days
+      end
+    else
+      expiration_date = Time.zone.now + pack.expiration.days
+    end
+
+    user.update_attributes(classes_left: (user.classes_left.nil? ? 0 : user.classes_left)  + pack.classes,
+                            last_class_purchased: Time.zone.now,
+                            expiration_date: expiration_date)
 
     return purchase
     

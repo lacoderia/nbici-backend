@@ -12,7 +12,7 @@ feature 'InstructorsController' do
   context 'Get all instructors' do
     
     before do
-        Timecop.freeze(starting_datetime)
+      Timecop.freeze(starting_datetime)
     end
 
     it 'should get all the instructors' do

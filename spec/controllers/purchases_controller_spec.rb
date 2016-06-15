@@ -28,6 +28,7 @@ feature 'PurchasesController' do
       #Refresh de user
       user = User.find(user_01.id)
       expect(user.classes_left).to eql 1
+      expect(user.expiration_date).to be_within(1.second).of (user.last_class_purchased + pack.expiration.days)
 
     end
     

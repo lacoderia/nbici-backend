@@ -62,6 +62,7 @@ feature 'RemindersController' do
       
       expect(User.with_expiring_classes.size).to eql 0
       
+      User.create_expiration_date_for_users_with_purchases
       #--Reminder for the 30 day pack
       Timecop.travel(starting_datetime + 28.days)
       expect(User.with_expiring_classes.size).to eql 1
@@ -78,7 +79,8 @@ feature 'RemindersController' do
       expect(user_with_expiring_classes_30_days.purchases.last.expired).to eql false
       User.expire_classes
       expect(User.find(user_with_expiring_classes_30_days.id).classes_left).to eql 0
-      expect(User.find(user_with_expiring_classes_30_days.id).purchases.last.expired).to eql true
+      expect(User.find(user_with_expiring_classes_30_days.id).expirations.count).to eql 1
+      #expect(User.find(user_with_expiring_classes_30_days.id).purchases.last.expired).to eql true
 
       #It should not send another reminding email
       Timecop.travel(starting_datetime + 28.days + 7.days)
@@ -97,7 +99,8 @@ feature 'RemindersController' do
       #It shouldn't expire classes
       User.expire_classes
       expect(User.find(user_with_expiring_classes_180_days.id).classes_left).to eql 15
-      expect(User.find(user_with_expiring_classes_180_days.id).purchases.last.expired).to eql false
+      expect(User.find(user_with_expiring_classes_180_days.id).expirations.count).to eql 0
+      #expect(User.find(user_with_expiring_classes_180_days.id).purchases.last.expired).to eql false
       
       #It should send another reminding email
       Timecop.travel(starting_datetime + 172.days + 1.minute)
@@ -127,7 +130,7 @@ feature 'RemindersController' do
       expect(user_with_expiring_classes_180_days.purchases.last.expired).to eql false
       User.expire_classes
       expect(User.find(user_with_expiring_classes_180_days.id).classes_left).to eql 0
-      expect(User.find(user_with_expiring_classes_180_days.id).purchases.last.expired).to eql true
+      expect(User.find(user_with_expiring_classes_180_days.id).expirations.count).to eql 1
       
       #It should not send another reminding email
       Timecop.travel(starting_datetime + 180.days + 1.days)

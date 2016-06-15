@@ -70,8 +70,8 @@ ActiveAdmin.register Schedule, :as => "Clases" do
   form do |f|
     f.inputs "Detalles de clases" do
       f.input :datetime, label: "Horario"
-      f.input :instructor, label: "Instructor", :collection => Instructor.active, :as => :select, :member_label => Proc.new { |i| "#{i.first_name} #{i.last_name}" } 
-      f.input :room, label: "Cuarto", :collection => Room.all, :as => :select, :member_label => Proc.new { |r| "#{r.description}" }, :include_blank => false 
+      f.input :instructor, label: "Instructor", :collection => Instructor.active.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select 
+      f.input :room, label: "Cuarto", :collection => Room.all.collect{|room| [room.description, room.id]}, :as => :select, :include_blank => false 
     end
     f.actions
   end
