@@ -117,7 +117,7 @@ class User < ActiveRecord::Base
   end
 
   def self.create_coupons_for_all_users
-    User.all do |user|
+    User.where(coupon: nil).each do |user|
       coupon = Coupon.generate
       user.update_attribute(:coupon, coupon)
     end
