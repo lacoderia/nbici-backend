@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  owner_id: 1
+  referred_id: 1
+  credits: 1.5
+  used: false
+
+two:
+  owner_id: 1
+  referred_id: 1
+  credits: 1.5
+  used: false

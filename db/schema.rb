@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160613231006) do
+ActiveRecord::Schema.define(version: 20160616221208) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,13 @@ ActiveRecord::Schema.define(version: 20160613231006) do
     t.string   "phone"
     t.boolean  "primary",    default: false
     t.string   "brand"
+  end
+
+  create_table "configurations", force: :cascade do |t|
+    t.string   "key"
+    t.string   "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "credit_modifications", force: :cascade do |t|
@@ -173,6 +180,15 @@ ActiveRecord::Schema.define(version: 20160613231006) do
     t.boolean  "expired",        default: false
   end
 
+  create_table "referrals", force: :cascade do |t|
+    t.integer  "owner_id"
+    t.integer  "referred_id"
+    t.float    "credits"
+    t.boolean  "used",        default: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
@@ -228,6 +244,8 @@ ActiveRecord::Schema.define(version: 20160613231006) do
     t.string   "phone"
     t.string   "conekta_id"
     t.datetime "expiration_date"
+    t.string   "coupon"
+    t.float    "credits",                default: 0.0
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree

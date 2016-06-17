@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   #        :confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
 
+  before_create :assign_coupon
+
   has_and_belongs_to_many :roles
 
   has_many :emails
@@ -13,6 +15,8 @@ class User < ActiveRecord::Base
   has_many :appointments
   has_many :purchases
   has_many :credit_modifications
+  has_many :referrals, :foreign_key => "owner_id", :class_name => "Referral"
+  
   
   accepts_nested_attributes_for :credit_modifications
   accepts_nested_attributes_for :purchases
@@ -111,5 +115,18 @@ class User < ActiveRecord::Base
     end
 
   end
+
+  def self.create_coupons_for_all_users
+    User.all do |user|
+      coupon = Coupon.generate
+      user.update_attribute(:coupon, coupon)
+    end
+  end
+
+  private 
+
+    def assign_coupon
+      self.coupon = Coupon.generate
+    end
 
 end

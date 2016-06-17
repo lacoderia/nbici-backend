@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   
+  resources :configurations
+  resources :referrals
   resources :expirations
   resources :venues, except: [:new, :edit]
   resources :distributions do
