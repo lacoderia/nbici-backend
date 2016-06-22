@@ -39,7 +39,11 @@ class Discount
   end  
 
   def self.validate_with_coupon_and_pack current_user, pack, coupon
-    #The user has already used a coupon
+
+    if current_user.coupon == coupon
+      raise "No puedes usar tu propio cupón."
+    end
+
     if Referral.find_by_referred_id(current_user.id)
       raise "Ya has usado un cupón anteriormente."
     end

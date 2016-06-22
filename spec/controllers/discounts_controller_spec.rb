@@ -30,9 +30,16 @@ feature 'DiscountsController' do
       response = JSON.parse(page.body)
       expect(response["errors"][0]["title"]).to eql "El cupón no existe."
 
-      Referral.create!(owner: user_with_credits, referred: user_without_credits, credits: Configuration.referral_credit, used: false)
-
       validate_coupon_request = {pack_id: pack.id, coupon: user_without_credits.coupon}      
+      with_rack_test_driver do
+        page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["errors"][0]["title"]).to eql "No puedes usar tu propio cupón."
+
+      Referral.create!(owner: user_with_credits, referred: user_without_credits, credits: Configuration.referral_credit, used: false)
+      validate_coupon_request = {pack_id: pack.id, coupon: user_with_credits.coupon}      
       with_rack_test_driver do
         page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
       end
@@ -48,22 +55,22 @@ feature 'DiscountsController' do
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
       set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
 
-      validate_coupon_request = {pack_id: pack.id, coupon: user_without_credits.coupon}      
+      validate_coupon_request = {pack_id: pack.id, coupon: user_with_credits.coupon}      
       with_rack_test_driver do
         page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
       end
       
       response = JSON.parse(page.body)
-      expect(response["discount"]["coupon"]).to eq user_without_credits.coupon
+      expect(response["discount"]["coupon"]).to eq user_with_credits.coupon
       expect(response["discount"]["final_price"]).to eq (pack.price - Configuration.coupon_discount)
 
-      validate_coupon_request = {pack_id: pack_with_discount.id, coupon: user_without_credits.coupon}      
+      validate_coupon_request = {pack_id: pack_with_discount.id, coupon: user_with_credits.coupon}      
       with_rack_test_driver do
         page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
       end
       
       response = JSON.parse(page.body)
-      expect(response["discount"]["coupon"]).to eq user_without_credits.coupon
+      expect(response["discount"]["coupon"]).to eq user_with_credits.coupon
       expect(response["discount"]["final_price"]).to eq (pack_with_discount.special_price - Configuration.coupon_discount)
 
     end
@@ -113,6 +120,17 @@ feature 'DiscountsController' do
       expect(response["discount"]["initial_price"]).to eql pack_with_discount.special_price
       expect(response["discount"]["final_price"]).to eql pack_with_discount.special_price - Configuration.referral_credit
       expect(response["discount"]["final_credits"]).to eql 0.0
+
+      user_with_credits.update_attribute(:credits, Configuration.referral_credit * 10) 
+      validate_credit_request = {pack_id: pack.id}      
+      with_rack_test_driver do
+        page.driver.post discounts_validate_with_credits_path, validate_credit_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["discount"]["initial_price"]).to eql pack.price
+      expect(response["discount"]["final_price"]).to eql 0.0 
+      expect(response["discount"]["final_credits"]).to eql ((Configuration.referral_credit * 10) - pack.price)
 
     end
 

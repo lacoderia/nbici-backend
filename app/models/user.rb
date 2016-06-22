@@ -129,4 +129,8 @@ class User < ActiveRecord::Base
       self.coupon = Discount.generate_coupon
     end
 
+    def discount_credits
+
+    end
+
 end

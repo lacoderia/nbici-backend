@@ -24,7 +24,7 @@ class Pack < ActiveRecord::Base
     if final_credits > 0.0
       if final_credits > final_price
         final_price = 0.0
-        final_credits = final_credits - final_price
+        final_credits = final_credits - pack_price 
       else
         final_price = final_price - final_credits
         final_credits = 0.0
