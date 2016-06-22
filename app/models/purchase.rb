@@ -18,6 +18,10 @@ class Purchase < ActiveRecord::Base
     currency = "MXN"
     credits = user.credits
 
+    if params[:coupon] and params[:credits]
+      raise "Sólo se puede utilizar un método de descuento, cupón o créditos."
+    end
+
     #Se valida el precio final con cupón
     if params[:coupon]
       validated_price = (Discount.validate_with_coupon_and_pack user, pack, params[:coupon])[:final_price]
