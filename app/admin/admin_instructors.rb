@@ -31,18 +31,20 @@ ActiveAdmin.register Instructor, :as => "Instructores" do
   end
 
   form do |f|
-    f.inputs "Detalles de cuenta" do
-      1.times do
-        if f.object.new_record?
-          f.object.build_admin_user
+    if not current_admin_user.role? :niumedia
+      f.inputs "Detalles de cuenta" do
+        1.times do
+          if f.object.new_record?
+            f.object.build_admin_user
+          end
         end
-      end
-      f.fields_for :admin_user do |t|
-        instructor_role = Role.find_by_name(:instructor)
-        t.input :email
-        t.input :password
-        t.input :password_confirmation
-        t.input :role_ids, as: :hidden, input_html: { value: instructor_role.id }
+        f.fields_for :admin_user do |t|
+          instructor_role = Role.find_by_name(:instructor)
+          t.input :email
+          t.input :password
+          t.input :password_confirmation
+          t.input :role_ids, as: :hidden, input_html: { value: instructor_role.id }
+        end
       end
     end
     f.inputs "Detalles de instructor" do
@@ -52,7 +54,7 @@ ActiveAdmin.register Instructor, :as => "Instructores" do
       f.input :picture_2, label: "Foto_2"
       f.input :quote, label: "Cita"
       f.input :bio, label: "Bio"
-      f.input :active, label: "Activo"
+      f.input :active, label: "Activo" if not current_admin_user.role? :niumedia
     f.actions
     end
   end

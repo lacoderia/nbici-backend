@@ -4,7 +4,7 @@ feature 'CreditModificationsController' do
   
   let!(:admin_user) { create(:admin_user) }
   let!(:user) { create(:user) }
-  let!(:pack) { create(:pack) }
+  let!(:pack) { create(:pack, special_price: 100.00) }
   let!(:pack_50) { create(:pack, description: "50 pack", classes: 50, price: 5000.00, expiration: 360, special_price: 0) }
 
   context 'Manual modifications through the admin' do

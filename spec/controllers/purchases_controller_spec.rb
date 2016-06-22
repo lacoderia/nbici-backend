@@ -31,6 +31,31 @@ feature 'PurchasesController' do
       expect(user.expiration_date).to be_within(1.second).of (user.last_class_purchased + pack.expiration.days)
 
     end
+
+    #TODO: add coupon 
+    it 'should purchase a pack with discount coupon' do
+        
+      login_with_service user = { email: user_01.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_purchase_request = {pack_id: pack.id, price: pack.price, uid: card.uid}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["purchase"]["user"]["id"]).to be user_01.id
+      expect(SendEmailJob).to have_been_enqueued.with("purchase", global_id(user_01), global_id(Purchase.last))
+        
+      perform_enqueued_jobs { SendEmailJob.perform_later("purchase", user_01, Purchase.last) } 
+
+      #Refresh de user
+      user = User.find(user_01.id)
+      expect(user.classes_left).to eql 1
+      expect(user.expiration_date).to be_within(1.second).of (user.last_class_purchased + pack.expiration.days)
+
+    end
     
     it 'validates purchase errors' do
 
@@ -58,13 +83,13 @@ feature 'PurchasesController' do
       expect(response["errors"][0]["title"]).to eql "Tarjeta no encontrada o registrada."
       
       # Incorrect pack
-      new_purchase_request = {pack_id: 3, price: pack.price, uid: card.uid}
+      new_purchase_request = {pack_id: 900, price: pack.price, uid: card.uid}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
       
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "Couldn't find Pack with 'id'=3"
+      expect(response["errors"][0]["title"]).to eql "Couldn't find Pack with 'id'=900"
 
       # Incorrect price
       new_purchase_request = {pack_id: pack.id, price: "200.00", uid: card.uid}

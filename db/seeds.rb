@@ -13,6 +13,7 @@ user = User.create(first_name: "Arnulfo", last_name: "Quimare", email: "usuario_
 role_instructor = Role.create(name: 'instructor')
 role_super_admin = Role.create(name: 'super_admin')
 role_front_desk = Role.create(name: 'front_desk')
+role_niumedia = Role.create(name: 'niumedia')
 
 #Instructors
 
@@ -49,6 +50,9 @@ AdminUser.create!(email: 'admin@n-bici.com', password: 'password', password_conf
 
 #Front desk
 AdminUser.create!(email: 'info@n-bici.com', password: 'password', password_confirmation: 'password', roles: [role_front_desk])
+
+#Niumedia
+AdminUser.create!(email: 'admin@niumedia.mx', password: 'niumedia', password_confirmation: 'niumedia', roles: [role_niumedia])
 
 #Emails
 email = Email.create(user: user, email_status: "sent", email_type: "purchase")
@@ -242,3 +246,7 @@ Schedule.create(instructor: instructor_ale, room: room, datetime: next_saturday 
 
 #Appointment
 #appointment = Appointment.create(user: user, schedule: schedule_1, bicycle_number: 1, status: 'BOOKED', start: schedule_1.datetime, description: "Con mi maestro favorito")
+
+#Configuration
+Configuration.create(key: "coupon_discount", value: "40")
+Configuration.create(key: "referral_credit", value: "40")

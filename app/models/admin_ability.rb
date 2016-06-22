@@ -12,6 +12,9 @@ class AdminAbility
     elsif admin_user.role? :front_desk
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, Appointment
+    elsif admin_user.role? :niumedia
+      can :read, ActiveAdmin::Page, :name => "Dashboard"
+      can :manage, Instructor
     end
  
   end

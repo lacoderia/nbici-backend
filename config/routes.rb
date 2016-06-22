@@ -64,6 +64,9 @@ Rails.application.routes.draw do
   resources :users
 
   resources :roles, except: [:new, :edit]
+    
+  match 'discounts/validate_with_coupon', :to => "discounts#validate_with_coupon", :via => [:post, :options]
+  match 'discounts/validate_with_credits', :to => "discounts#validate_with_credits", :via => [:post, :options]
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
