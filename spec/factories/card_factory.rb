@@ -17,6 +17,10 @@ FactoryGirl.define do
     trait :no_funds do
       uid "tok_test_insufficient_funds"
     end
+    
+    trait :master_card do
+      uid "tok_test_mastercard_4444"
+    end
   end
 
 end

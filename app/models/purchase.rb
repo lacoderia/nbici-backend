@@ -25,7 +25,7 @@ class Purchase < ActiveRecord::Base
     #Se valida el precio final con cupón
     if params[:coupon]
       validated_price = (Discount.validate_with_coupon_and_pack user, pack, params[:coupon])[:final_price]
-      description = "Descuento #{description}"
+      description = "#{description} con cupón de descuento"
       
       if params[:price].to_f != validated_price
         raise "El precio enviado es diferente al precio con descuento."
@@ -35,6 +35,7 @@ class Purchase < ActiveRecord::Base
       price_and_credits = Discount.validate_with_credits_and_pack user, pack
       validated_price = price_and_credits[:final_price]
       credits = price_and_credits[:final_credits]
+      description = "#{description} con crédito a favor"
 
       if params[:credits].to_f != price_and_credits[:initial_credits] or params[:price].to_f != validated_price 
         raise "Hay un error calculando el precio final con los créditos a favor."
