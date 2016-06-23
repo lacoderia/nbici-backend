@@ -12,7 +12,8 @@ feature 'PurchasesController' do
   let!(:card_03){create(:card, :visa_card_2, user: user_03)}
   let!(:card_04){create(:card, :master_card_2, user: user_04)}
   let!(:card_05){create(:card, :amex, user: user_05)}
-  let!(:card_no_funds){ create(:card, :no_funds, user: user_01)}
+  let!(:card_no_funds){create(:card, :no_funds, user: user_01)}
+  let!(:promotion){create(:promotion)}
 
   context 'Create a new purchase' do
 
@@ -110,6 +111,30 @@ feature 'PurchasesController' do
       user_01.reload
       expect(user_01.credits).to be > 0 
       expect(user_01.credits).to eql (initial_credits - pack.price)
+
+    end
+
+    it 'should purchase a pack with promotion discount' do
+
+      login_with_service user = { email: user_01.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_purchase_request = {pack_id: pack.id, price: pack.price - promotion.amount, uid: card.uid, coupon: promotion.coupon}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["purchase"]["user"]["id"]).to be user_01.id
+      expect(SendEmailJob).to have_been_enqueued.with("purchase", global_id(user_01), global_id(Purchase.last))
+        
+      perform_enqueued_jobs { SendEmailJob.perform_later("purchase", user_01, Purchase.last) } 
+
+      #Reload user
+      user_01.reload
+      expect(user_01.classes_left).to eql 1
+      expect(user_01.expiration_date).to be_within(1.second).of (user_01.last_class_purchased + pack.expiration.days)
 
     end
 

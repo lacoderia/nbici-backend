@@ -1,10 +1,12 @@
 feature 'DiscountsController' do
 
-  let!(:user_without_credits) { create(:user) }
-  let!(:user_with_credits) { create(:user, credits: Configuration.referral_credit) }
-  let!(:pack) { create(:pack) }
-  let!(:pack_with_discount) { create(:pack, special_price: 100.00) }
-  let!(:coupon_discount) { create(:configuration, :coupon_discount) }
+  let!(:user_without_credits){create(:user)}
+  let!(:user_with_credits){create(:user, credits: Configuration.referral_credit)}
+  let!(:pack){create(:pack)}
+  let!(:pack_with_discount){create(:pack, special_price: 100.00)}
+  let!(:coupon_discount){create(:configuration, :coupon_discount)}
+  let!(:promotion){create(:promotion)}
+  let!(:inactive_promotion){create(:promotion, :inactive)}
 
   context 'Coupon discount methods' do
 
@@ -23,6 +25,15 @@ feature 'DiscountsController' do
       expect(response["errors"][0]["title"]).to eql "El paquete no existe."
 
       validate_coupon_request = {pack_id: pack.id, coupon: user_without_credits.coupon + "F"}      
+      with_rack_test_driver do
+        page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["errors"][0]["title"]).to eql "El cupón no existe."
+
+      #Inactive promotion
+      validate_coupon_request = {pack_id: pack.id, coupon: inactive_promotion.coupon}      
       with_rack_test_driver do
         page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
       end
@@ -72,6 +83,16 @@ feature 'DiscountsController' do
       response = JSON.parse(page.body)
       expect(response["discount"]["coupon"]).to eq user_with_credits.coupon
       expect(response["discount"]["final_price"]).to eq (pack_with_discount.special_price - Configuration.coupon_discount)
+
+      #Generic coupon
+      validate_coupon_request = {pack_id: pack.id, coupon: promotion.coupon}      
+      with_rack_test_driver do
+        page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["discount"]["coupon"]).to eq promotion.coupon
+      expect(response["discount"]["final_price"]).to eq (pack.price - promotion.amount)
 
     end
 

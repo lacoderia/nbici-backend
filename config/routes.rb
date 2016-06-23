@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :promotions
   resources :configurations
   resources :referrals
   resources :expirations

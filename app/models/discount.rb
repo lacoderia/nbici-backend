@@ -1,7 +1,10 @@
 class Discount 
 
   DELSTRS = "0OB81I"
-
+  
+  USER_COUPON_TYPE = "USER_COUPON"
+  PROMOTION_COUPON_TYPE = "PROMOTION"
+  
   def self.generate_coupon
     random = SecureRandom.hex
     coupon = (random.upcase.delete DELSTRS)[0..5]
@@ -12,7 +15,17 @@ class Discount
 
   def self.exists? coupon
     if coupon
-      return User.find_by_coupon(coupon) ? true : false
+      promotion = Promotion.find_by_coupon_and_active(coupon, true)
+      if not promotion
+        user_coupon = User.find_by_coupon(coupon)
+        if user_coupon
+          return {coupon: user_coupon.coupon, type: USER_COUPON_TYPE, value: Configuration.coupon_discount}
+        else
+          return false
+        end
+      else
+        return {coupon: promotion.coupon, type: PROMOTION_COUPON_TYPE, value: promotion.amount}
+      end      
     else
       return false
     end
@@ -39,7 +52,6 @@ class Discount
   end  
 
   def self.validate_with_coupon_and_pack current_user, pack, coupon
-
     if current_user.coupon == coupon
       raise "No puedes usar tu propio cupón."
     end
@@ -48,8 +60,8 @@ class Discount
       raise "Ya has usado un cupón anteriormente."
     end
     
-    if Discount.exists? coupon
-      return pack.price_with_coupon_for_user current_user, coupon
+    if meta_coupon = (Discount.exists? coupon)
+      return pack.price_with_coupon_for_user current_user, meta_coupon
     else
       raise "El cupón no existe."
     end

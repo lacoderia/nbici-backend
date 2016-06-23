@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  coupon: MyString
+  description: MyString
+  amount: 1.5
+  active: false
+
+two:
+  coupon: MyString
+  description: MyString
+  amount: 1.5
+  active: false

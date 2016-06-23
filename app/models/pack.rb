@@ -34,12 +34,12 @@ class Pack < ActiveRecord::Base
     return {final_price: final_price, initial_price: pack_price, final_credits: final_credits, initial_credits: user.credits}
   end
 
-  def price_with_coupon_for_user user, coupon
+  def price_with_coupon_for_user user, meta_coupon 
 
     pack_price = self.price_or_special_price_for_user user
-    final_price = pack_price  - Configuration.coupon_discount
-    return {final_price: final_price, initial_price: pack_price, coupon: coupon, discount: Configuration.coupon_discount}      
-
+    final_price = pack_price  - meta_coupon[:value]
+    return {final_price: final_price, initial_price: pack_price, coupon: meta_coupon[:coupon], discount: meta_coupon[:value]} 
+    
   end
   
 end
