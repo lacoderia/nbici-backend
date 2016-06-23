@@ -3,9 +3,15 @@ feature 'PurchasesController' do
 
   let!(:user_01){create(:user)}
   let!(:user_02){create(:user)}
+  let!(:user_03){create(:user)}
+  let!(:user_04){create(:user)}
+  let!(:user_05){create(:user)}
   let!(:pack){create(:pack)}
   let!(:card){create(:card, user: user_01)}
   let!(:card_02){create(:card, :master_card, user: user_02)}
+  let!(:card_03){create(:card, :visa_card_2, user: user_03)}
+  let!(:card_04){create(:card, :master_card_2, user: user_04)}
+  let!(:card_05){create(:card, :amex, user: user_05)}
   let!(:card_no_funds){ create(:card, :no_funds, user: user_01)}
 
   context 'Create a new purchase' do
@@ -31,6 +37,79 @@ feature 'PurchasesController' do
       user_01.reload
       expect(user_01.classes_left).to eql 1
       expect(user_01.expiration_date).to be_within(1.second).of (user_01.last_class_purchased + pack.expiration.days)
+
+    end
+
+    it 'should stack credits from referrals' do
+
+      expect(user_01.referrals.count).to eql 0
+
+      login_with_service user = { email: user_02.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_purchase_request = {pack_id: pack.id, price: pack.price - Configuration.coupon_discount, uid: card_02.uid, coupon: user_01.coupon}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+
+      logout
+
+      login_with_service user = { email: user_03.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_purchase_request = {pack_id: pack.id, price: pack.price - Configuration.coupon_discount, uid: card_03.uid, coupon: user_01.coupon}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+
+      logout
+
+      login_with_service user = { email: user_04.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_purchase_request = {pack_id: pack.id, price: pack.price - Configuration.coupon_discount, uid: card_04.uid, coupon: user_01.coupon}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+
+      logout
+
+      login_with_service user = { email: user_05.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_purchase_request = {pack_id: pack.id, price: pack.price - Configuration.coupon_discount, uid: card_05.uid, coupon: user_01.coupon}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+
+      logout
+
+      #Purchase of user with +credits 
+      user_01.reload
+      initial_credits = user_01.credits
+      expect(initial_credits).to eql (Configuration.referral_credit*4)
+
+      login_with_service user = { email: user_01.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_purchase_request = {pack_id: pack.id, price: 0, uid: card.uid, credits: user_01.credits}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["purchase"]["user"]["id"]).to be user_01.id
+      expect(SendEmailJob).to have_been_enqueued.with("purchase", global_id(user_01), global_id(Purchase.last))
+        
+      #Reload user
+      user_01.reload
+      expect(user_01.credits).to be > 0 
+      expect(user_01.credits).to eql (initial_credits - pack.price)
 
     end
 
@@ -63,7 +142,7 @@ feature 'PurchasesController' do
 
       logout
       
-      #Purchase of second user
+      #Purchase of user with credits 
       login_with_service user = { email: user_02.email, password: "12345678" }
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
       set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1

@@ -44,37 +44,56 @@ class Purchase < ActiveRecord::Base
       raise "El precio enviado es diferente al precio del paquete."
     end
 
-    charge = Conekta::Charge.create({
-      amount: amount,
-      currency: currency,
-      description: description,
-      card: card.uid,
-      details: {
-        name: card.name,
-        email: user.email,
-        phone: card.phone,
-        line_items: [{
-          name: description,
-          description: "Paquete nbici",
-          unit_price: amount,
-          quantity: 1
-        }]
-      }
-    })
+    if params[:price].to_f > 0
 
-    purchase = Purchase.create!(
-      user: user,
-      pack: pack,
-      uid: charge.id,
-      object: charge.object, 
-      livemode: charge.livemode, 
-      status: charge.status,
-      description: charge.description,
-      amount: charge.amount,
-      currency: charge.currency,
-      payment_method: charge.payment_method,
-      details: charge.details
-    )
+      charge = Conekta::Charge.create({
+        amount: amount,
+        currency: currency,
+        description: description,
+        card: card.uid,
+        details: {
+          name: card.name,
+          email: user.email,
+          phone: card.phone,
+          line_items: [{
+            name: description,
+            description: "Paquete nbici",
+            unit_price: amount,
+            quantity: 1
+          }]
+        }
+      })
+
+      purchase = Purchase.create!(
+        user: user,
+        pack: pack,
+        uid: charge.id,
+        object: charge.object, 
+        livemode: charge.livemode, 
+        status: charge.status,
+        description: charge.description,
+        amount: charge.amount,
+        currency: charge.currency,
+        payment_method: charge.payment_method,
+        details: charge.details
+      )
+
+    else
+
+      purchase = Purchase.create!(
+        user: user,
+        pack: pack,
+        object: "charge", 
+        livemode: true, 
+        status: "paid",
+        description: description,
+        amount: amount,
+        currency: currency,
+        payment_method: "free",
+        details: "pago gratis"
+      )
+      
+    end
 
     if user.expiration_date
       if user.expiration_date <= Time.zone.now

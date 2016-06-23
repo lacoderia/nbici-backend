@@ -21,6 +21,22 @@ FactoryGirl.define do
     trait :master_card do
       uid "tok_test_mastercard_4444"
     end
+
+    trait :visa_card_2 do
+      uid "tok_test_visa_1881"
+    end
+
+    trait :master_card_2 do
+      uid "tok_test_mastercard_5100"
+    end
+
+    trait :amex do
+      uid "tok_test_amex_0005"
+    end
+
+    trait :amex_2 do
+      uid "tok_test_amex_8431"
+    end
   end
 
 end
