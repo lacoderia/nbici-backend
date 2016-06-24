@@ -188,6 +188,22 @@ feature 'PurchasesController' do
       expect(user_02.classes_left).to eql 1
       expect(user_02.expiration_date).to be_within(1.second).of (user_02.last_class_purchased + pack.expiration.days)
       expect(user_02.credits).to eql 0.0
+
+      logout
+
+      #Should use a promotion coupon after a user's coupon without a problem
+      login_with_service user = { email: user_01.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_purchase_request = {pack_id: pack.id, price: pack.price - promotion.amount, uid: card.uid, coupon: promotion.coupon}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["purchase"]["user"]["id"]).to be user_01.id
+      expect(SendEmailJob).to have_been_enqueued.with("purchase", global_id(user_01), global_id(Purchase.last))
       
     end
     
