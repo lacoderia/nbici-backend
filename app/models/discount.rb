@@ -59,7 +59,7 @@ class Discount
     if meta_coupon = (Discount.exists? coupon)
 
       if meta_coupon[:type].eql? USER_COUPON_TYPE and Referral.find_by_referred_id(current_user.id)
-        raise "Ya has usado un cupón anteriormente."
+        raise "Ya has usado un cupón de otro usuario anteriormente."
       end
 
       return pack.price_with_coupon_for_user current_user, meta_coupon

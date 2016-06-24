@@ -56,7 +56,7 @@ feature 'DiscountsController' do
       end
       
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "Ya has usado un cupón anteriormente."
+      expect(response["errors"][0]["title"]).to eql "Ya has usado un cupón de otro usuario anteriormente."
 
     end
 
