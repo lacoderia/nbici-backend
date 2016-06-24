@@ -36,6 +36,11 @@ class User < ActiveRecord::Base
       true
     end
   end
+
+  def send_coupon_by_email email
+    SendEmailJob.perform_later("send_coupon", self, email)
+    return {coupon: self.coupon, email: email}
+  end
   
   #CONEKTA
   def get_or_create_conekta_customer

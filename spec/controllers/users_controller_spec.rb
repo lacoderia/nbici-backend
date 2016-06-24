@@ -1,6 +1,32 @@
 feature 'UsersController' do
+  include ActiveJob::TestHelper
 
   let!(:user_01){create(:user)}
+
+  context 'sharing discount' do
+
+    it 'should send coupon to email' do
+      
+      login_with_service user = { email: user_01.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      send_coupon_by_email_request = {email: "test@email.com"}
+      with_rack_test_driver do
+        page.driver.post send_coupon_by_email_user_path(user_01.id), send_coupon_by_email_request 
+      end
+      response = JSON.parse(page.body)
+      expect(response['coupon']['coupon']).to eql user_01.coupon
+      expect(response['coupon']['email']).to eql "test@email.com"
+      expect(SendEmailJob).to have_been_enqueued.with("send_coupon", global_id(user_01), "test@email.com")
+
+      expect(Email.count).to eql 0
+      perform_enqueued_jobs { SendEmailJob.perform_later("send_coupon", user_01, "test@email.com") } 
+      expect(Email.count).to eql 1
+
+    end
+
+  end
 
   context 'user update' do
 

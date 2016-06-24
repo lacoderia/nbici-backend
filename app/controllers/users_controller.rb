@@ -3,7 +3,7 @@ class UsersController < ApiController
 
   before_action :authenticate_user!
   
-  before_action :set_user, only: [:update]
+  before_action :set_user, only: [:update, :send_coupon_by_email]
 
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
@@ -16,6 +16,16 @@ class UsersController < ApiController
       render json: @user
     else
       render json: ErrorSerializer.serialize(@user.errors)
+    end
+  end
+
+  def send_coupon_by_email
+    begin
+      coupon = @user.send_coupon_by_email params[:email]
+      render json: CouponSerializer.serialize(coupon) 
+    rescue Exception => e
+      errors = {:error_sending_coupon => [e.message]}
+      render json: ErrorSerializer.serialize(errors), status: 500
     end
   end
 

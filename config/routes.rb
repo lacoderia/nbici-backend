@@ -62,7 +62,11 @@ Rails.application.routes.draw do
     get 'session', :to => "sessions#get"
   end
   
-  resources :users
+  resources :users do
+    member do
+      match 'send_coupon_by_email', :to => "users#send_coupon_by_email", :via => [:post, :options]
+    end
+  end
 
   resources :roles, except: [:new, :edit]
     

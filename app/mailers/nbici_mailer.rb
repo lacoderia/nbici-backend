@@ -28,4 +28,9 @@ class NbiciMailer < ActionMailer::Base
     mail(to: @user.email, subject: "Tus clases expirarán pronto")
   end
 
+  def send_coupon user, email
+    @user = user
+    mail(to: email, subject: "#{@user.first_name} te invita a probar NBici!")
+  end
+
 end
