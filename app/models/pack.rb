@@ -38,7 +38,12 @@ class Pack < ActiveRecord::Base
 
     pack_price = self.price_or_special_price_for_user user
     final_price = pack_price  - meta_coupon[:value]
-    return {final_price: final_price, initial_price: pack_price, coupon: meta_coupon[:coupon], discount: meta_coupon[:value]} 
+    discount = meta_coupon[:value]
+    if final_price < 0
+      final_price = 0
+      discount = pack_price
+    end
+    return {final_price: final_price, initial_price: pack_price, coupon: meta_coupon[:coupon], discount: discount} 
     
   end
   

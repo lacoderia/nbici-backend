@@ -6,6 +6,7 @@ feature 'DiscountsController' do
   let!(:pack_with_discount){create(:pack, special_price: 100.00)}
   let!(:coupon_discount){create(:configuration, :coupon_discount)}
   let!(:promotion){create(:promotion)}
+  let!(:promotion_mega){create(:promotion, amount: 1000, coupon: "NBICIMEGA")}
   let!(:inactive_promotion){create(:promotion, :inactive)}
 
   context 'Coupon discount methods' do
@@ -93,6 +94,17 @@ feature 'DiscountsController' do
       response = JSON.parse(page.body)
       expect(response["discount"]["coupon"]).to eq promotion.coupon
       expect(response["discount"]["final_price"]).to eq (pack.price - promotion.amount)
+
+      #Generic meta coupon
+      validate_coupon_request = {pack_id: pack.id, coupon: promotion_mega.coupon}      
+      with_rack_test_driver do
+        page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["discount"]["coupon"]).to eq promotion_mega.coupon
+      expect(response["discount"]["final_price"]).to eq 0 
+      expect(response["discount"]["discount"]).to eq pack.price
 
     end
 

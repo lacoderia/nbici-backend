@@ -14,6 +14,7 @@ feature 'PurchasesController' do
   let!(:card_05){create(:card, :amex, user: user_05)}
   let!(:card_no_funds){create(:card, :no_funds, user: user_01)}
   let!(:promotion){create(:promotion)}
+  let!(:promotion_mega){create(:promotion, amount: 500, coupon: " NBICIMEGA")}
 
   context 'Create a new purchase' do
 
@@ -133,8 +134,26 @@ feature 'PurchasesController' do
 
       #Reload user
       user_01.reload
+      new_expiration_date = user_01.expiration_date
       expect(user_01.classes_left).to eql 1
       expect(user_01.expiration_date).to be_within(1.second).of (user_01.last_class_purchased + pack.expiration.days)
+
+      #Promotion code exceeding the cost of the purchase
+      new_purchase_request = {pack_id: pack.id, price: 0, uid: card.uid, coupon: promotion_mega.coupon}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["purchase"]["user"]["id"]).to be user_01.id
+      expect(SendEmailJob).to have_been_enqueued.with("purchase", global_id(user_01), global_id(Purchase.last))
+        
+      perform_enqueued_jobs { SendEmailJob.perform_later("purchase", user_01, Purchase.last) } 
+
+      #Reload user
+      user_01.reload
+      expect(user_01.classes_left).to eql 2
+      expect(user_01.expiration_date).to be_within(1.second).of (new_expiration_date + pack.expiration.days)
 
     end
 
