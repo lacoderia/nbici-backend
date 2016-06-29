@@ -17,34 +17,37 @@ class Purchase < ActiveRecord::Base
     description = pack.description
     currency = "MXN"
     credits = user.credits
+    params_coupon = params[:coupon]
+    params_credits = params[:credits]
+    params_price = params[:price]
 
-    if params[:coupon] and params[:credits]
+    if params_coupon and params_credits
       raise "Sólo se puede utilizar un método de descuento, cupón o créditos."
     end
 
     #Se valida el precio final con cupón
-    if params[:coupon]
-      validated_price = (Discount.validate_with_coupon_and_pack user, pack, params[:coupon])[:final_price]
+    if params_coupon
+      validated_price = (Discount.validate_with_coupon_and_pack user, pack, params_coupon)[:final_price]
       description = "#{description} con cupón de descuento"
       
-      if params[:price].to_f != validated_price
+      if params_price.to_f != validated_price
         raise "El precio enviado es diferente al precio con descuento."
       end
     #Se valida el precio con créditos
-    elsif params[:credits]
+    elsif params_credits
       price_and_credits = Discount.validate_with_credits_and_pack user, pack
       validated_price = price_and_credits[:final_price]
       credits = price_and_credits[:final_credits]
       description = "#{description} con crédito a favor"
 
-      if params[:credits].to_f != price_and_credits[:initial_credits] or params[:price].to_f != validated_price 
+      if params_credits.to_f != price_and_credits[:initial_credits] or params_price.to_f != validated_price 
         raise "Hay un error calculando el precio final con los créditos a favor."
       end
-    elsif (pack.price_or_special_price_for_user user) != params[:price].to_f
+    elsif (pack.price_or_special_price_for_user user) != params_price.to_f
       raise "El precio enviado es diferente al precio del paquete."
     end
 
-    if params[:price].to_f > 0
+    if params_price.to_f > 0
 
       charge = Conekta::Charge.create({
         amount: amount,
@@ -105,7 +108,7 @@ class Purchase < ActiveRecord::Base
       expiration_date = Time.zone.now + pack.expiration.days
     end
 
-    if params[:coupon] and referrer = User.find_by_coupon(params[:coupon])      
+    if params_coupon and referrer = User.find_by_coupon(params_coupon.upcase)      
       #Add credit
       referrer.update_attribute(:credits, referrer.credits + Configuration.referral_credit) 
       #Add referral

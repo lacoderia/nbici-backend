@@ -14,7 +14,7 @@ feature 'PurchasesController' do
   let!(:card_05){create(:card, :amex, user: user_05)}
   let!(:card_no_funds){create(:card, :no_funds, user: user_01)}
   let!(:promotion){create(:promotion)}
-  let!(:promotion_mega){create(:promotion, amount: 500, coupon: " NBICIMEGA")}
+  let!(:promotion_mega){create(:promotion, amount: 500, coupon: "nbiciMEGA")}
 
   context 'Create a new purchase' do
 
@@ -121,7 +121,7 @@ feature 'PurchasesController' do
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
       set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
 
-      new_purchase_request = {pack_id: pack.id, price: pack.price - promotion.amount, uid: card.uid, coupon: promotion.coupon}
+      new_purchase_request = {pack_id: pack.id, price: pack.price - promotion.amount, uid: card.uid, coupon: "NbiCI"}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
@@ -139,7 +139,7 @@ feature 'PurchasesController' do
       expect(user_01.expiration_date).to be_within(1.second).of (user_01.last_class_purchased + pack.expiration.days)
 
       #Promotion code exceeding the cost of the purchase
-      new_purchase_request = {pack_id: pack.id, price: 0, uid: card.uid, coupon: promotion_mega.coupon}
+      new_purchase_request = {pack_id: pack.id, price: 0, uid: card.uid, coupon: "NBICimega"}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
@@ -165,7 +165,7 @@ feature 'PurchasesController' do
       
       expect(user_02.referrals.count).to eql 0
 
-      new_purchase_request = {pack_id: pack.id, price: pack.price - Configuration.coupon_discount, uid: card.uid, coupon: user_02.coupon}
+      new_purchase_request = {pack_id: pack.id, price: pack.price - Configuration.coupon_discount, uid: card.uid, coupon: user_02.coupon.downcase}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
@@ -215,7 +215,7 @@ feature 'PurchasesController' do
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
       set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
 
-      new_purchase_request = {pack_id: pack.id, price: pack.price - promotion.amount, uid: card.uid, coupon: promotion.coupon}
+      new_purchase_request = {pack_id: pack.id, price: pack.price - promotion.amount, uid: card.uid, coupon: "nbici"}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
@@ -291,7 +291,7 @@ feature 'PurchasesController' do
 
       #COUPON
       #Incorrect price
-      new_purchase_request = {pack_id: pack.id, price: pack.price, uid: card.uid, coupon: user_02.coupon}
+      new_purchase_request = {pack_id: pack.id, price: pack.price, uid: card.uid, coupon: user_02.coupon.upcase}
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end

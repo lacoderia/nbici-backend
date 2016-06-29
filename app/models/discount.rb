@@ -52,6 +52,7 @@ class Discount
   end  
 
   def self.validate_with_coupon_and_pack current_user, pack, coupon
+    coupon = coupon.upcase
     if current_user.coupon == coupon
       raise "No puedes usar tu propio cupón."
     end

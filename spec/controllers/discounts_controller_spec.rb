@@ -6,8 +6,8 @@ feature 'DiscountsController' do
   let!(:pack_with_discount){create(:pack, special_price: 100.00)}
   let!(:coupon_discount){create(:configuration, :coupon_discount)}
   let!(:promotion){create(:promotion)}
-  let!(:promotion_mega){create(:promotion, amount: 1000, coupon: "NBICIMEGA")}
-  let!(:inactive_promotion){create(:promotion, :inactive)}
+  let!(:promotion_mega){create(:promotion, amount: 1000, coupon: "nbicimega")}
+  let!(:inactive_promotion){create(:promotion, :inactive, coupon: "INACTIVE")}
 
   context 'Coupon discount methods' do
 
@@ -17,7 +17,7 @@ feature 'DiscountsController' do
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
       set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
 
-      validate_coupon_request = {pack_id: pack.id + 100, coupon: user_without_credits.coupon}      
+      validate_coupon_request = {pack_id: pack.id + 100, coupon: user_without_credits.coupon.downcase}      
       with_rack_test_driver do
         page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
       end
@@ -34,7 +34,7 @@ feature 'DiscountsController' do
       expect(response["errors"][0]["title"]).to eql "El cupón no existe."
 
       #Inactive promotion
-      validate_coupon_request = {pack_id: pack.id, coupon: inactive_promotion.coupon}      
+      validate_coupon_request = {pack_id: pack.id, coupon: inactive_promotion.coupon.upcase}      
       with_rack_test_driver do
         page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
       end
@@ -42,7 +42,7 @@ feature 'DiscountsController' do
       response = JSON.parse(page.body)
       expect(response["errors"][0]["title"]).to eql "El cupón no existe."
 
-      validate_coupon_request = {pack_id: pack.id, coupon: user_without_credits.coupon}      
+      validate_coupon_request = {pack_id: pack.id, coupon: user_without_credits.coupon.downcase}      
       with_rack_test_driver do
         page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
       end
@@ -51,7 +51,7 @@ feature 'DiscountsController' do
       expect(response["errors"][0]["title"]).to eql "No puedes usar tu propio cupón."
 
       Referral.create!(owner: user_with_credits, referred: user_without_credits, credits: Configuration.referral_credit, used: false)
-      validate_coupon_request = {pack_id: pack.id, coupon: user_with_credits.coupon}      
+      validate_coupon_request = {pack_id: pack.id, coupon: user_with_credits.coupon.upcase}      
       with_rack_test_driver do
         page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
       end
