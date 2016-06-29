@@ -32,6 +32,7 @@ class AppointmentsController < ApiController
   def edit_bicycle_number
     begin
       @appointment.edit_bicycle_number(params[:bicycle_number].to_i)
+      SendEmailJob.perform_later("booking", current_user, @appointment)
       render json: @appointment      
     rescue Exception => e
       appointment = Appointment.new

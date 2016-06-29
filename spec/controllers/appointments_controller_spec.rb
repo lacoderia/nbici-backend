@@ -113,6 +113,9 @@ feature 'AppointmentsController' do
       expect(appointment.status).to eql "BOOKED"
       user = User.find(response["appointment"]["user_id"])
       expect(user.classes_left).to eql 1
+      
+      expect(SendEmailJob).to have_been_enqueued.with("booking", global_id(user_with_classes_left), global_id(Appointment.last))
+      perform_enqueued_jobs { SendEmailJob.perform_later("booking", user_with_classes_left, Appointment.last) } 
 
       #Error editing bicycle number
       edit_bicycle_appointment_request = {bicycle_number: 6}
@@ -139,7 +142,6 @@ feature 'AppointmentsController' do
       expect(page.status_code).to be 500
       expect(response["errors"][0]["title"]).to eql "Sólo se pueden cambiar los lugares con al menos una hora de anticipación."
 
-      #Error cancelling appointment
       Timecop.travel(starting_datetime - 1.hours)
       edit_bicycle_appointment_request = {bicycle_number: 1}
       with_rack_test_driver do
@@ -148,6 +150,10 @@ feature 'AppointmentsController' do
       response = JSON.parse(page.body)
       expect(response["appointment"]["bicycle_number"]).to eql 1
       expect(response["appointment"]["schedule"]["id"]).to eql appointment.schedule.id
+
+      expect(SendEmailJob).to have_been_enqueued.with("booking", global_id(user_with_classes_left), global_id(Appointment.last))
+      perform_enqueued_jobs { SendEmailJob.perform_later("booking", user_with_classes_left, Appointment.last) } 
+
 
     end
 
