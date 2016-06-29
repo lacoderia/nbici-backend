@@ -510,14 +510,7 @@
 			/*@editable*/line-height:150% !important;
 		}
 
-}</style>
-                  <script type="text/javascript">
-                    var w=window;
-                    if(w.performance||w.mozPerformance||w.msPerformance||w.webkitPerformance){var d=document,AKSB=AKSB||{};AKSB.q=[];AKSB.mark=function(a,b){AKSB.q.push(["mark",a,b||(new Date).getTime()])};AKSB.measure=function(a,b,c){AKSB.q.push(["measure",a,b,c||(new Date).getTime()])};AKSB.done=function(a){AKSB.q.push(["done",a])};AKSB.mark("firstbyte",(new Date).getTime());AKSB.prof={custid:"405188",ustr:"cs",originlat:0,clientrtt:49,ghostip:"184.26.93.100",
-                    ipv6:false,pct:10,xhrtest:false,clientip:"187.163.150.229",requestid:"161c3c1",protocol:"",blver:5,akM:"b",akN:"ae",akTT:"O",akTX:"1",akTI:"161c3c1",ai:"287436"};(function(a){var b=d.createElement("script");b.async="async";b.src=a;a=d.getElementsByTagName("script");a=a[a.length-1];a.parentNode.insertBefore(b,
-                    a)})(("https:"===d.location.protocol?"https:":"http:")+"//ds-aksb-a.akamaihd.net/aksb.min.js")};
-                  </script>
-                  </head>
+}</style></head>
     <body>
         <center>
             <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
@@ -590,7 +583,7 @@
                             <td class="mcnImageContent" valign="top" style="padding-right: 9px; padding-left: 9px; padding-top: 0; padding-bottom: 0; text-align:center;">
                                 
                                     
-                                        <img align="center" alt="" src="https://gallery.mailchimp.com/7d9deb35a51e804cb0349b927/images/86ef8b52-a16b-41c3-8537-d5be76ba8eb4.png" width="564" style="max-width:650px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
+                                        <img align="center" alt="" src="https://gallery.mailchimp.com/7d9deb35a51e804cb0349b927/images/6fade3fa-0316-45f6-95a2-0f3ea2c64f5d.png" width="564" style="max-width:650px; padding-bottom: 0; display: inline !important; vertical-align: bottom;" class="mcnImage">
                                     
                                 
                             </td>
@@ -628,10 +621,10 @@
                         
                         <td valign="top" class="mcnTextContent" style="padding-top:9px; padding-right: 18px; padding-bottom: 9px; padding-left: 18px;">
                         
-                            <h1><%= @user.first_name.split.map(&:capitalize).join(' ') %>, se ha realizado satisfactoriamente tu compra.</h1>
+                            <h1><%= @user.first_name.split.map(&:capitalize).join(' ') %>, ¡tus clases expirarán pronto!</h1>
 
-                            <p><%= @purchase.pack.description %> - $<%= "%.2f" % (@purchase.amount/100.00) %><br>
-                            ¡El viaje comienza ahora! Actívate N bici.</p>
+                            <p>Todavía tienes tiempo de activarte. Si quieres extender tu periodo comprando más clases, <a class="mc-template-link" href="http://n-bici.com/compra-de-paquetes/">puedes adquirir más aquí</a>.<br>
+¡El viaje comienza ahora! Actívate N bici.</p>
 
                         </td>
                     </tr>
