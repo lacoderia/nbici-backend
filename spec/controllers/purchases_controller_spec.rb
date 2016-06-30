@@ -138,6 +138,16 @@ feature 'PurchasesController' do
       expect(user_01.classes_left).to eql 1
       expect(user_01.expiration_date).to be_within(1.second).of (user_01.last_class_purchased + pack.expiration.days)
 
+      #Error using the same promo code
+      new_purchase_request = {pack_id: pack.id, price: pack.price - promotion.amount, uid: card.uid, coupon: "NbiCI"}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(page.status_code).to be 500
+      expect(response["errors"][0]["title"]).to eql "Ya has usado este cupón anteriormente."      
+
       #Promotion code exceeding the cost of the purchase
       new_purchase_request = {pack_id: pack.id, price: 0, uid: card.uid, coupon: "NBICimega"}
       with_rack_test_driver do

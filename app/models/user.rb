@@ -8,6 +8,7 @@ class User < ActiveRecord::Base
   before_create :assign_coupon
 
   has_and_belongs_to_many :roles
+  has_and_belongs_to_many :promotions
 
   has_many :emails
   has_many :expirations

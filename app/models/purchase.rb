@@ -113,6 +113,9 @@ class Purchase < ActiveRecord::Base
       referrer.update_attribute(:credits, referrer.credits + Configuration.referral_credit) 
       #Add referral
       Referral.create!(owner: referrer, referred: user, credits: Configuration.referral_credit, used: false)
+    elsif params_coupon and promotion = Promotion.find_by_coupon(params_coupon.upcase)
+      user.promotions << promotion
+      user.save!
     end
     
     user.update_attributes(classes_left: (user.classes_left.nil? ? 0 : user.classes_left)  + pack.classes,

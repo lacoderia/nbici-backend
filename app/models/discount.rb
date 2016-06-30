@@ -24,7 +24,7 @@ class Discount
           return false
         end
       else
-        return {coupon: promotion.coupon, type: PROMOTION_COUPON_TYPE, value: promotion.amount}
+        return {coupon: promotion.coupon, type: PROMOTION_COUPON_TYPE, value: promotion.amount, id: promotion.id}
       end      
     else
       return false
@@ -61,6 +61,9 @@ class Discount
 
       if meta_coupon[:type].eql? USER_COUPON_TYPE and Referral.find_by_referred_id(current_user.id)
         raise "Ya has usado un cupón de otro usuario anteriormente."
+      elsif meta_coupon[:type].eql? PROMOTION_COUPON_TYPE and
+        not current_user.promotions.where("user_id = ? AND promotion_id = ?", current_user.id, meta_coupon[:id]).empty?
+        raise "Ya has usado este cupón anteriormente."
       end
 
       return pack.price_with_coupon_for_user current_user, meta_coupon
