@@ -30,7 +30,7 @@ class NbiciMailer < ActionMailer::Base
 
   def send_coupon user, email
     @user = user
-    mail(to: email, subject: "#{@user.first_name} te invita a probar NBici!")
+    mail(to: email, subject: "¡#{@user.first_name} te invita a probar N Bici!")
   end
 
 end
