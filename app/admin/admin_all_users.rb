@@ -11,7 +11,17 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
 
   config.sort_order = 'created_at_desc'
 
+  action_item only: :edit do
+    if resource.purchases.empty?
+      link_to "Delete", admin_todos_los_cliente_path(resource.id), method: :delete, data: {:confirm => "Eliminarás al usuario. ¿Estás seguro?"}
+    end
+  end
+
   controller do
+    def destroy
+      super
+    end
+
     def update
       if (not params[:user][:credit_modifications_attributes].first[1][:credits].blank?) and
         (params[:user][:credit_modifications_attributes].first[1][:credits] != 0)
@@ -97,7 +107,17 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
     column "Apellido", :last_name
     column "Email", :email
     column "Clases restantes", :classes_left
-    actions :defaults => true
+
+    actions defaults: false do |user|
+      links = "#{link_to "Edit", "#{admin_todos_los_cliente_path(user.id)}/edit"} "
+      if user.purchases.empty?
+        links += "#{link_to "Delete", admin_todos_los_cliente_path(user.id), method: :delete, data: {:confirm => "Eliminarás al usuario. ¿Estás seguro?"} }"
+      else
+        links += (link_to "Purchases", "#{admin_compras_path}?utf8=✓&q%5Buser_id_equals%5D=#{user.id}").to_s
+      end
+      links.html_safe
+    end
+
   end
 
   form do |f|
@@ -120,7 +140,7 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
       f.actions
     end
   end
-
+  
   csv do
     column "Nombre" do |user|
       user.first_name
