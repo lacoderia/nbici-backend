@@ -26,6 +26,9 @@ ActiveAdmin.register Schedule, :as => "Clases" do
     column "Confirmados" do |schedule|
       schedule.appointments.finalized.count
     end
+    column "Por Pagar" do |schedule|
+      Configuration.payment_based_on_attendees schedule.appointments.finalized.count
+    end
     actions :defaults => true
   end
 
@@ -45,6 +48,9 @@ ActiveAdmin.register Schedule, :as => "Clases" do
     column "Confirmados" do |schedule|
       schedule.appointments.finalized.count
     end
+    column "Por Pagar" do |schedule|
+      Configuration.payment_based_on_attendees schedule.appointments.finalized.count
+    end
   end
 
   show do |schedule|
@@ -63,6 +69,9 @@ ActiveAdmin.register Schedule, :as => "Clases" do
       end
       row "Confirmados" do
         schedule.appointments.finalized.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}"if appointment.user  }.join("<br/>").html_safe
+      end
+      row "Por Pagar" do
+        Configuration.payment_based_on_attendees schedule.appointments.finalized.count
       end
     end
   end
