@@ -12,7 +12,7 @@ ActiveAdmin.register Purchase, :as => "Compras" do
 
   controller do
     def scoped_collection
-      Purchase.with_users_and_appointments
+      Purchase.with_users
     end
     
     def destroy
@@ -48,7 +48,9 @@ ActiveAdmin.register Purchase, :as => "Compras" do
       "#{purchase.pack.description}"
     end
 
-    column "Precio", :amount
+    column "Precio" do |purchase|
+      purchase.amount / 100.0
+    end
 
     column "Fecha", :created_at 
 

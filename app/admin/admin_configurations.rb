@@ -1,6 +1,6 @@
 ActiveAdmin.register Configuration, :as => "Configuraciones" do
 
-  actions :all, :except => [:show, :destroy]
+  actions :all, :except => [:show, :destroy, :new]
 
   permit_params :key, :value
 
