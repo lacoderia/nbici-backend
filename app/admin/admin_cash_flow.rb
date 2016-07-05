@@ -17,6 +17,7 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
   end
 
   index :title => "Control de ingresos" do
+  
     column "Cliente" do |purchase|
       "#{purchase.user.first_name} #{purchase.user.last_name}"
     end
@@ -31,7 +32,12 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
 
     column "Fecha", :created_at
 
-    column "Usado" do |purchase|
+    column "Usadas" do |purchase|
+      appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
+      appointments_in_month.count
+    end
+
+    column "Disponible" do |purchase|
       appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
       price_per_class = (purchase.amount / 100.0) / purchase.pack.classes
       appointments_in_month.count * price_per_class
