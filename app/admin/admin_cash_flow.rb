@@ -40,7 +40,7 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
     column "Disponible" do |purchase|
       appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
       price_per_class = (purchase.amount / 100.0) / purchase.pack.classes
-      if appointments_in_month.count <= purchase.pack.classes) 
+      if appointments_in_month.count <= purchase.pack.classes
         appointments_in_month.count * price_per_class
       else
         0.0
