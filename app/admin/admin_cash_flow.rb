@@ -62,7 +62,9 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
       purchase.amount / 100.0
     end
 
-    column "Fecha", :created_at
+    column "Fecha" do |purchase|
+      purchase.created_at
+    end
 
     column "Usadas" do |purchase|
       appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
