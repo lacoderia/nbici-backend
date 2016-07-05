@@ -64,7 +64,7 @@ class User < ActiveRecord::Base
     #BY PURCHASE
     users_with_classes_left = User.where("classes_left > ?", 0)
     users_with_classes_left.each do |user|
-      if user.expiration_date <= Time.zone.now
+      if user.expiration_date and user.expiration_date <= Time.zone.now
         Expiration.create(user_id: user.id, classes_left: user.classes_left, last_class_purchased: user.last_class_purchased)
         user.update_attribute(:classes_left, 0)
       end      
