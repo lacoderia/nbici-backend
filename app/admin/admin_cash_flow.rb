@@ -81,7 +81,7 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
       if appointments_in_month.count <= purchase.pack.classes
         appointments_in_month.count * price_per_class
       else
-        0.0
+        purchase.amount / 100.0
       end
     end
     
