@@ -6,6 +6,7 @@ feature 'PurchasesController' do
   let!(:user_03){create(:user)}
   let!(:user_04){create(:user)}
   let!(:user_05){create(:user)}
+  let!(:user_staff){create(:user, :staff)}
   let!(:pack){create(:pack)}
   let!(:card){create(:card, user: user_01)}
   let!(:card_02){create(:card, :master_card, user: user_02)}
@@ -39,6 +40,36 @@ feature 'PurchasesController' do
       user_01.reload
       expect(user_01.classes_left).to eql 1
       expect(user_01.expiration_date).to be_within(1.second).of (user_01.last_class_purchased + pack.expiration.days)
+
+    end
+
+    it 'should not stack credits from referrals for staff' do
+
+      expect(user_staff.referrals.count).to eql 0
+
+      login_with_service user = { email: user_02.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_purchase_request = {pack_id: pack.id, price: pack.price - Configuration.coupon_discount, uid: card_02.uid, coupon: user_staff.coupon}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+
+      user_staff.reload
+      expect(user_staff.referrals.count).to eql 1
+      expect(user_staff.credits).to eql 0.0
+
+      #Check that the user can't use another discount coupon
+
+      new_purchase_request = {pack_id: pack.id, price: pack.price - Configuration.coupon_discount, uid: card_02.uid, coupon: user_01.coupon}
+      with_rack_test_driver do
+        page.driver.post charge_purchases_path, new_purchase_request
+      end
+
+      response = JSON.parse(page.body)
+      expect(page.status_code).to be 500
+      expect(response["errors"][0]["title"]).to eql "Ya has usado un cupón de otro usuario anteriormente."
 
     end
 

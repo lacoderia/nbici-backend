@@ -10,6 +10,10 @@ FactoryGirl.define do
     roles {[FactoryGirl.create(:role)]}
     #Only modifications through the admin
     credit_modifications []
+
+    trait :staff do
+      staff true
+    end
   end
 
 end

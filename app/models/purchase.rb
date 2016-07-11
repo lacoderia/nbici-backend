@@ -110,9 +110,11 @@ class Purchase < ActiveRecord::Base
       expiration_date = Time.zone.now + pack.expiration.days
     end
 
-    if params_coupon and referrer = User.find_by_coupon(params_coupon.upcase)      
-      #Add credit
-      referrer.update_attribute(:credits, referrer.credits + Configuration.referral_credit) 
+    if params_coupon and referrer = User.find_by_coupon(params_coupon.upcase) 
+      if not referrer.staff?
+        #Add credit
+        referrer.update_attribute(:credits, referrer.credits + Configuration.referral_credit) 
+      end
       #Add referral
       Referral.create!(owner: referrer, referred: user, credits: Configuration.referral_credit, used: false)
     elsif params_coupon and promotion = Promotion.find_by_coupon(params_coupon.upcase)
