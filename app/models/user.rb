@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   before_create :assign_coupon
+  before_update :check_staff
 
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :promotions
@@ -133,6 +134,12 @@ class User < ActiveRecord::Base
 
     def assign_coupon
       self.coupon = Discount.generate_coupon
+    end
+
+    def check_staff
+      if self.staff?
+        self.credits = 0.0
+      end
     end
  
 end

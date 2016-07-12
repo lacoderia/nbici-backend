@@ -6,7 +6,7 @@ feature 'PurchasesController' do
   let!(:user_03){create(:user)}
   let!(:user_04){create(:user)}
   let!(:user_05){create(:user)}
-  let!(:user_staff){create(:user, :staff)}
+  let!(:user_staff){create(:user, credits: 100.0)}
   let!(:pack){create(:pack)}
   let!(:card){create(:card, user: user_01)}
   let!(:card_02){create(:card, :master_card, user: user_02)}
@@ -45,7 +45,9 @@ feature 'PurchasesController' do
 
     it 'should not stack credits from referrals for staff' do
 
+      expect(user_staff.credits).to eql 100.0
       expect(user_staff.referrals.count).to eql 0
+      user_staff.update_attribute(:staff, true)
 
       login_with_service user = { email: user_02.email, password: "12345678" }
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
