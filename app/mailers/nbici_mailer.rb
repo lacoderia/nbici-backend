@@ -3,7 +3,7 @@ class NbiciMailer < ActionMailer::Base
 
   def welcome user, data = nil
     @user = user
-    mail(to: @user.email, subject: "¡Bienvenido a n-bici!")
+    mail(to: @user.email, subject: "¡Bienvenido a N bici!")
   end
 
   def booking user, appointment
@@ -31,6 +31,12 @@ class NbiciMailer < ActionMailer::Base
   def send_coupon user, email
     @user = user
     mail(to: email, subject: "¡#{@user.first_name} te invita a probar N Bici!")
+  end
+
+  def after_first_class user, appointment
+    @user = user
+    @appointment = appointment
+    mail(to: @user.email, subject: "¿Cómo te fue en tu primera clase?")
   end
 
 end

@@ -89,6 +89,7 @@ feature 'AppointmentsController' do
   context 'Creating, editing, and cancelling appointments' do
   
     let!(:schedule) { create(:schedule, datetime: starting_datetime + 1.hour) }
+    let!(:schedule_02) { create(:schedule, datetime: starting_datetime + 4.hour) }
     let!(:user_with_classes_left) { create(:user, classes_left: 2, last_class_purchased: starting_datetime) }
     let!(:user_with_no_classes_left) { create(:user, classes_left: 0, last_class_purchased: starting_datetime) }
     let!(:user_with_nil_classes_left) { create(:user) }
@@ -154,7 +155,6 @@ feature 'AppointmentsController' do
       expect(SendEmailJob).to have_been_enqueued.with("booking", global_id(user_with_classes_left), global_id(Appointment.last))
       perform_enqueued_jobs { SendEmailJob.perform_later("booking", user_with_classes_left, Appointment.last) } 
 
-
     end
 
     it 'should test cancel appointment conditions' do
@@ -219,11 +219,33 @@ feature 'AppointmentsController' do
       appointment = Appointment.find(response["appointment"]["id"])
       expect(appointment.status).to eql "BOOKED"
 
-      Timecop.travel(starting_datetime + 2.hours)
+      new_datetime = starting_datetime + 2.hours
+      Timecop.travel(new_datetime)
       Appointment.finalize
+
+      expect(SendEmailJob).to have_been_enqueued.with("after_first_class", global_id(user_with_classes_left),  global_id(Appointment.last))
+      perform_enqueued_jobs { SendEmailJob.perform_later("after_first_class", user_with_classes_left, Appointment.last) } 
+      expect(Email.count).to eql 1
       
       appointment = Appointment.find(response["appointment"]["id"])
       expect(appointment.status).to eql "FINALIZED"
+
+      another_appointment_request = {schedule_id: schedule_02.id, bicycle_number: 4, description: "Mi segunda clase"}      
+      with_rack_test_driver do
+        page.driver.post book_appointments_path, another_appointment_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["appointment"]["booked_seats"][0]["number"]).to eq 4
+      appointment = Appointment.find(response["appointment"]["id"])
+      expect(appointment.status).to eql "BOOKED"
+
+      Timecop.travel(new_datetime + 3.hours)
+      Appointment.finalize
+
+      expect(Appointment.finalized.count).to eql 2
+      expect {expect(SendEmailJob).to have_been_enqueued.with("after_first_class", global_id(user_with_classes_left),  global_id(Appointment.last))}.to raise_error(RSpec::Expectations::ExpectationNotMetError)
+      expect(Email.count).to eql 1
       
       #Can't book past schedules
       new_appointment_request = {schedule_id: schedule.id, bicycle_number: 2, description: "Mi otra clase"}      
