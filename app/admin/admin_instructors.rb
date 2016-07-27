@@ -56,8 +56,8 @@ ActiveAdmin.register Instructor, :as => "Instructores" do
       f.input :picture_2, label: "Foto_2"
       f.input :quote, label: "Cita"
       f.input :bio, label: "Bio"
-      f.input :active, label: "Activo" if not current_admin_user.role? :niumedia
-    f.actions
+      f.input :active, label: "Activo"
+      f.actions
     end
   end
 
