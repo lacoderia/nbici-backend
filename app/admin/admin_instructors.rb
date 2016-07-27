@@ -8,9 +8,11 @@ ActiveAdmin.register Instructor, :as => "Instructores" do
 
   controller do
     def update
-      if params[:instructor][:admin_user_attributes][:password].blank?
-        params[:instructor][:admin_user_attributes].delete("password")
-        params[:instructor][:admin_user_attributes].delete("password_confirmation")
+      if not current_admin_user.role? :niumedia
+        if params[:instructor][:admin_user_attributes][:password].blank?
+          params[:instructor][:admin_user_attributes].delete("password")
+          params[:instructor][:admin_user_attributes].delete("password_confirmation")
+        end
       end
       super
     end
