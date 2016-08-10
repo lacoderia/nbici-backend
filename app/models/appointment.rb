@@ -23,6 +23,7 @@ class Appointment < ActiveRecord::Base
   scope :booked, -> {where("status = ?", 'BOOKED')}
   scope :finalized, -> {where("status = ?", 'FINALIZED')}
   scope :cancelled, -> {where("status = ?", 'CANCELLED')}
+  scope :not_cancelled, -> {where("status = ? OR status = ?", 'BOOKED', 'FINALIZED')}
   #scope :today_with_users, -> {where("true").includes(:user, :schedule=> :instructor)}
 
   def cancel_with_time_check

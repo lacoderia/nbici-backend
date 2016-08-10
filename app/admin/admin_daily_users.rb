@@ -36,7 +36,7 @@ ActiveAdmin.register Appointment, :as => "Clientes_del_dia" do
       "#{appointment.user.first_name} #{appointment.user.last_name}"
     end
     column 'Instructor' do |appointment|
-      "#{appointment.schedule.instructor.first_name} #{appointment.schedule.instructor.last_name}"
+      "#{appointment.schedule.instructor.first_name} #{appointment.schedule.instructor.last_name}" if appointment.schedule
     end
   end
 

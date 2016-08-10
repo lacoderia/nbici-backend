@@ -29,7 +29,15 @@ ActiveAdmin.register Schedule, :as => "Clases" do
     column "Por Pagar" do |schedule|
       Configuration.payment_based_on_attendees schedule.appointments.finalized.count
     end
-    actions :defaults => true
+    
+    actions defaults: false do |schedule|
+      links = "#{link_to "View", admin_clase_path(schedule.id)} "
+      links += "#{link_to "Edit", "#{admin_clase_path(schedule.id)}/edit"} "
+      if schedule.appointments.not_cancelled.empty?
+        links += "#{link_to "Delete", admin_clase_path(schedule.id), method: :delete, data: {:confirm => "Eliminarás la clase. ¿Estás seguro?"} }"
+      end
+      links.html_safe
+    end
   end
 
   csv do
