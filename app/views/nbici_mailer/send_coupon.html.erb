@@ -207,9 +207,9 @@
                           <div class="text" eqid="EQMST-C376B100-8A8F-4E8F-92E4-E5A9BB41982E" style="font-size: 16px; font-family: 'Lucida Grande';text-align: center;"><p style="margin: 0px; text-align: center; line-height: normal; color: rgb(255, 255, 255); ">
                             <p>
                             <br/><br/>
-                            Aquí tienes $ <%= "%.2f" % (Configuration.coupon_discount/100.00) %> pesos de regalo para tu primera compra. Compra tu paquete, reserva tu clase y ¡ponte a rodar!
+                            Aquí tienes $ <%= "%.2f" % (Configuration.coupon_discount) %> pesos de regalo para tu primera compra. Compra tu paquete, reserva tu clase y ¡ponte a rodar!
                             <br/><br/>
-                            Al utilizarlo, le abonaremos $ <%= "%.2f" % (Configuration.referral_credit/100.00) %> a tu amigo <%= @user.first_name %>. 
+                            Al utilizarlo, le abonaremos $ <%= "%.2f" % (Configuration.referral_credit) %> a tu amigo <%= @user.first_name %>. 
                             <br/><br/>
                             <b>CUPON: <%= @user.coupon %></b>
                             <br/><br/>
