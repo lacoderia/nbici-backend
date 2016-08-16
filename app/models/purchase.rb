@@ -117,6 +117,8 @@ class Purchase < ActiveRecord::Base
       end
       #Add referral
       Referral.create!(owner: referrer, referred: user, credits: Configuration.referral_credit, used: false)
+      #Send email
+      SendEmailJob.perform_later("shared_coupon", user, referrer)
     elsif params_coupon and promotion = Promotion.find_by_coupon(params_coupon.upcase)
       user.promotions << promotion
       user.save!

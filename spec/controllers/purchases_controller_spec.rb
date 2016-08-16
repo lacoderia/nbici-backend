@@ -78,6 +78,7 @@ feature 'PurchasesController' do
     it 'should stack credits from referrals' do
 
       expect(user_01.referrals.count).to eql 0
+      expect(Email.count).to eql 0
 
       login_with_service user = { email: user_02.email, password: "12345678" }
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
@@ -87,6 +88,9 @@ feature 'PurchasesController' do
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
+
+      expect(SendEmailJob).to have_been_enqueued.with("shared_coupon", global_id(user_02), global_id(user_01))
+      perform_enqueued_jobs { SendEmailJob.perform_later("shared_coupon", user_02, user_01) } 
 
       logout
 
@@ -98,6 +102,9 @@ feature 'PurchasesController' do
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
+      
+      expect(SendEmailJob).to have_been_enqueued.with("shared_coupon", global_id(user_03), global_id(user_01))
+      perform_enqueued_jobs { SendEmailJob.perform_later("shared_coupon", user_03, user_01) } 
 
       logout
 
@@ -109,6 +116,9 @@ feature 'PurchasesController' do
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
+      
+      expect(SendEmailJob).to have_been_enqueued.with("shared_coupon", global_id(user_04), global_id(user_01))
+      perform_enqueued_jobs { SendEmailJob.perform_later("shared_coupon", user_04, user_01) } 
 
       logout
 
@@ -120,8 +130,14 @@ feature 'PurchasesController' do
       with_rack_test_driver do
         page.driver.post charge_purchases_path, new_purchase_request
       end
+      
+      expect(SendEmailJob).to have_been_enqueued.with("shared_coupon", global_id(user_05), global_id(user_01))
+      perform_enqueued_jobs { SendEmailJob.perform_later("shared_coupon", user_05, user_01) } 
 
       logout
+
+      # 5 shared coupon email sent
+      expect(Email.count).to eql 4
 
       #Purchase of user with +credits 
       user_01.reload

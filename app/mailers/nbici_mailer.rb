@@ -39,4 +39,9 @@ class NbiciMailer < ActionMailer::Base
     mail(to: @user.email, subject: "¿Cómo te fue en tu primera clase?")
   end
 
+  def shared_coupon referred, referrer 
+    @referred = referred
+    mail(to: referrer.email, subject: "¡Tienes saldo a favor!")
+  end
+
 end
