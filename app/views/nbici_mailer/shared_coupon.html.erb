@@ -208,7 +208,7 @@
                             <p>
                             <br/><br/>
                             <%= @referred.first_name %> ha usado tu código al registrarse en N bici, por esto acabamos de abonar a tu cuenta
-                            $ <%= Configuration.referral_credit %>. 
+                            $ <%= "%.2f" % (Configuration.referral_credit/100.00) %>. 
                             <br/><br/>
                             Gracias por compartir.
                             <br/><br/>
