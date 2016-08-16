@@ -9,7 +9,7 @@ feature 'AppointmentsController' do
     let!(:user_with_no_classes){create(:user)}
     
     #Schedules
-    let!(:future_sch_01){create(:schedule, datetime: starting_datetime + 1.hour)}
+    let!(:future_sch_01){create(:schedule, datetime: starting_datetime + 1.hour, description: "futuro uno")}
     let!(:future_sch_02){create(:schedule, datetime: starting_datetime + 1.day)}
     let!(:future_sch_03){create(:schedule, datetime: starting_datetime + 6.days + 23.hours)}
     let!(:future_sch_04){create(:schedule, datetime: starting_datetime + 7.days)}
@@ -53,6 +53,7 @@ feature 'AppointmentsController' do
       response = JSON.parse(page.body)
       expect(response["appointments"].size).to eql 3
       expect(response["appointments"][0]["id"]).to eql future_app_01.id
+      expect(response["appointments"][0]["schedule"]["description"]).to eql "futuro uno"
       expect(response["appointments"][1]["id"]).to eql future_app_02.id
       expect(response["appointments"][2]["id"]).to eql future_app_03.id
       

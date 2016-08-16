@@ -11,6 +11,7 @@ class AppointmentSerializer < ActiveModel::Serializer
     sch_obj[:id] = object.schedule.id
     sch_obj[:datetime] = object.schedule.datetime
     sch_obj[:room_id] = object.schedule.room_id
+    sch_obj[:description] = object.schedule.description
     sch_obj[:instructor] = object.schedule.instructor
     sch_obj
   end

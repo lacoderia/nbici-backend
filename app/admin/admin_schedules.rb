@@ -2,12 +2,11 @@ ActiveAdmin.register Schedule, :as => "Clases" do
 
   actions :all
 
-  permit_params :datetime, :room_id, :instructor_id
+  permit_params :datetime, :room_id, :instructor_id, :description
 
   filter :datetime, :label => "Horario"
-  
+  filter :description, :label => "Descripción"
   filter :instructor_first_name, :label => "Nombre de instructor", :as => :string
-  
   filter :instructor_active, :label => "¿Instructor activo?", :as => :boolean
   
   config.sort_order = "datetime_desc"
@@ -17,6 +16,7 @@ ActiveAdmin.register Schedule, :as => "Clases" do
     column "Instructor" do |schedule|
       "#{schedule.instructor.first_name} #{schedule.instructor.last_name}" if schedule.instructor
     end
+    column "Descripción", :description
     column "Reservados" do |schedule|
       schedule.appointments.booked.count
     end
@@ -47,6 +47,9 @@ ActiveAdmin.register Schedule, :as => "Clases" do
     column "Instructor" do |schedule|
       "#{schedule.instructor.first_name} #{schedule.instructor.last_name}"
     end
+    column "Descripcion" do |schedule| 
+      schedule.description
+    end
     column "Reservados" do |schedule|
       schedule.appointments.booked.count
     end
@@ -69,6 +72,9 @@ ActiveAdmin.register Schedule, :as => "Clases" do
       row "Instructor" do
         "#{schedule.instructor.first_name} #{schedule.instructor.last_name}"
       end
+      row "Descripción" do
+        schedule.description
+      end
       row "Reservados" do
         schedule.appointments.booked.map { |appointment| "#{appointment.user.first_name} #{appointment.user.last_name}" if appointment.user }.join("<br/>").html_safe
       end
@@ -89,6 +95,7 @@ ActiveAdmin.register Schedule, :as => "Clases" do
       f.input :datetime, label: "Horario"
       f.input :instructor, label: "Instructor", :collection => Instructor.active.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select 
       f.input :room, label: "Cuarto", :collection => Room.all.collect{|room| [room.description, room.id]}, :as => :select, :include_blank => false 
+      f.input :description, label: "Descripción"
     end
     f.actions
   end
