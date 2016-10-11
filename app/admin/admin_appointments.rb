@@ -22,6 +22,7 @@ ActiveAdmin.register User, :as => "Resumen_clases_por_usuario" do
   index :title => "Clientes" do
     column "Nombre", :first_name
     column "Apellido", :last_name
+    column "Email", :email
     column "Clases restantes", :classes_left
     column "Reservadas", :sortable => 'booked' do |user|
       user["booked"]
