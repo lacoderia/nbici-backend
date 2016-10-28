@@ -15,6 +15,10 @@ class NbiciMailer < ActionMailer::Base
   def purchase user, purchase
     @user = user
     @purchase = purchase
+    @challenge = false
+    if @purchase.pack.id == 6
+      @challenge = true
+    end
     mail(to: @user.email, subject: "Confirmación de compra")
   end
 
