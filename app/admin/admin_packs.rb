@@ -1,6 +1,6 @@
 ActiveAdmin.register Pack, :as => "Paquetes" do
 	
-  actions :all, :except => [:show]
+  actions :all, :except => [:show, :destroy]
 
   permit_params :classes, :description, :price, :special_price, :expiration, :active
 
