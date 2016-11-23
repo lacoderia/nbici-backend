@@ -6,7 +6,7 @@ gem 'pg'
 gem 'state_machine'
 gem 'cancancan'
 gem "active_model_serializers", "~> 0.8.0"
-gem 'devise'
+gem 'devise', "~> 3.5.6"
 gem 'devise_token_auth'
 gem 'rack-cors', :require => 'rack/cors'
 gem 'conekta'
