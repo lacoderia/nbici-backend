@@ -2,7 +2,7 @@ ActiveAdmin.register Pack, :as => "Paquetes" do
 	
   actions :all, :except => [:show]
 
-  permit_params :classes, :description, :price, :special_price, :expiration 
+  permit_params :classes, :description, :price, :special_price, :expiration, :active
 
   config.filters = false
 
@@ -12,6 +12,7 @@ ActiveAdmin.register Pack, :as => "Paquetes" do
     column "Precio", :price
     column "Precio especial", :special_price
     column "Días de expiración", :expiration
+    column "Activo", :active
     actions :defaults => true
   end
 
@@ -22,6 +23,7 @@ ActiveAdmin.register Pack, :as => "Paquetes" do
       f.input :price, label: "Precio"
       f.input :special_price, label: "Precio especial"
       f.input :expiration, label: "Días de expiración"
+      f.input :active, label: "Activo"
     end
     f.actions
   end
