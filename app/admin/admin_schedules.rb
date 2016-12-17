@@ -2,10 +2,11 @@ ActiveAdmin.register Schedule, :as => "Clases" do
 
   actions :all
 
-  permit_params :datetime, :room_id, :instructor_id, :description
+  permit_params :datetime, :room_id, :instructor_id, :description, :free
 
   filter :datetime, :label => "Horario"
   filter :description, :label => "Descripción"
+  filter :free, :label => "Gratis"
   filter :instructor_first_name, :label => "Nombre de instructor", :as => :string
   filter :instructor_active, :label => "¿Instructor activo?", :as => :boolean
   
@@ -29,6 +30,7 @@ ActiveAdmin.register Schedule, :as => "Clases" do
     column "Por Pagar" do |schedule|
       Configuration.payment_based_on_attendees schedule.appointments.finalized.count
     end
+    column "Gratis", :free
     
     actions defaults: false do |schedule|
       links = "#{link_to "View", admin_clase_path(schedule.id)} "
@@ -96,6 +98,7 @@ ActiveAdmin.register Schedule, :as => "Clases" do
       f.input :instructor, label: "Instructor", :collection => Instructor.active.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select 
       f.input :room, label: "Cuarto", :collection => Room.all.collect{|room| [room.description, room.id]}, :as => :select, :include_blank => false 
       f.input :description, label: "Descripción"
+      f.input :free, label: "Gratis"
     end
     f.actions
   end

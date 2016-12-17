@@ -5,7 +5,7 @@ feature 'SchedulesController' do
   let!(:schedule_current_week_01) { create(:schedule, datetime: starting_datetime, description: "semana uno" ) }
   let!(:schedule_current_week_02) { create(:schedule, datetime: starting_datetime + 7.days + 23.hours + 59.minutes) }
   let!(:schedule_past_week) { create(:schedule, datetime: starting_datetime - 1.day) }
-  let!(:schedule_next_week) { create(:schedule, datetime: starting_datetime + 8.days) }
+  let!(:schedule_next_week) { create(:schedule, datetime: starting_datetime + 8.days, free: true) }
 
   let!(:appointment_01) { create(:appointment, schedule: schedule_current_week_01, bicycle_number: 4) }
   let!(:appointment_02) { create(:appointment, schedule: schedule_current_week_01, bicycle_number: 1) }
@@ -36,7 +36,7 @@ feature 'SchedulesController' do
         response = JSON.parse(page.body)
         expect(response['schedules'].count).to eql 1
         expect(response['schedules'][0]['id']).to eql schedule_next_week.id
-
+        expect(response['schedules'][0]['free']).to eql true 
     end
 
     it 'should give the booked seats for a schedule' do

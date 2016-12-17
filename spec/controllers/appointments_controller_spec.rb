@@ -90,6 +90,7 @@ feature 'AppointmentsController' do
   context 'Creating, editing, and cancelling appointments' do
   
     let!(:schedule) { create(:schedule, datetime: starting_datetime + 1.hour) }
+    let!(:schedule_free) { create(:schedule, datetime: starting_datetime + 1.hour, free: true) }
     let!(:schedule_02) { create(:schedule, datetime: starting_datetime + 4.hour) }
     let!(:user_with_classes_left) { create(:user, classes_left: 2, last_class_purchased: starting_datetime) }
     let!(:user_with_no_classes_left) { create(:user, classes_left: 0, last_class_purchased: starting_datetime) }
@@ -97,6 +98,52 @@ feature 'AppointmentsController' do
 
     before do
       Timecop.freeze(starting_datetime)
+    end
+
+    it 'should test that free schedules dont deduct credits and that no credits are required to book them ' do
+
+      #User with credits
+      page = login_with_service user = { email: user_with_classes_left[:email], password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_appointment_request = {schedule_id: schedule_free.id, bicycle_number: 4, description: "Mi primera clase"}      
+      with_rack_test_driver do
+        page.driver.post book_appointments_path, new_appointment_request
+      end
+
+      response = JSON.parse(page.body)
+      expect(response["appointment"]["booked_seats"][0]["number"]).to eq 4
+      appointment = Appointment.find(response["appointment"]["id"])
+      expect(appointment.status).to eql "BOOKED"
+      user = User.find(response["appointment"]["user_id"])
+      #No credits deducted
+      expect(user.classes_left).to eql 2
+      
+      expect(SendEmailJob).to have_been_enqueued.with("booking", global_id(user_with_classes_left), global_id(Appointment.last))
+      perform_enqueued_jobs { SendEmailJob.perform_later("booking", user_with_classes_left, Appointment.last) }
+      logout
+
+      #User with no credits
+      page = login_with_service user = { email: user_with_nil_classes_left[:email], password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      new_appointment_request = {schedule_id: schedule_free.id, bicycle_number: 3, description: "Mi primera clase"}      
+      with_rack_test_driver do
+        page.driver.post book_appointments_path, new_appointment_request
+      end
+
+      response = JSON.parse(page.body)
+      expect(response["appointment"]["booked_seats"][0]["number"]).to eq 3
+      appointment = Appointment.find(response["appointment"]["id"])
+      expect(appointment.status).to eql "BOOKED"
+      user = User.find(response["appointment"]["user_id"])
+      expect(user.classes_left).to eql nil
+      
+      expect(SendEmailJob).to have_been_enqueued.with("booking", global_id(user_with_nil_classes_left), global_id(Appointment.last))
+      perform_enqueued_jobs { SendEmailJob.perform_later("booking", user_with_nil_classes_left, Appointment.last) }
+
     end
 
     it 'should test edit bicycle number in an appointment' do

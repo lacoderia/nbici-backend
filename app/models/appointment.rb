@@ -79,15 +79,23 @@ class Appointment < ActiveRecord::Base
       raise "Esa bicicleta no existe, por favor intenta nuevamente."
     end
 
-    if (user.classes_left and user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
-
-      schedule.appointments << appointment = Appointment.create!(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
-      user.update_attribute(:classes_left, user.classes_left - 1)
-    elsif not user.classes_left or user.classes_left == 0 
-      raise "Ya no tienes clases disponibles, adquiere más para continuar."
-    elsif schedule.bookings.find{|bicycle| bicycle.number == bicycle_number}
-      raise "La bicicleta ya fue reservada, por favor intenta con otra."
+    if schedule.free
+      if (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
+        schedule.appointments << appointment = Appointment.create!(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
+      else
+        raise "La bicicleta ya fue reservada, por favor intenta con otra."
+      end
+    else
+      if (user.classes_left and user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
+        schedule.appointments << appointment = Appointment.create!(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
+        user.update_attribute(:classes_left, user.classes_left - 1)
+      elsif not user.classes_left or user.classes_left == 0 
+        raise "Ya no tienes clases disponibles, adquiere más para continuar."
+      elsif schedule.bookings.find{|bicycle| bicycle.number == bicycle_number}
+        raise "La bicicleta ya fue reservada, por favor intenta con otra."
+      end
     end
+    
     appointment
   end
 
