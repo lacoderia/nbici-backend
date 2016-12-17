@@ -136,6 +136,7 @@ feature 'AppointmentsController' do
 
       response = JSON.parse(page.body)
       expect(response["appointment"]["booked_seats"][0]["number"]).to eq 3
+      expect(response["appointment"]["schedule"]["free"]).to eq true
       appointment = Appointment.find(response["appointment"]["id"])
       expect(appointment.status).to eql "BOOKED"
       user = User.find(response["appointment"]["user_id"])
