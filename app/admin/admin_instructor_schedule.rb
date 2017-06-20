@@ -2,7 +2,7 @@ ActiveAdmin.register ScheduleForInstructor, :as => "Clases_de_entrenadores" do
 
   actions :all, :except => [:new, :destroy, :update, :edit]
 
-  config.filters = false
+  filter :datetime, :label => "Horario"
   
   config.sort_order = "datetime_desc"
   
