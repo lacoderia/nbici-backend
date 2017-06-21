@@ -81,7 +81,13 @@ class Appointment < ActiveRecord::Base
 
     if schedule.free
       if (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
-        schedule.appointments << appointment = Appointment.create!(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
+        
+        if user.appointments.where("schedule_id = ?", schedule.id).empty?
+          schedule.appointments << appointment = Appointment.create!(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)
+        else
+          raise "Sólo puedes reservar un lugar en clases gratis."
+        end
+
       else
         raise "La bicicleta ya fue reservada, por favor intenta con otra."
       end
