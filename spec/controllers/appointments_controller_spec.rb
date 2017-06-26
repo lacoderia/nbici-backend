@@ -262,12 +262,12 @@ feature 'AppointmentsController' do
       expect(user.classes_left).to eql 1
 
       #Error cancelling appointment
-      Timecop.travel(starting_datetime - 23.hours)
+      Timecop.travel(starting_datetime - 11.hours)
       
       visit cancel_appointment_path(appointment.id)
       response = JSON.parse(page.body)
       expect(page.status_code).to be 500
-      expect(response["errors"][0]["title"]).to eql "Sólo se pueden cancelar clases con 24 horas de anticipación."
+      expect(response["errors"][0]["title"]).to eql "Sólo se pueden cancelar clases con 12 horas de anticipación."
 
       #Error calling an appointment_id that doesn't exist
       visit cancel_appointment_path(2003)
@@ -276,7 +276,7 @@ feature 'AppointmentsController' do
       expect(response["errors"][0]["title"]).to eql "Clase no encontrada."
 
       #Success cancelling appointment
-      Timecop.travel(starting_datetime - 23.hours - 1.minute)
+      Timecop.travel(starting_datetime - 11.hours - 1.minute)
       
       visit cancel_appointment_path(appointment.id)
       response = JSON.parse(page.body)

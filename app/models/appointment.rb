@@ -28,11 +28,11 @@ class Appointment < ActiveRecord::Base
 
   def cancel_with_time_check
 
-    if Time.zone.now < (self.start - 24.hours)
+    if Time.zone.now < (self.start - 12.hours)
       self.cancel!
       self.user.update_attribute(:classes_left, self.user.classes_left + 1)
     else
-      raise "Sólo se pueden cancelar clases con 24 horas de anticipación."
+      raise "Sólo se pueden cancelar clases con 12 horas de anticipación."
     end    
   end
 
