@@ -90,6 +90,7 @@ feature 'CreditModificationsController' do
       expect(user.expiration_date).to be nil
       expect(user.classes_left).to be nil
       expect(user.last_class_purchased).to be nil
+      expect(user.credit_modifications.size).to eql 0
 
       login_as_admin admin_user
       
@@ -103,12 +104,24 @@ feature 'CreditModificationsController' do
       expect(user.expiration_date).to eql starting_datetime + 15.days
       expect(user.classes_left).to be 4 
       expect(user.last_class_purchased).to eql starting_datetime
+      expect(user.credit_modifications.size).to eql 1
+      # Check migration of timestamp fields
+      expect(user.credit_modifications.first.created_at).not_to be nil
+
+      # Checks view credit modifications link exists and works
+      todos_los_clientes_page = PageObject.new
+      page_all_users = todos_los_clientes_page.visit_page(admin_todos_los_clientes_path)
+      credit_modifications_link = "/admin/modificaciones_de_creditos?q%5Buser_id_equals%5D=#{user.id}&commit=Filter&order=id_desc" 
+      expect(page_all_users.have_link?(credit_modifications_link)).to be true
+      credit_modifications_page = PageObject.new
+      page_credits_from_user = credit_modifications_page.visit_page(credit_modifications_link)
+      expect(page_credits_from_user.has_text? user.email)
 
       #ONE WEEK LATER
       one_week_after = starting_datetime + 8.days
       Timecop.travel(one_week_after)
       
-      #Delete 2 credis
+      #Delete 2 credits
       visit(edit_admin_todos_los_cliente_path(user.id))
       fill_in "credit_id", with: -2
       fill_in "reason_id", with: "Added Manual Credits Test minus"
