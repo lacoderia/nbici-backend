@@ -3,6 +3,9 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
   actions :all, :except => [:show, :new, :destroy, :update]
   
   filter :created_at, :label => "Fecha"
+  filter :user_first_name, :as => :string, :label => "Nombre del usuario"
+  filter :user_last_name, :as => :string, :label => "Apellido del usuario"
+  filter :user_email, :as => :string, :label => "Email del usuario"
 
   config.sort_order = "created_at_desc"
   
@@ -41,7 +44,7 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
       appointments_in_month.count
     end
 
-    column "Disponible" do |purchase|
+    column "$ Disponible" do |purchase|
       appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
       price_per_class = (purchase.amount / 100.0) / purchase.pack.classes
       if appointments_in_month.count <= purchase.pack.classes
@@ -50,6 +53,16 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
         purchase.amount / 100.0
       end
     end
+
+    column "Clases Disponibles" do |purchase|
+      appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
+      if appointments_in_month.count < purchase.pack.classes
+        puchase.pack.classess - appointments_in_month.count
+      else
+        0
+      end
+    end
+
   end
 
   csv do
@@ -75,13 +88,22 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
       appointments_in_month.count
     end
 
-    column "Disponible" do |purchase|
+    column "$ Disponible" do |purchase|
       appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
       price_per_class = (purchase.amount / 100.0) / purchase.pack.classes
       if appointments_in_month.count <= purchase.pack.classes
         appointments_in_month.count * price_per_class
       else
         purchase.amount / 100.0
+      end
+    end
+
+    column "Clases Disponibles" do |purchase|
+      appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
+      if appointments_in_month.count < purchase.pack.classes
+        puchase.pack.classess - appointments_in_month.count
+      else
+        0
       end
     end
     
