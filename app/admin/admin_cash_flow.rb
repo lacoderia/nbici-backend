@@ -57,7 +57,7 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
     column "Clases Disponibles" do |purchase|
       appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
       if appointments_in_month.count < purchase.pack.classes
-        puchase.pack.classess - appointments_in_month.count
+        purchase.pack.classes - appointments_in_month.count
       else
         0
       end
@@ -101,7 +101,7 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
     column "Clases Disponibles" do |purchase|
       appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
       if appointments_in_month.count < purchase.pack.classes
-        puchase.pack.classess - appointments_in_month.count
+        purchase.pack.classes - appointments_in_month.count
       else
         0
       end
