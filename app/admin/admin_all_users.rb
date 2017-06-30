@@ -4,8 +4,8 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
 
   permit_params :classes_left, :last_class_purchased, :expiration_date, credit_modifications_attributes: [:user_id, :reason, :credits, :pack_id], purchases_attributes: [:user_id, :pack_id, :object, :livemode, :status, :description, :amount, :currency, :payment_method, :details]
   
-  filter :last_name, :as => :string
-  filter :first_name, :as => :string
+  filter :first_name, :as => :string, :label => "Nombre"
+  filter :last_name, :as => :string, :label => "Apellido"
   filter :email, :as => :string
   filter :classes_left
 

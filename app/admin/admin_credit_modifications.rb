@@ -2,9 +2,9 @@ ActiveAdmin.register CreditModification, :as => "Modificaciones_de_creditos" do
 
   actions :all, :except => [:destroy, :new]
 
-  filter :user_first_name, :as => :string, :label => "Nombre del usuario"
-  filter :user_last_name, :as => :string, :label => "Apellido del usuario"
-  filter :user_email, :as => :string, :label => "Email del usuario"
+  filter :user_first_name, :as => :string, :label => "Nombre"
+  filter :user_last_name, :as => :string, :label => "Apellido"
+  filter :user_email, :as => :string, :label => "Email"
   filter :user_id, :label => "ID del usuario"
   filter :created_at, :label => "Fecha"
   

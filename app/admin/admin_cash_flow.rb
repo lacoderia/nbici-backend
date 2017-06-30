@@ -3,19 +3,19 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
   actions :all, :except => [:show, :new, :destroy, :update]
   
   filter :created_at, :label => "Fecha"
-  filter :user_first_name, :as => :string, :label => "Nombre del usuario"
-  filter :user_last_name, :as => :string, :label => "Apellido del usuario"
-  filter :user_email, :as => :string, :label => "Email del usuario"
+  filter :user_first_name, :as => :string, :label => "Nombre"
+  filter :user_last_name, :as => :string, :label => "Apellido"
+  filter :user_email, :as => :string, :label => "Email"
 
   config.sort_order = "created_at_desc"
   
-  scope("Hace 3 meses"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at <= ?", Time.zone.now.beginning_of_month - 3.month, Time.zone.now.end_of_month - 3.month)}
+  scope("#{Date::MONTHNAMES[(Time.zone.now.beginning_of_month - 3.month).month]}"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at <= ?", Time.zone.now.beginning_of_month - 3.month, Time.zone.now.end_of_month - 3.month)}
   
-  scope("Hace 2 meses"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at <= ?", Time.zone.now.beginning_of_month - 2.month, Time.zone.now.end_of_month - 2.month)}
+  scope("#{Date::MONTHNAMES[(Time.zone.now.beginning_of_month - 2.month).month]}"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at <= ?", Time.zone.now.beginning_of_month - 2.month, Time.zone.now.end_of_month - 2.month)}
   
-  scope("Hace 1 mes"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at <= ?", Time.zone.now.beginning_of_month - 1.month, Time.zone.now.end_of_month - 1.month)}
+  scope("#{Date::MONTHNAMES[(Time.zone.now.beginning_of_month - 1.month).month]}"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at <= ?", Time.zone.now.beginning_of_month - 1.month, Time.zone.now.end_of_month - 1.month)}
   
-  scope("Mes actual"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at <= ?", Time.zone.now.beginning_of_month, Time.zone.now.end_of_month)}
+  scope("#{Date::MONTHNAMES[Time.zone.now.beginning_of_month.month]}"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at <= ?", Time.zone.now.beginning_of_month, Time.zone.now.end_of_month)}
   
   controller do
     def scoped_collection
@@ -29,8 +29,8 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
       "#{purchase.user.first_name} #{purchase.user.last_name}"
     end
 
-    column "Paquete" do |purchase|
-      "#{purchase.pack.description}"
+    column "Compradas" do |purchase|
+      purchase.pack.classes
     end
 
     column "Precio" do |purchase|
@@ -40,22 +40,12 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
     column "Fecha", :created_at
 
     column "Usadas" do |purchase|
-      appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
+      appointments_in_month = purchase.user.appointments.finalized.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
       appointments_in_month.count
     end
 
-    column "$ Disponible" do |purchase|
-      appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
-      price_per_class = (purchase.amount / 100.0) / purchase.pack.classes
-      if appointments_in_month.count <= purchase.pack.classes
-        appointments_in_month.count * price_per_class
-      else
-        purchase.amount / 100.0
-      end
-    end
-
-    column "Clases Disponibles" do |purchase|
-      appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
+    column "Disponibles" do |purchase|
+      appointments_in_month = purchase.user.appointments.finalized.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
       if appointments_in_month.count < purchase.pack.classes
         purchase.pack.classes - appointments_in_month.count
       else
@@ -63,6 +53,16 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
       end
     end
 
+    #column "$ Disponible" do |purchase|
+    #  appointments_in_month = purchase.user.appointments.finalized.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
+    #  price_per_class = (purchase.amount / 100.0) / purchase.pack.classes
+    #  if appointments_in_month.count <= purchase.pack.classes
+    #    appointments_in_month.count * price_per_class
+    #  else
+    #    purchase.amount / 100.0
+    #  end
+    #end
+ 
   end
 
   csv do
@@ -71,8 +71,8 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
       "#{purchase.user.first_name} #{purchase.user.last_name}"
     end
 
-    column "Paquete" do |purchase|
-      "#{purchase.pack.description}"
+    column "Compradas" do |purchase|
+      purchase.pack.classes
     end
 
     column "Precio" do |purchase|
@@ -84,28 +84,28 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
     end
 
     column "Usadas" do |purchase|
-      appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
+      appointments_in_month = purchase.user.appointments.finalized.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
       appointments_in_month.count
     end
-
-    column "$ Disponible" do |purchase|
-      appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
-      price_per_class = (purchase.amount / 100.0) / purchase.pack.classes
-      if appointments_in_month.count <= purchase.pack.classes
-        appointments_in_month.count * price_per_class
-      else
-        purchase.amount / 100.0
-      end
-    end
-
-    column "Clases Disponibles" do |purchase|
-      appointments_in_month = purchase.user.appointments.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
+    
+    column "Disponibles" do |purchase|
+      appointments_in_month = purchase.user.appointments.finalized.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
       if appointments_in_month.count < purchase.pack.classes
         purchase.pack.classes - appointments_in_month.count
       else
         0
       end
     end
+
+    #column "$ Disponible" do |purchase|
+    #  appointments_in_month = purchase.user.appointments..finalized.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
+    #  price_per_class = (purchase.amount / 100.0) / purchase.pack.classes
+    #  if appointments_in_month.count <= purchase.pack.classes
+    #    appointments_in_month.count * price_per_class
+    #  else
+    #    purchase.amount / 100.0
+    #  end
+    #end
     
   end
   
