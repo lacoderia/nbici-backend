@@ -250,3 +250,5 @@ Schedule.create(instructor: instructor_ale, room: room, datetime: next_saturday 
 #Configuration
 Configuration.create(key: "coupon_discount", value: "40")
 Configuration.create(key: "referral_credit", value: "40")
+Configuration.create(key: "free_classes_start_date", value: (Time.zone.now + 1.month).strftime("%FT%T.%L%:z") )
+Configuration.create(key: "free_classes_end_date", value: (Time.zone.now + 2.month).strftime("%FT%T.%L%:z") )
