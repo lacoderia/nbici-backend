@@ -4,8 +4,11 @@ class InstructorSerializer < ActiveModel::Serializer
   def email
     object.admin_user.email
   end
-  
+    
   def weekly_schedules
-    ActiveModel::ArraySerializer.new(object.schedules.includes(:room).where("datetime >= ? AND datetime <= ?", Time.zone.now, Time.zone.now + 7.days), each_serializer: ScheduleSerializer, except: :instructor)
+    start_day = Time.zone.now
+    end_day = start_day + 7.days
+    schedules_with_start_date = Schedule.weekly_scope_with_parameters(object.schedules, start_day, end_day)
+    WeeklyScheduleSerializer.serialize(schedules_with_start_date)
   end
 end

@@ -25,6 +25,27 @@ class Schedule < ActiveRecord::Base
     return {schedules: schedules, start_day: start_day}
   end
 
+  def self.weekly_scope_with_parameters schedules, start_day, end_day
+
+    result_schedules = schedules.where("datetime >= ? AND datetime <= ?", start_day, end_day).order(datetime: :asc)
+
+    #If thare are no schedules next week
+    if result_schedules.empty?
+      start_day = nil
+      #Check if there are schedules anyday in the future
+      result_schedules = schedules.where("datetime >= ?", end_day).order(datetime: :asc)
+      if not result_schedules.empty?
+        start_day = result_schedules.first.datetime
+        end_day = start_day + 7.days
+        result_schedules = schedules.where("datetime >= ? AND datetime <= ?", start_day, end_day).order(datetime: :asc)
+      end
+
+    end
+
+    return {schedules: result_schedules, start_day: result_schedules[0].datetime}
+
+  end
+
   def bookings
     booked_bicycles = []
     active_bicycles = Bicycle.to_bicycle_array(self.room.distribution.active_seats)
