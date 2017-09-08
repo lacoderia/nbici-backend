@@ -11,7 +11,11 @@ class ScheduleSerializer < ActiveModel::Serializer
   end
 
   def available_seats
-    object.available_seats
+    if object.instructor
+      object.available_seats
+    else
+      return 0
+    end
   end
   
   def instructor
