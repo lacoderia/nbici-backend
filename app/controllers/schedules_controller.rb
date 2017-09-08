@@ -8,7 +8,7 @@ class SchedulesController < ApplicationController
   def weekly_scope
     schedules_with_start_date = Schedule.weekly_scope
 
-    render json: WeeklyScheduleSerializer.serialize(schedules_with_start_date)
+    render json: WeeklyScheduleSerializer.serialize(schedules_with_start_date, true)
   end
 
   # GET /schedules/(:id)/bookings
