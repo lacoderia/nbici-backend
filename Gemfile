@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.2.7.1'
 
-gem 'pg'
+gem 'pg', '~> 0.20'
 gem 'state_machine'
 gem 'cancancan'
 gem "active_model_serializers", "~> 0.8.0"
