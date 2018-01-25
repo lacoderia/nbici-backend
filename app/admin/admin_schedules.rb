@@ -2,7 +2,7 @@ ActiveAdmin.register Schedule, :as => "Clases" do
 
   actions :all
 
-  permit_params :datetime, :room_id, :instructor_id, :description, :opening, :free
+  permit_params :datetime, :room_id, :instructor_id, :description, :opening, :free, :alternate_instructor_id
 
   filter :datetime, :label => "Horario"
   filter :description, :label => "Descripción"
@@ -17,6 +17,9 @@ ActiveAdmin.register Schedule, :as => "Clases" do
     column "Horario", :datetime
     column "Instructor" do |schedule|
       "#{schedule.instructor.first_name} #{schedule.instructor.last_name}" if schedule.instructor
+    end
+    column "Suple a" do |schedule|
+      "#{schedule.alternate_instructor.first_name} #{schedule.alternate_instructor.last_name}" if schedule.alternate_instructor
     end
     column "Descripción", :description
     column "Reservados" do |schedule|
@@ -49,7 +52,10 @@ ActiveAdmin.register Schedule, :as => "Clases" do
       schedule.datetime
     end
     column "Instructor" do |schedule|
-      "#{schedule.instructor.first_name} #{schedule.instructor.last_name}"
+      "#{schedule.instructor.first_name} #{schedule.instructor.last_name}" if schedule.instructor
+    end
+    column "Suple a" do |schedule|
+      "#{schedule.alternate_instructor.first_name} #{schedule.alternate_instructor.last_name}" if schedule.alternate_instructor
     end
     column "Descripcion" do |schedule| 
       schedule.description
@@ -76,6 +82,9 @@ ActiveAdmin.register Schedule, :as => "Clases" do
       row "Instructor" do
         "#{schedule.instructor.first_name} #{schedule.instructor.last_name}" if schedule.instructor
       end
+      row "Suple a" do
+        "#{schedule.alternate_instructor.first_name} #{schedule.alternate_instructor.last_name}" if schedule.alternate_instructor
+      end
       row "Descripción" do
         schedule.description
       end
@@ -98,6 +107,7 @@ ActiveAdmin.register Schedule, :as => "Clases" do
     f.inputs "Detalles de clases" do
       f.input :datetime, label: "Horario"
       f.input :instructor, label: "Instructor", :collection => Instructor.active.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select 
+      f.input :alternate_instructor, label: "Suple a", :collection => Instructor.active.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select 
       f.input :room, label: "Cuarto", :collection => Room.all.collect{|room| [room.description, room.id]}, :as => :select, :include_blank => false 
       f.input :description, label: "Descripción"
       f.input :free, label: "Gratis"

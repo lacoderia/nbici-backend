@@ -1,6 +1,7 @@
 class Schedule < ActiveRecord::Base
   belongs_to :instructor
   belongs_to :room
+  belongs_to :alternate_instructor, :foreign_key => "alternate_instructor_id", :class_name => "Instructor"
   has_many :appointments, :dependent => :delete_all
 
   #scope :for_instructor_payments, -> {select("schedules.*, COUNT(appointments.*) as app_num").joins(:appointments, :instructor).where("appointments.status = ?", "FINALIZED").group("schedules.id").group_by{|schedule| schedule.datetime.to_date.to_s}}
