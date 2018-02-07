@@ -2,7 +2,12 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   ENV['HOST'] = "localhost:3000"
-  ENV['CONEKTA_KEY'] = 'key_8Rsb4vxpEbDj9MTsaHzwKg'
+  ENV['WP_HOST'] = "localhost:3000"
+  ENV['CONEKTA_KEY'] = 'key_5RX7V5fz7TMCqypQWJuPnA'
+
+  # REMOTE SYNCH VARIABLES
+  ENV['SYNCH_KEY'] = 'd41d8cd98f00b204e9800998ecf8427e'
+  ENV['REMOTE_HOST'] = 'localhost:3000'
   
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -48,8 +53,9 @@ Rails.application.configure do
   ENV['MAIL_PASSWORD'] = ""
 
   config.action_mailer.smtp_settings = {
+    tls: true,
     address: ENV["ADDRESS"],
-    port: 587,
+    port: 465,
     domain: ENV["DOMAIN_NAME"],
     authentication: "plain",
     enable_starttls_auto: true,
@@ -60,6 +66,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { :host => ENV["HOST"] }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true 
 
+  config.active_job.queue_adapter = :development
 end
