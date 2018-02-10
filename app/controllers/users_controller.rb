@@ -59,9 +59,9 @@ class UsersController < ApiController
       
       if valid_email and remote_valid_email.code == "200"
         
-        # synchronize user, password, and mark account as linked
+        # synchronize user, password
         remote_valid_update = User.remote_update_account(params[:email], params[:password], session[:request_headers])
-        valid_update = current_user.update_account(email: params[:email], password: params[:password]) 
+        valid_update = current_user.update_account(params[:email], params[:password]) 
         
         if valid_update and remote_valid_update.code == "200"
           render json: current_user, status: :ok
@@ -78,7 +78,7 @@ class UsersController < ApiController
     end
   end
 
-  # CALLED FROM SYSTEM TO SYSTEM 
+  # CALLED FROM SYSTEM TO SYSTEM  
 
   # @email
   def validate_email
@@ -110,6 +110,8 @@ class UsersController < ApiController
     end
   end
 
+  # @email
+  # @password
   def update_account
     begin
       valid_update = current_user.update_account params[:email], params[:password]
@@ -117,6 +119,51 @@ class UsersController < ApiController
         render json: current_user, status: :ok
       else
         raise 'Error actualizando la cuenta.'
+      end
+    rescue Exception => e
+      errors = {:error_authenticating => [e.message]}
+      render json: ErrorSerializer.serialize(errors), status: 500
+    end
+  end
+
+  # N-bici unique methods
+
+  # @classes_left
+  # @expiration_date
+  def receive_classes_left
+    begin 
+      valid_migration = current_user.migrate_classes_left params[:classes_left], params[:expiration_date]
+      if valid_migration
+        render json: current_user, status: :ok
+      else
+        raise 'Error migrando las clases disponibles hacia N-bici. Favor de ponerse en contacto con el administrador.'
+      end
+    rescue Exception => e
+      errors = {:error_authenticating => [e.message]}
+      render json: ErrorSerializer.serialize(errors), status: 500
+    end
+  end
+
+  def migrate_accounts
+    begin
+      # request classes_left
+      response = User.remote_request_classes_left(session[:request_headers])
+      if response.code == "200"
+        classes_left_info = JSON.parse(response.body)
+        
+        # saving data for rollback if needed
+        old_classes_left = current_user.classes_left
+        old_expiration_date = current_user.expiration_date
+
+        valid_migration = current_user.migrate_classes_left classes_left_info["user"]["classes_left"], classes_left_info["user"]["expiration_date"]
+        if valid_migration
+          render json: current_user, status: :ok
+        else
+          current_user.update_attributes!(classes_left: old_classes_left, expiration_date: old_expiration_date, linked: false)
+          raise 'Error migrando las clases disponibles hacia N-bici. Favor de ponerse en contacto con el administrador.'
+        end        
+      else
+        raise 'Error obteniendo las clases disponibles desde N-box. Favor de ponerse en contacto con el administrador.'
       end
     rescue Exception => e
       errors = {:error_authenticating => [e.message]}

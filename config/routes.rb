@@ -74,6 +74,9 @@ Rails.application.routes.draw do
       match 'validate_email', :to => 'users#validate_email', :via => [:post, :options]
       match 'remote_login', :to => 'users#remote_login', :via => [:post, :options]
       match 'update_account', :to => 'users#update_account', :via => [:post, :options]
+      #Nbici unique methods
+      match 'receive_classes_left', :to => 'users#receive_classes_left', :via => [:post, :options]
+      match 'migrate_accounts', :to => 'users#migrate_accounts', :via => [:post, :options]
     end
   end
 

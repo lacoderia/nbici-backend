@@ -152,7 +152,28 @@ class User < ActiveRecord::Base
 
     crypt = ActiveSupport::MessageEncryptor.new(ENV['SYNCH_KEY'])
     encrypted_password = crypt.encrypt_and_sign(password)
-    self.update_attributes!(email: email, password: password, u_password: encrypted_password, linked: true)
+    return self.update_attributes!(email: email, password: password, u_password: encrypted_password)
+    
+  end
+
+  def migrate_classes_left classes_left, expiration_date
+
+    final_classes_left = self.classes_left + classes_left.to_i
+
+    if expiration_date and (not expiration_date.empty?) and (Time.zone.now < expiration_date.to_datetime)
+
+      expiration_time_left_in_seconds = expiration_date.to_datetime.to_i - Time.zone.now.to_i 
+
+      if self.expiration_date
+        final_expiration_date = self.expiration_date + expiration_time_left_in_seconds.seconds
+      else
+        final_expiration_date = expiration_date.to_datetime
+      end
+    else
+      final_expiration_date = self.expiration_date
+    end
+
+    self.update_attributes!(classes_left: final_classes_left, expiration_date: final_expiration_date, linked: true)
 
   end
   
@@ -188,8 +209,17 @@ class User < ActiveRecord::Base
   def self.remote_update_account email, password, headers
     
     remote_update_account_path = "http://#{ENV['REMOTE_HOST']}/users/update_account"
-    user_params = { 'email' => email, 'password' => password}
+    user_params = { 'email' => email, 'password' => password }
     return Connection.post_with_headers remote_update_account_path, user_params, headers 
+
+  end
+
+  # N-bici unique methods
+
+  def self.remote_request_classes_left headers
+
+    remote_send_classes_left_path = "http://#{ENV['REMOTE_HOST']}/users/send_classes_left"
+    return Connection.get_with_headers remote_send_classes_left_path, headers
 
   end
 
