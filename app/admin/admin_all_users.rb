@@ -8,11 +8,12 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
   filter :last_name, :as => :string, :label => "Apellido"
   filter :email, :as => :string
   filter :classes_left
+  filter :linked, :label => "Ligada"
 
   config.sort_order = 'created_at_desc'
 
   action_item only: :edit do
-    if resource.purchases.empty?
+    if resource.is_a?(User) and resource.purchases.empty?
       link_to "Delete", admin_todos_los_cliente_path(resource.id), method: :delete, data: {:confirm => "Eliminarás al usuario. ¿Estás seguro?"}
     end
   end
@@ -107,6 +108,7 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
     column "Apellido", :last_name
     column "Email", :email
     column "Clases restantes", :classes_left
+    column "Ligada", :linked
 
     actions defaults: false do |user|
       links = "#{link_to "View Credits", "#{admin_modificaciones_de_creditos_path}?q%5Buser_id_equals%5D=#{user.id}&commit=Filter&order=id_desc"} "
