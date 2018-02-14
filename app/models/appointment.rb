@@ -92,7 +92,6 @@ class Appointment < ActiveRecord::Base
 
   def self.book params, current_user
 
-    user = current_user 
     schedule = Schedule.find(params[:schedule_id])
     bicycle_number = params[:bicycle_number].to_i
     description = params[:description]
@@ -108,15 +107,15 @@ class Appointment < ActiveRecord::Base
     
     if (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
       if schedule.opening
-        future_free_appointments = user.appointments.not_cancelled.joins(:schedule).where("schedules.datetime between ? and ? and schedules.opening = ?", Configuration.free_classes_start_date, Configuration.free_classes_end_date, true)
+        future_free_appointments = current_user.appointments.not_cancelled.joins(:schedule).where("schedules.datetime between ? and ? and schedules.opening = ?", Configuration.free_classes_start_date, Configuration.free_classes_end_date, true)
         if future_free_appointments.empty?
-          schedule.appointments << appointment = Appointment.create!(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)
+          schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)
         else
           #The second opening class will be deducted
-          if (user.classes_left and user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
-            schedule.appointments << appointment = Appointment.create!(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
-            user.update_attribute(:classes_left, user.classes_left - 1)
-          elsif not user.classes_left or user.classes_left == 0 
+          if (current_user.classes_left and current_user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
+            schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
+            current_user.update_attribute(:classes_left, current_user.classes_left - 1)
+          elsif not current_user.classes_left or current_user.classes_left == 0 
             raise "Ya no tienes clases disponibles, adquiere más para continuar."
           elsif schedule.bookings.find{|station| station.number == station_number}
             raise "La bicicleta ya fue reservada, por favor intenta con otra."
@@ -124,17 +123,17 @@ class Appointment < ActiveRecord::Base
         end
 
       elsif schedule.free
-        free_appointments = user.appointments.booked.where("schedule_id = ?", schedule.id)
+        free_appointments = current_user.appointments.booked.where("schedule_id = ?", schedule.id)
         if free_appointments.empty?
-          schedule.appointments << appointment = Appointment.create!(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)
+          schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)
         else
           raise "Sólo puedes reservar un lugar en clases gratis."
         end
       else
-        if (user.classes_left and user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
-          schedule.appointments << appointment = Appointment.create!(user: user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
-          user.update_attribute(:classes_left, user.classes_left - 1)
-        elsif not user.classes_left or user.classes_left == 0 
+        if (current_user.classes_left and current_user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
+          schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
+          current_user.update_attribute(:classes_left, current_user.classes_left - 1)
+        elsif not current_user.classes_left or current_user.classes_left == 0 
           raise "Ya no tienes clases disponibles, adquiere más para continuar."
         elsif schedule.bookings.find{|station| station.number == station_number}
           raise "La bicicleta ya fue reservada, por favor intenta con otra."
