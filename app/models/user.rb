@@ -19,7 +19,6 @@ class User < ActiveRecord::Base
   has_many :credit_modifications
   has_many :referrals, :foreign_key => "owner_id", :class_name => "Referral"
   
-  
   accepts_nested_attributes_for :credit_modifications
   accepts_nested_attributes_for :purchases
   
@@ -212,6 +211,34 @@ class User < ActiveRecord::Base
     user_params = { 'email' => email, 'password' => password }
     return Connection.post_with_headers remote_update_account_path, user_params, headers 
 
+  end
+
+  def remote_login_and_set_headers
+
+    if self.headers 
+      expiry_time = Time.at(self.headers["expiry"].to_i)
+      #Close to expire
+      if expiry_time <= (Time.zone.now + 1.hour)
+        # Get new headers
+        response = self.remote_login 
+        self.headers = Connection.get_headers response
+        self.save!
+        return response
+      end
+    else 
+      #Get new headers
+      response = self.remote_login 
+      self.headers = Connection.get_headers response
+      self.save!
+      return response
+    end
+    return nil
+
+  end
+
+  def set_headers headers
+    self.headers = headers
+    self.save!
   end
 
   # N-bici unique methods
