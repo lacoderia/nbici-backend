@@ -17,9 +17,10 @@ class UsersController < ApiController
           # remote update password
           @user.remote_login_and_set_headers
           remote_valid_update = User.remote_update_account(@user.email, user_params[:password], @user.headers)
-          #local update password
-          valid_update = @user.update_account(@user.email, user_params[:password])
-          if not (valid_update and remote_valid_update.code == "200")
+
+          if remote_valid_update.code == "200"
+            @user.set_headers(Connection.get_headers remote_valid_update)
+          else
             raise 'La actualización de contraseña no pudo realizarse. Favor de ponerse en contacto con el administrador.' 
           end
         end
@@ -72,14 +73,18 @@ class UsersController < ApiController
       if valid_email and remote_valid_email.code == "200"
         
         # synchronize user, password
+        @user = current_user
         remote_valid_update = User.remote_update_account(params[:email], params[:password], current_user.headers)
         valid_update = current_user.update_account(params[:email], params[:password]) 
-        
+ 
         if valid_update and remote_valid_update.code == "200"
-          render json: current_user, status: :ok
+          bypass_sign_in(@user)
+          @user.set_headers(Connection.get_headers remote_valid_update)
+          render json: @user, status: :ok
         else
           raise 'La sincronización de usuario y contraseña no pudo realizarse. Favor de ponerse en contacto con el administrador.' 
         end
+
       else
         raise 'El correo seleccionado tiene a un usuario que no está vinculado a esta cuenta. Favor de ponerse en contacto con el administrador.'
       end
@@ -126,9 +131,12 @@ class UsersController < ApiController
   # @password
   def update_account
     begin
-      valid_update = current_user.update_account params[:email], params[:password]
+      @user = current_user
+      valid_update = current_user.update_account params[:email], params[:password]      
+
       if valid_update
-        render json: current_user, status: :ok
+        bypass_sign_in(@user)      
+        render json: @user, status: :ok
       else
         raise 'Error actualizando la cuenta.'
       end
