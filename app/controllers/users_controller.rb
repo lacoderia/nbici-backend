@@ -78,7 +78,7 @@ class UsersController < ApiController
         valid_update = current_user.update_account(params[:email], params[:password]) 
  
         if valid_update and remote_valid_update.code == "200"
-          bypass_sign_in(@user)
+          sign_in(@user, :bypass => true)
           @user.set_headers(Connection.get_headers remote_valid_update)
           render json: @user, status: :ok
         else
@@ -135,7 +135,7 @@ class UsersController < ApiController
       valid_update = current_user.update_account params[:email], params[:password]      
 
       if valid_update
-        bypass_sign_in(@user)      
+        sign_in(@user, :bypass => true)
         render json: @user, status: :ok
       else
         raise 'Error actualizando la cuenta.'
