@@ -157,7 +157,8 @@ class User < ActiveRecord::Base
 
   def migrate_classes_left classes_left, expiration_date
 
-    final_classes_left = self.classes_left + classes_left.to_i
+    final_classes_left = self.classes_left ? self.classes_left : 0
+    final_classes_left += classes_left ?  classes_left.to_i : 0
 
     if expiration_date and (not expiration_date.empty?) and (Time.zone.now < expiration_date.to_datetime)
 
