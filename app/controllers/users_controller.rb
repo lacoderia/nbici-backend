@@ -14,20 +14,29 @@ class UsersController < ApiController
         sign_in(@user)
 
         if @user.linked
-         
-          # remote update password
-          @user.remote_login_and_set_headers
-          remote_valid_update = User.remote_update_account(@user.email, user_params[:password], @user.headers)
+          
           #local update password
+          crypt = ActiveSupport::MessageEncryptor.new(ENV['SYNCH_KEY'])
+          old_password = crypt.decrypt_and_verify(@user.u_password) 
           valid_update = @user.update_account(@user.email, user_params[:password])
-          if not (valid_update and remote_valid_update.code == "200")
-            raise 'La actualización de contraseña no pudo realizarse. Favor de ponerse en contacto con el administrador.' 
-          else
-            @user.set_headers(Connection.get_headers remote_valid_update)
-          end
 
+          if valid_update
+            # remote update password
+            @user.remote_login_and_set_headers
+            remote_valid_update = User.remote_update_account(@user.email, user_params[:password], @user.headers)
+            
+            if remote_valid_update.code == "200"
+              @user.set_headers(Connection.get_headers remote_valid_update)
+            else
+              raise 'La actualización de contraseña no pudo realizarse en N-box. Favor de ponerse en contacto con el administrador.' 
+            end
+
+          else
+              #Rollback 
+              @user.update_account(@user.email, old_password)
+              raise 'La actualización de contraseña no pudo realizarse en N-bici. Favor de ponerse en contacto con el administrador.' 
+          end
         end
-        
       end
       render json: @user
     else
