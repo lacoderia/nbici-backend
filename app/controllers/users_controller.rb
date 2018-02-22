@@ -8,40 +8,49 @@ class UsersController < ApiController
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
-    if @user.update(user_params)
-      if user_params[:password]
-        signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
-        sign_in(@user)
+  
+    if @user.linked
 
-        if @user.linked
+      if user_params[:password]
+
+        # remote update password
+        @user.remote_login_and_set_headers
+        remote_valid_update = User.remote_update_account(@user.email, user_params[:password], @user.headers)
+
+        if remote_valid_update.code = "200"
           
-          #local update password
-          crypt = ActiveSupport::MessageEncryptor.new(ENV['SYNCH_KEY'])
-          old_password = crypt.decrypt_and_verify(@user.u_password) 
+          # local update password
           valid_update = @user.update_account(@user.email, user_params[:password])
 
-          if valid_update
-            # remote update password
-            @user.remote_login_and_set_headers
-            remote_valid_update = User.remote_update_account(@user.email, user_params[:password], @user.headers)
-            
-            if remote_valid_update.code == "200"
-              @user.set_headers(Connection.get_headers remote_valid_update)
-            else
-              raise 'La actualización de contraseña no pudo realizarse en N-box. Favor de ponerse en contacto con el administrador.' 
-            end
-
+          if valid_update and @user.update(user_params)
+            render json: @user
           else
-              #Rollback 
-              @user.update_account(@user.email, old_password)
-              raise 'La actualización de contraseña no pudo realizarse en N-bici. Favor de ponerse en contacto con el administrador.' 
+            render json: ErrorSerializer.serialize(@user.errors)
           end
+        else
+          raise 'La actualización de contraseña no pudo realizarse en N-box. Favor de ponerse en contacto con el administrador.' 
+        end
+
+      else
+        if @user.update(user_params)
+          render json: @user
+        else
+          render json: ErrorSerializer.serialize(@user.errors)
         end
       end
-      render json: @user
+
     else
-      render json: ErrorSerializer.serialize(@user.errors)
+      if @user.update(user_params)
+        if user_params[:password]
+          signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+          sign_in(@user)
+        end
+        render json: @user
+      else
+        render json: ErrorSerializer.serialize(@user.errors)
+      end
     end
+ 
   end
 
   def send_coupon_by_email
