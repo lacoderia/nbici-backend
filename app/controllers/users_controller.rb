@@ -192,7 +192,8 @@ class UsersController < ApiController
 
         valid_migration = current_user.migrate_classes_left classes_left_info["user"]["classes_left"], classes_left_info["user"]["expiration_date"]
         if valid_migration
-          render json: current_user, status: :ok
+          @user = User.find(current_user.id)
+          render json: @user, status: :ok
         else
           current_user.update_attributes!(classes_left: old_classes_left, expiration_date: old_expiration_date, linked: false)
           raise 'Error migrando las clases disponibles hacia N-bici. Favor de ponerse en contacto con el administrador.'
