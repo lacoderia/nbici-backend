@@ -20,7 +20,7 @@ class UsersController < ApiController
           old_password = crypt.decrypt_and_verify(@user.u_password)
          
           # restore old password
-          @user.update_attribute("password", old_password)
+          @user.update_account(@user.email, old_password)
           # remote update password
           @user.remote_login_and_set_headers
           remote_valid_update = User.remote_update_account(@user.email, user_params[:password], @user.headers)
