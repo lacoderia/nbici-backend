@@ -9,15 +9,15 @@ class UsersController < ApiController
   # PATCH/PUT /users/1.json
   def update
 
-    crypt = ActiveSupport::MessageEncryptor.new(ENV['SYNCH_KEY'])
-    old_password = crypt.decrypt_and_verify(@user.u_password)
-
     if @user.update(user_params)
       if user_params[:password]
         signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
         sign_in(@user)
 
         if @user.linked
+      
+          crypt = ActiveSupport::MessageEncryptor.new(ENV['SYNCH_KEY'])
+          old_password = crypt.decrypt_and_verify(@user.u_password)
          
           # restore old password
           @user.update_attribute("password", old_password)
