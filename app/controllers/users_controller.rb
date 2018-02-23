@@ -149,9 +149,8 @@ class UsersController < ApiController
       valid_update = current_user.update_account params[:email], params[:password]      
 
       if valid_update
-        @user = User.find(current_user.id)        
-        sign_in(@user, :bypass => true)
-        render json: @user, status: :ok
+        sign_in(current_user, :bypass => true)
+        render json: current_user, status: :ok
       else
         raise 'Error actualizando la cuenta.'
       end
