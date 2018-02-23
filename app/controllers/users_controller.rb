@@ -146,10 +146,10 @@ class UsersController < ApiController
   # @password
   def update_account
     begin
-      @user = current_user
       valid_update = current_user.update_account params[:email], params[:password]      
 
       if valid_update
+        @user = User.find(current_user.id)        
         sign_in(@user, :bypass => true)
         render json: @user, status: :ok
       else
