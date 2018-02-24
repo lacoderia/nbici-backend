@@ -24,14 +24,16 @@ class UsersController < ApiController
           # remote update password
           @user.remote_login_and_set_headers
           remote_valid_update = User.remote_update_account(@user.email, user_params[:password], @user.headers)
-          #local update password
-          valid_update = @user.update_account(@user.email, user_params[:password])
-          if not (valid_update and remote_valid_update.code == "200")
-            raise 'La actualización de contraseña no pudo realizarse. Favor de ponerse en contacto con el administrador.' 
+          if remote_valid_update.code == "200"
+            #local update password
+            valid_update = @user.update_account(@user.email, user_params[:password])
+            if valid_update
+              @user.set_headers(Connection.get_headers remote_valid_update)
+            end
           else
-            @user.set_headers(Connection.get_headers remote_valid_update)
+            raise 'La actualización de contraseña en N-box no pudo realizarse. Favor de ponerse en contacto con el administrador.' 
           end
-
+          
         end
         
       end
