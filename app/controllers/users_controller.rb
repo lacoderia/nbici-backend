@@ -22,7 +22,7 @@ class UsersController < ApiController
           # restore old password
           @user.update_account(@user.email, old_password)
           # remote update password
-          @user.remote_login_and_set_headers
+          @user.remote_login_and_set_headers true
           remote_valid_update = User.remote_update_account(@user.email, user_params[:password], @user.headers)
           if remote_valid_update.code == "200"
             #local update password

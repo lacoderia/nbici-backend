@@ -151,7 +151,7 @@ class User < ActiveRecord::Base
 
     crypt = ActiveSupport::MessageEncryptor.new(ENV['SYNCH_KEY'])
     encrypted_password = crypt.encrypt_and_sign(password)
-    return self.update_attributes!(email: email, password: password, u_password: encrypted_password)
+    return self.update_attributes!(email: email, password: password, password_confirmation: password, u_password: encrypted_password)
     
   end
 
@@ -179,13 +179,13 @@ class User < ActiveRecord::Base
   
   # Remote methods   
  
-  def remote_login
+  def remote_login is_being_updated = false
 
     remote_user_session_path = "http://#{ENV['REMOTE_HOST']}/auth/sign_in"
     crypt = ActiveSupport::MessageEncryptor.new(ENV['SYNCH_KEY'])
     decrypted_password = crypt.decrypt_and_verify(self.u_password)
     
-    user_params = { 'user[email]' => self.email, 'user[password]' => decrypted_password }
+    user_params = { 'user[email]' => self.email, 'user[password]' => decrypted_password, 'is_being_updated' => is_being_updated }
     return Connection.post remote_user_session_path, user_params
 
   end
@@ -214,21 +214,21 @@ class User < ActiveRecord::Base
 
   end
 
-  def remote_login_and_set_headers
+  def remote_login_and_set_headers is_being_updated = false
 
     if self.headers 
       expiry_time = Time.at(self.headers["expiry"].to_i)
       #Close to expire
       if expiry_time <= (Time.zone.now + 1.hour)
         # Get new headers
-        response = self.remote_login 
+        response = self.remote_login is_being_updated 
         self.headers = Connection.get_headers response
         self.save!
         return response
       end
     else 
       #Get new headers
-      response = self.remote_login 
+      response = self.remote_login is_being_updated
       self.headers = Connection.get_headers response
       self.save!
       return response
