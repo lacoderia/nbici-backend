@@ -1,7 +1,9 @@
 class Pack < ActiveRecord::Base
   has_many :purchases
 
-  def price_or_special_price_for_user user
+  scope :active, -> {where(active: true)}
+  
+  def price_or_special_price_for_user user  
 
     if user.purchases.empty?
       if self.special_price
