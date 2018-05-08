@@ -198,7 +198,7 @@
 										<table cellspacing="0" cellpadding="0" class="layout-block-box-padding" width="526" style="min-width: 526px; ">
 											<tbody><tr>
 												<td align="left" class="layout-block-column" width="526" style="min-width: 526px; ">
-													<div class="heading" eqid="EQMST-947E21D6-11FC-487E-81CB-74874A9BE93B" style="font-size: 16px; font-family: 'Lucida Grande'; text-align: center; "><b style="font-size: 30px; font-family: Arial; "><%= @user.first_name.split.map(&:capitalize).join(' ') %>:</b>
+													<div class="heading" eqid="EQMST-947E21D6-11FC-487E-81CB-74874A9BE93B" style="font-size: 16px; font-family: 'Lucida Grande'; text-align: center; "><b style="font-size: 30px; font-family: Arial; "><%= @user.first_name.split.map(&:capitalize).join(' ') %> tus clases expirarán el <%= @user.expiration_date.strftime("%d/%m/%Y") %>!</b>
 														</div>
 												</td>
 											</tr>
