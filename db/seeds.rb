@@ -73,6 +73,7 @@ pack_5 = Pack.create(description: "50 clases", classes: 50, price: 5000.00, expi
 
 #Venues
 venue = Venue.create(name: "Gimnasio SLP", description: "Gimnasio original")
+venue_2 = Venue.create(name: "Gimnasio Aniversario", description: "Gimnasio aniversario")
 
 #Bicycles
 bicycle1 = Bicycle.new(position:1, number:1)
@@ -94,12 +95,22 @@ bicycle16 = Bicycle.new(position:52, number:16)
 bicycle17 = Bicycle.new(position:42, number:17)
 bicycle18 = Bicycle.new(position:67, number:18)
 bicycle19 = Bicycle.new(position:79, number:19)
+bicycle20 = Bicycle.new(position:80, number:20)
+bicycle21 = Bicycle.new(position:81, number:21)
+bicycle22 = Bicycle.new(position:83, number:22)
+bicycle23 = Bicycle.new(position:84, number:23)
+bicycle24 = Bicycle.new(position:74, number:24)
+bicycle25 = Bicycle.new(position:64, number:25)
 
 #Distributions
 distribution = Distribution.create(height: 8, width: 11, description: "distribucion actual", inactive_seats: "", active_seats: Bicycle.to_string_array([bicycle1,bicycle2,bicycle3,bicycle4,bicycle5,bicycle6,bicycle7,bicycle8,bicycle9,bicycle10,bicycle11,bicycle12,bicycle13,bicycle14,bicycle15,bicycle16,bicycle17,bicycle18,bicycle19]), total_seats: 19)
 
+distribution_2 = Distribution.create(height: 9, width: 11, description: "distribucion aniversario", inactive_seats: "", active_seats: Bicycle.to_string_array([bicycle1,bicycle2,bicycle3,bicycle4,bicycle5,bicycle6,bicycle7,bicycle8,bicycle9,bicycle10,bicycle11,bicycle12,bicycle13,bicycle14,bicycle15,bicycle16,bicycle17,bicycle18,bicycle19,bicycle20,bicycle21,bicycle22,bicycle23,bicycle24,bicycle25]), total_seats: 25)
+
 #Room
 room = Room.create(venue: venue, distribution: distribution, description: "Salón original")
+
+room_2 = Room.create(venue: venue_2, distribution: distribution_2, description: "Salón aniversario")
 
 #Schedules
 
