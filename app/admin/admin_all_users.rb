@@ -8,6 +8,7 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
   filter :last_name, :as => :string, :label => "Apellido"
   filter :email, :as => :string
   filter :linked, :label => "Ligada"
+  filter :created_at, :label => "Fecha de creación"
 
   config.sort_order = 'created_at_desc'
 
@@ -108,6 +109,7 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
     column "Email", :email
     column "Clases restantes", :classes_left
     column "Ligada", :linked
+    column "Fecha de creación", :created_at 
 
     actions defaults: false do |user|
       links = "#{link_to "View Credits", "#{admin_modificaciones_de_creditos_path}?q%5Buser_id_equals%5D=#{user.id}&commit=Filter&order=id_desc"} "
