@@ -19,7 +19,6 @@ class PurchasesController < ApiController
       purchase.errors.add(:error_creating_purchase, error)
       render json: ErrorSerializer.serialize(purchase.errors), status: 500
     end
-
-  end
+  end 
   
 end

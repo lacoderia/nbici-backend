@@ -5,16 +5,28 @@ class Pack < ActiveRecord::Base
   
   def price_or_special_price_for_user user  
 
-    if user.purchases.empty?
+    if Configuration.force_special_price?
+
       if self.special_price
         return self.special_price
       else
         return self.price
       end
-    else
-      return self.price
-    end
 
+    else
+
+      if user.purchases.empty?
+        if self.special_price
+          return self.special_price
+        else
+          return self.price
+        end
+      else
+        return self.price
+      end
+      
+    end
+    
   end
 
   def price_with_credits_for_user user
