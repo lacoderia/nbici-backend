@@ -2,14 +2,14 @@ ActiveAdmin.register Promotion, :as => "Promociones" do
 
   actions :all, :except => [:show]
 
-  permit_params :coupon, :description, :amount, :active
+  permit_params :coupon, :description, :active #:amount
   
   config.filters = false
 
   index :title => "Promociones" do
     column "Cupón", :coupon
     column "Descripción", :description
-    column "Cantidad", :amount
+    #column "Cantidad", :amount
     column "Activo", :active
     actions :defaults => true
   end
@@ -18,7 +18,7 @@ ActiveAdmin.register Promotion, :as => "Promociones" do
     f.inputs "Detalles de promociones" do
       f.input :coupon, label: "Cupón"
       f.input :description, label: "Descripción"
-      f.input :amount, label: "Cantidad"
+      #f.input :amount, label: "Cantidad"
       f.input :active, label: "Activo"
     end
     f.actions

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :promotion_amounts
   resources :promotions
   resources :configurations
   resources :referrals

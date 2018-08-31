@@ -1,0 +1,2 @@
+class PromotionAmountsController < ApplicationController
+end

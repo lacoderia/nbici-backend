@@ -1,5 +1,7 @@
 class Pack < ActiveRecord::Base
   has_many :purchases
+  has_many :promotion_amounts
+  has_many :promotions, through: :promotion_amounts
 
   scope :active, -> {where(active: true)}
   
@@ -51,7 +53,18 @@ class Pack < ActiveRecord::Base
   def price_with_coupon_for_user user, meta_coupon 
 
     pack_price = self.price_or_special_price_for_user user
-    final_price = pack_price  - meta_coupon[:value]
+    final_price = pack_price
+
+    if meta_coupon[:type].eql? Discount::USER_COUPON_TYPE
+    
+      final_price -= meta_coupon[:value]
+
+    elsif meta_coupon[:type].eql? Discount::PROMOTION_COUPON_TYPE 
+
+      final_price -= meta_coupon[:value][self.id] if meta_coupon[:value][self.id]
+
+    end
+
     discount = meta_coupon[:value]
     if final_price < 0
       final_price = 0

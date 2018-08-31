@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180219182337) do
+ActiveRecord::Schema.define(version: 20180830205105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -166,10 +166,19 @@ ActiveRecord::Schema.define(version: 20180219182337) do
     t.boolean  "active",        default: true
   end
 
+  create_table "promotion_amounts", force: :cascade do |t|
+    t.integer  "promotion_id"
+    t.integer  "pack_id"
+    t.float    "amount"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "promotion_amounts", ["promotion_id", "pack_id"], name: "index_promotion_amounts_on_promotion_id_and_pack_id", unique: true, using: :btree
+
   create_table "promotions", force: :cascade do |t|
     t.string   "coupon"
     t.string   "description"
-    t.float    "amount"
     t.boolean  "active"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false

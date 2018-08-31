@@ -3,10 +3,16 @@ feature 'DiscountsController' do
   let!(:user_without_credits){create(:user)}
   let!(:user_with_credits){create(:user, credits: Configuration.referral_credit)}
   let!(:pack){create(:pack)}
+  let!(:pack){create(:pack)}
   let!(:pack_with_discount){create(:pack, special_price: 100.00)}
   let!(:coupon_discount){create(:configuration, :coupon_discount)}
   let!(:promotion){create(:promotion)}
-  let!(:promotion_mega){create(:promotion, amount: 1000, coupon: "nbicimega")}
+  let!(:promotion_mega){create(:promotion, coupon: "nbicimega")}
+
+  let!(:promotion_amount){create(:promotion_amount, pack: pack, promotion: promotion)}
+  let!(:promotion_amount_mega){create(:promotion_amount, pack: pack, promotion: promotion_mega, amount: 1000)}
+
+
   let!(:inactive_promotion){create(:promotion, :inactive, coupon: "INACTIVE")}
 
   context 'Coupon discount methods' do
@@ -104,7 +110,7 @@ feature 'DiscountsController' do
       
       response = JSON.parse(page.body)
       expect(response["discount"]["coupon"]).to eq promotion.coupon
-      expect(response["discount"]["final_price"]).to eq (pack.price - promotion.amount)
+      expect(response["discount"]["final_price"]).to eq (pack.price - promotion_amount.amount)
 
       #Generic meta coupon
       validate_coupon_request = {pack_id: pack.id, coupon: promotion_mega.coupon}      

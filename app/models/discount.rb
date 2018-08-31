@@ -24,7 +24,7 @@ class Discount
           return false
         end
       else
-        return {coupon: promotion.coupon, type: PROMOTION_COUPON_TYPE, value: promotion.amount, id: promotion.id}
+        return {coupon: promotion.coupon, type: PROMOTION_COUPON_TYPE, value: promotion.promotion_amounts_per_pack_id, id: promotion.id}
       end      
     else
       return false

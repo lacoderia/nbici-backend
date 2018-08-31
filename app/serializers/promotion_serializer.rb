@@ -1,3 +1,3 @@
 class PromotionSerializer < ActiveModel::Serializer
-  attributes :id, :coupon, :description, :amount, :active
+  attributes :id, :coupon, :description, :active#, :amount
 end
