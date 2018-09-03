@@ -18,9 +18,9 @@ ActiveAdmin.register Promotion, :as => "Promociones" do
 
       details = ""
       usage.each do |k, v|
-        details += "#{Pack.find(k).description} - #{v} veces\n"
+        details += "#{Pack.find(k).description} - #{v} veces <br>"
       end
-      details
+      details.html_safe
     end
     actions :defaults => true
   end
