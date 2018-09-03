@@ -26,6 +26,7 @@ ActiveAdmin.register Promotion, :as => "Promociones" do
   end
 
   form do |f|
+    f.semantic_errors *f.object.errors.keys
     f.inputs "Detalles de promociones" do
       f.input :coupon, label: "Cupón"
       f.input :description, label: "Descripción"
