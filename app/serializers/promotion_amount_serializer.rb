@@ -1,3 +1,3 @@
 class PromotionAmountSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :promotion_id, :pack_id, :amount
 end

@@ -1,6 +1,7 @@
 class Purchase < ActiveRecord::Base
   belongs_to :pack
   belongs_to :user
+  belongs_to :promotion
 
   scope :with_users, -> {joins(:user)}
 
@@ -22,6 +23,7 @@ class Purchase < ActiveRecord::Base
     params_coupon = params[:coupon]
     params_credits = params[:credits]
     params_price = params[:price]
+    promotion = nil
 
     if params_coupon and params_credits
       raise "Sólo se puede utilizar un método de descuento, cupón o créditos."
@@ -29,8 +31,12 @@ class Purchase < ActiveRecord::Base
 
     #Se valida el precio final con cupón
     if params_coupon
-      validated_price = (Discount.validate_with_coupon_and_pack user, pack, params_coupon)[:final_price]
+      validated_discount = Discount.validate_with_coupon_and_pack user, pack, params_coupon
+      validated_price = validated_discount[:final_price]
+      coupon = validated_discount[:coupon]
       description = "#{description} con cupón de descuento"
+      
+      promotion = Promotion.find_by_coupon(coupon)
       
       if params_price.to_f != validated_price
         raise "El precio enviado es diferente al precio con descuento."
@@ -80,7 +86,8 @@ class Purchase < ActiveRecord::Base
         amount: charge.amount,
         currency: charge.currency,
         payment_method: charge.payment_method,
-        details: charge.details
+        details: charge.details,
+        promotion: promotion
       )
 
     else
@@ -95,7 +102,8 @@ class Purchase < ActiveRecord::Base
         amount: amount,
         currency: currency,
         payment_method: "free",
-        details: "pago gratis"
+        details: "pago gratis",
+        promotion: promotion
       )
       
     end

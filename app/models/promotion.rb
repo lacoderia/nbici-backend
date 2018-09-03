@@ -1,8 +1,11 @@
 class Promotion < ActiveRecord::Base
 
   has_and_belongs_to_many :users
-  has_many :promotion_amounts
-  has_many :packs, through: :promotion_amounts
+  has_many :promotion_amounts, dependent: :delete_all
+  has_many :packs, through: :promotion_amounts  
+  has_many :purchases
+  
+  accepts_nested_attributes_for :promotion_amounts, allow_destroy: true
   
   before_save :capitalize_coupon
 
