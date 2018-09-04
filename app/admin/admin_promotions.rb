@@ -6,6 +6,22 @@ ActiveAdmin.register Promotion, :as => "Promociones" do
   
   config.filters = false
 
+  scope("#{Date::MONTHNAMES[(Time.zone.now.beginning_of_month - 3.month).month]}"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at  <= ?", Time.zone.now.beginning_of_month - 3.month, Time.zone.now.end_of_month - 3.month)}
+  
+  scope("#{Date::MONTHNAMES[(Time.zone.now.beginning_of_month - 2.month).month]}"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at  <= ?", Time.zone.now.beginning_of_month - 2.month, Time.zone.now.end_of_month - 2.month)}
+  
+  scope("#{Date::MONTHNAMES[(Time.zone.now.beginning_of_month - 1.month).month]}"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at  <= ?", Time.zone.now.beginning_of_month - 1.month, Time.zone.now.end_of_month - 1.month)}
+  
+  scope("#{Date::MONTHNAMES[Time.zone.now.beginning_of_month.month]}"){|scope| scope.where("purchases.created_at >= ? and purchases.created_at <= ?", Time.zone.now.beginning_of_month, Time.zone.now.end_of_month)}
+
+  scope("All"){|scope| scope}
+
+  controller do
+    def scoped_collection
+      Promotion.joins('LEFT OUTER JOIN purchases ON purchases.promotion_id = promotions.id')
+    end
+  end
+
   index :title => "Promociones" do
     column "Cupón", :coupon
     column "Descripción", :description
