@@ -27,16 +27,17 @@ ActiveAdmin.register Promotion, :as => "Promociones" do
     column "Descripción", :description
     column "Activo", :active
     column "Uso" do |promotion|
-      usage = {}
-      promotion.purchases.each do |purchase|
-        usage[purchase.pack_id] ? usage[purchase.pack_id] += 1 : usage[purchase.pack_id] = 1
-      end
+      #usage = {}
+      #promotion.purchases.where().each do |purchase|
+      #  usage[purchase.pack_id] ? usage[purchase.pack_id] += 1 : usage[purchase.pack_id] = 1
+      #end
 
-      details = ""
-      usage.each do |k, v|
-        details += "#{Pack.find(k).description} - #{v} veces <br>"
-      end
-      details.html_safe
+      #details = ""
+      #usage.each do |k, v|
+      #  details += "#{Pack.find(k).description} - #{v} veces <br>"
+      #end
+      #details.html_safe
+      promotion.purchases.count
     end
     actions :defaults => true
   end
