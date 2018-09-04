@@ -18,7 +18,7 @@ ActiveAdmin.register Promotion, :as => "Promociones" do
 
   controller do
     def scoped_collection
-      Promotion.joins('LEFT OUTER JOIN purchases ON purchases.promotion_id = promotions.id')
+      Promotion.joins('LEFT OUTER JOIN purchases ON purchases.promotion_id = promotions.id').group("promotions.id")
     end
   end
 
