@@ -5,7 +5,7 @@ ActiveAdmin.register Purchase, :as => "Compras" do
   filter :user_last_name, :label => "Apellido de cliente", :as => :string
   filter :created_at, :label => "Fecha"
   filter :amount, :label => "Precio"
-  filter :promotion, :label => "Promocion", :collection => Promotion.all.collect {|p| [p.description, p.id]}
+  filter :promotion, :label => "Promocion", :collection => Promotion.all.collect {|p| [p.coupon, p.id]}
 
   FILTERS = ["user_last_name", "created_at", "amount", "promotion", "user_id"]
 
