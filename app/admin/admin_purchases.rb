@@ -5,8 +5,9 @@ ActiveAdmin.register Purchase, :as => "Compras" do
   filter :user_last_name, :label => "Apellido de cliente", :as => :string
   filter :created_at, :label => "Fecha"
   filter :amount, :label => "Precio"
+  filter :promotion, :label => "Promocion", :collection => Promotion.all.collect {|p| [p.description, p.id]}
 
-  FILTERS = ["user_last_name", "created_at", "amount", "user_id"]
+  FILTERS = ["user_last_name", "created_at", "amount", "promotion", "user_id"]
 
   config.sort_order = "created_at_desc"
 
@@ -37,6 +38,21 @@ ActiveAdmin.register Purchase, :as => "Compras" do
         success.html { redirect_to redirect_path }
       end
     end
+
+#    before_filter only: :index do
+
+      # if filter button was clicked
+#      if not(params[:commit].blank? && params[:q].blank?)
+
+#        params[:q].each do |k, v|
+#          if k.include?("amount")
+#            binding.pry
+#            v = (v.to_f * 100).to_i.to_s
+#            params[:q][k] = v
+#          end
+#        end
+#      end
+#    end
   end
 
   index :title => "Compras" do
