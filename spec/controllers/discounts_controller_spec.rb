@@ -74,7 +74,19 @@ feature 'DiscountsController' do
       end
       
       response = JSON.parse(page.body)
-      expect(response["errors"][0]["title"]).to eql "Ya has usado este cupón anteriormente."
+      expect(response["discount"]["coupon"]).to eql "NBICI"
+      
+      user_without_credits.promotions << promotion
+      user_without_credits.promotions << promotion
+      user_without_credits.save!
+      
+      validate_coupon_request = {pack_id: pack.id, coupon: promotion.coupon.downcase}      
+      with_rack_test_driver do
+        page.driver.post discounts_validate_with_coupon_path, validate_coupon_request
+      end
+
+      response = JSON.parse(page.body)
+      expect(response["errors"][0]["title"]).to eql "Ya has excedido el uso de este cupón por #{Configuration.max_promotion_use} usos anteriores."
 
     end
 

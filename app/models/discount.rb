@@ -62,8 +62,9 @@ class Discount
       if meta_coupon[:type].eql? USER_COUPON_TYPE and Referral.find_by_referred_id(current_user.id)
         raise "Ya has usado un cupón de otro usuario anteriormente."
       elsif meta_coupon[:type].eql? PROMOTION_COUPON_TYPE and
-        not current_user.promotions.where("user_id = ? AND promotion_id = ?", current_user.id, meta_coupon[:id]).empty?
-        raise "Ya has usado este cupón anteriormente."
+        current_user.promotions.where("user_id = ? AND promotion_id = ?",
+                                      current_user.id, meta_coupon[:id]).count >= Configuration.max_promotion_use 
+        raise "Ya has excedido el uso de este cupón por #{Configuration.max_promotion_use} usos anteriores."
       end
 
       return pack.price_with_coupon_for_user current_user, meta_coupon

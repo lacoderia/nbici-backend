@@ -16,6 +16,8 @@ class Configuration < ActiveRecord::Base
   #Default special prices in every purchase
   DEFAULT_SPECIAL_PRICES_IN_EVERY_PURCHASE_START_DATE = "2018-06-18T00:00:00-05:00"
   DEFAULT_SPECIAL_PRICES_IN_EVERY_PURCHASE_END_DATE = "2018-06-18T07:00:01-05:00"
+  
+  DEFAULT_MAX_PROMOTION_USE = 3 
 
   def self.force_special_price?
     special_prices_start_date = Configuration.find_by_key("special_prices_start_date")
@@ -38,6 +40,15 @@ class Configuration < ActiveRecord::Base
       return false 
     end 
 
+  end
+
+  def self.max_promotion_use
+    max_promotion_use = Configuration.find_by_key("max_promotion_use")
+    if max_promotion_use
+      return max_promotion_use.value.to_i
+    else
+      return DEFAULT_MAX_PROMOTION_USE
+    end
   end
 
   def self.coupon_discount
