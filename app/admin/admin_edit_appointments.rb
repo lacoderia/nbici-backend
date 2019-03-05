@@ -8,7 +8,7 @@ ActiveAdmin.register Appointment, :as => "Eliminar_reservaciones" do
   filter :schedule_instructor_first_name, :as => :string, :label => "Nombre del instructor"  
   filter :user_last_name, :as => :string, :label => "Apellido de cliente"
 
-  config.sort_order = 'start_asc, bicycle_number_asc'
+  config.sort_order = 'start_desc, bicycle_number_asc'
 
   controller do
     def scoped_collection
