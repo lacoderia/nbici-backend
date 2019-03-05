@@ -1,29 +1,14 @@
-ActiveAdmin.register Appointment, :as => "Clientes_del_dia" do 
+ActiveAdmin.register Appointment, :as => "Eliminar_reservaciones" do 
 
-  menu parent: 'Reservaciones', priority: 0  
+  menu parent: 'Reservaciones', priority: 1 
   
-  actions :all, :except => [:show, :new, :destroy, :update, :edit]
+  actions :all, :except => [:show, :new, :update, :edit]
 
-  filter :start, :as => :date_time_range, :label => "Horario", datepicker_options: {min_date: Time.zone.now.beginning_of_day, max_date: Time.zone.now.end_of_day + 1.day}
-  
-  filter :schedule_instructor_first_name, :as => :string, :label => "Nombre del instructor"
-  
+  filter :start, :as => :date_time_range, :label => "Horario"  
+  filter :schedule_instructor_first_name, :as => :string, :label => "Nombre del instructor"  
   filter :user_last_name, :as => :string, :label => "Apellido de cliente"
 
   config.sort_order = 'start_asc, bicycle_number_asc'
-
-  before_filter only: :index do
-    # when arriving through top navigation
-    if params.keys == ["controller", "action"]
-      extra_params = {"q" => {"start_gteq" => Time.zone.now.beginning_of_day, "start_lteq" => Time.zone.now.end_of_day}}
-
-      # make sure data is filtered and filters show correctly
-      params.merge! extra_params
-
-      # make sure downloads and scopes use the default filter
-      request.query_parameters.merge! extra_params
-    end
-  end
 
   controller do
     def scoped_collection
@@ -31,7 +16,7 @@ ActiveAdmin.register Appointment, :as => "Clientes_del_dia" do
     end
   end
 
-  index :title => "Clientes del dia" do
+  index :title => "Eliminar reservaciones" do
     column "Horario", :start
     column "Bicicleta", :bicycle_number
     column 'Nombre' do |appointment|
@@ -40,6 +25,8 @@ ActiveAdmin.register Appointment, :as => "Clientes_del_dia" do
     column 'Instructor' do |appointment|
       "#{appointment.schedule.instructor.first_name} #{appointment.schedule.instructor.last_name}" if appointment.schedule
     end
+    actions defaults: true
+
   end
 
   csv do
@@ -58,3 +45,4 @@ ActiveAdmin.register Appointment, :as => "Clientes_del_dia" do
   end
 
 end
+

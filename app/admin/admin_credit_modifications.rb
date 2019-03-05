@@ -1,5 +1,7 @@
 ActiveAdmin.register CreditModification, :as => "Modificaciones_de_creditos" do
 
+  menu parent: 'Operacion Interna', priority: 4 
+
   actions :all, :except => [:destroy, :new]
 
   filter :user_first_name, :as => :string, :label => "Nombre"
@@ -21,6 +23,7 @@ ActiveAdmin.register CreditModification, :as => "Modificaciones_de_creditos" do
     end
 
     column "Créditos", :credits
+    column "Dinero?", :is_money
     column "Razón", :reason
     column "Paquete" do |credit_modification|
       "#{credit_modification.pack.description}" if credit_modification.pack

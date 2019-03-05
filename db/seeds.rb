@@ -130,7 +130,7 @@ next_saturday = next_friday + 1.day
 
 
 #Monday
-Schedule.create(instructor: instructor_ale, room: room, datetime: monday + 6.hours + 15.minutes)
+schedule_1 = Schedule.create(instructor: instructor_ale, room: room, datetime: monday + 6.hours + 15.minutes)
 Schedule.create(instructor: instructor_samuel, room: room, datetime: monday + 7.hours)
 Schedule.create(instructor: instructor_maca, room: room, datetime: monday + 8.hours)
 Schedule.create(instructor: instructor_isa, room: room, datetime: monday + 9.hours)
@@ -142,7 +142,7 @@ Schedule.create(instructor: instructor_sofi, room: room, datetime: monday + 20.h
 Schedule.create(instructor: instructor_diana, room: room, datetime: monday + 21.hours)
 
 #Tuesday
-Schedule.create(instructor: instructor_samuel, room: room, datetime: tuesday + 6.hours + 15.minutes)
+schedule_2 = Schedule.create(instructor: instructor_samuel, room: room, datetime: tuesday + 6.hours + 15.minutes)
 Schedule.create(instructor: instructor_ale, room: room, datetime: tuesday + 7.hours)
 Schedule.create(instructor: instructor_isa, room: room, datetime: tuesday + 8.hours)
 Schedule.create(instructor: instructor_maca, room: room, datetime: tuesday + 9.hours)
@@ -256,7 +256,8 @@ Schedule.create(instructor: instructor_geor, room: room, datetime: next_saturday
 Schedule.create(instructor: instructor_ale, room: room, datetime: next_saturday + 12.hours)
 
 #Appointment
-#appointment = Appointment.create(user: user, schedule: schedule_1, bicycle_number: 1, status: 'BOOKED', start: schedule_1.datetime, description: "Con mi maestro favorito")
+appointment = Appointment.create(user: user, schedule: schedule_1, bicycle_number: 1, status: 'BOOKED', start: schedule_1.datetime, description: "Con mi maestro favorito")
+appointment_2 = Appointment.create(user: user, schedule: schedule_2, bicycle_number: 1, status: 'BOOKED', start: schedule_2.datetime, description: "Con mi maestro favorito")
 
 #Configuration
 Configuration.create(key: "coupon_discount", value: "40")

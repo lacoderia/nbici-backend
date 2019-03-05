@@ -1,5 +1,7 @@
 ActiveAdmin.register Promotion, :as => "Promociones" do
 
+  menu parent: 'Operacion Interna', priority: 1 
+
   actions :all, :except => [:show]
 
   permit_params :coupon, :description, :active, promotion_amounts_attributes: [:id, :amount, :pack_id, :promotion_id, :_destroy]

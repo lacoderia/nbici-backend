@@ -1,5 +1,7 @@
 ActiveAdmin.register User, :as => "Resumen_clases_por_usuario" do
 
+  menu parent: 'Usuarios', priority: 1  
+
   actions :all, :except => [:show, :new, :destroy, :update, :edit]
 
   filter :first_name, :label => "Nombre"

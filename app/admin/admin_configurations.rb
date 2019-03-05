@@ -1,5 +1,7 @@
 ActiveAdmin.register Configuration, :as => "Configuraciones" do
 
+  menu parent: 'Operacion Interna', priority: 2
+
   actions :all, :except => [:show, :destroy, :new]
 
   permit_params :key, :value

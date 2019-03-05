@@ -1,4 +1,6 @@
 ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
+
+  menu parent: 'Operacion Interna', priority: 3
   
   actions :all, :except => [:show, :new, :destroy, :update]
   

@@ -1,4 +1,6 @@
 ActiveAdmin.register Pack, :as => "Paquetes" do
+  
+  menu parent: 'Operacion Interna', priority: 0 
 	
   actions :all, :except => [:show, :destroy]
 

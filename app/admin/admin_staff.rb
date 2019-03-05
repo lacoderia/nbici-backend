@@ -1,5 +1,7 @@
 ActiveAdmin.register User, :as => "Staff_y_Prueba" do
 
+  menu parent: 'Usuarios', priority: 2
+
   actions :all, :except => [:new, :show, :destroy]
 
   permit_params :first_name, :last_name, :staff, :test

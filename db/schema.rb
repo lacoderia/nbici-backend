@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180903205900) do
+ActiveRecord::Schema.define(version: 20190305210719) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -98,6 +98,7 @@ ActiveRecord::Schema.define(version: 20180903205900) do
     t.integer  "pack_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_money",   default: false
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
