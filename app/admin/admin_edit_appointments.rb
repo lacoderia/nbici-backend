@@ -1,4 +1,4 @@
-ActiveAdmin.register Appointment, :as => "Eliminar_reservaciones" do 
+ActiveAdmin.register Appointment, :as => "Cancelar_reservaciones" do 
 
   menu parent: 'Reservaciones', priority: 1 
   
@@ -14,9 +14,18 @@ ActiveAdmin.register Appointment, :as => "Eliminar_reservaciones" do
     def scoped_collection
       Appointment.not_cancelled_with_users_and_schedules
     end
+
+    def destroy
+      appointment = Appointment.find(params[:id]) 
+      
+      appointment.cancel_with_time_check(appointment.user, true)
+      flash[:notice] = "Appointment cancelled correctly."
+        redirect_to collection_url and return
+    end
+    
   end
 
-  index :title => "Eliminar reservaciones" do
+  index :title => "Cancelar reservaciones" do
     column "Horario", :start
     column "Bicicleta", :bicycle_number
     column 'Nombre' do |appointment|
@@ -25,7 +34,9 @@ ActiveAdmin.register Appointment, :as => "Eliminar_reservaciones" do
     column 'Instructor' do |appointment|
       "#{appointment.schedule.instructor.first_name} #{appointment.schedule.instructor.last_name}" if appointment.schedule
     end
-    actions defaults: true
+    actions defaults: false do |appointment|
+      "#{link_to "Cancel", admin_cancelar_reservacione_path(appointment.id), method: :delete, data: {:confirm => "Cancelarás la reservación. ¿Estás seguro?"} }".html_safe
+    end
 
   end
 

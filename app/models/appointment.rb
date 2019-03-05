@@ -26,8 +26,8 @@ class Appointment < ActiveRecord::Base
   scope :not_cancelled, -> {where("status = ? OR status = ?", 'BOOKED', 'FINALIZED')}
   #scope :today_with_users, -> {where("true").includes(:user, :schedule=> :instructor)}
 
-  def cancel_with_time_check current_user
-    if current_user.test?
+  def cancel_with_time_check current_user, no_time_check = false
+    if current_user.test? or no_time_check
       if Time.zone.now < (self.start - 1.minute)
         self.cancel!
         if self.user.classes_left and (not self.schedule.free)
