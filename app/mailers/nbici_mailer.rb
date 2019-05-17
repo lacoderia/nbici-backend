@@ -12,6 +12,12 @@ class NbiciMailer < ActionMailer::Base
     mail(to: @user.email, subject: "Tu clase ha sido reservada")
   end
 
+  def booking_anniversary user, appointment
+    @user = user
+    @appointment = appointment
+    mail(to: @user.email, subject: "Tu clase ha sido reservada")
+  end
+
   def purchase user, purchase
     @user = user
     @purchase = purchase

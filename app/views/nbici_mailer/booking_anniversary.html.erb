@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8" />
+		<title>rodada_en_altura_3</title>
+		<link href="<%= ENV['HOST'] %>/booking_aniversario/css/idGeneratedStyles.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body id="rodada_en_altura_3" lang="es-ES">
+		<div id="_idContainer000" class="Marco-de-texto-b-sico">
+			<p class="P-rrafo-b-sico ParaOverride-1"><span class="CharOverride-1"><%= @user.first_name.split.map(&:capitalize).join(' ') %>, ¡tu reservación está lista!</span></p>
+			<p class="P-rrafo-b-sico ParaOverride-1"><span class="CharOverride-1"><%= @appointment.schedule.instructor.first_name %> te espera a las <%= @appointment.start.strftime("%d/%m/%Y %I:%M%p") %> para una rodada en altura.</span></p>
+			<p class="P-rrafo-b-sico ParaOverride-2"><span class="CharOverride-2">Por favor toma en cuenta los siguientes puntos para disfrutar <br />al máximo tu rodada:</span></p>
+			<ul>
+				<li class="P-rrafo-b-sico ParaOverride-3"><span class="CharOverride-2">No olvides llegar </span><span class="CharOverride-3">15 minutos antes de la clase</span><span class="CharOverride-2">, ya que por tu propia <br />seguridad si llegas después no podrás subir al helipuerto .</span></li>
+			</ul>
+			<ul>
+				<li class="P-rrafo-b-sico ParaOverride-3"><span class="CharOverride-2">Para tomar tu clase debes </span><span class="CharOverride-3">ser mayor de 18 años</span><span class="CharOverride-2">, si aún no lo eres deberás venir </span><span class="CharOverride-3">acompañado de un padre o tutor</span><span class="CharOverride-2">, que se responsabilice <br />de tu aceptación de riesgo, de otra manera no podrás subir al helipuerto,<br /> este acompañante podrá esperarte en nuestro front desk y deberá traer <br />su </span><span class="CharOverride-3">INE (original y copia). </span></li>
+			</ul>
+			<ul>
+				<li class="P-rrafo-b-sico ParaOverride-3"><span class="CharOverride-2">Recuerda traer tu </span><span class="CharOverride-3">INE original y copia</span><span class="CharOverride-2">, sin ella no podrás tomar la clase.</span></li>
+			</ul>
+			<ul>
+				<li class="P-rrafo-b-sico ParaOverride-3"><span class="CharOverride-2">Únicamente será permitido subir con </span><span class="CharOverride-3">tus tenis, celular y agua.</span><span class="CharOverride-2"> <br />Por tu seguridad no podrás llevar </span><span class="CharOverride-3">NINGÚN </span><span class="CharOverride-2">otro objeto al helipuerto.</span></li>
+			</ul>
+			<ul>
+				<li class="P-rrafo-b-sico ParaOverride-3"><span class="CharOverride-2">Está estrictamente </span><span class="CharOverride-3">prohibido salir de la zona señalada por el Hotel.</span><span class="CharOverride-2"> <br />Deberás cumplir con las indicaciones que se te darán al subir, de lo contrario tendremos que pedirte que te retires.</span></li>
+			</ul>
+			<ul>
+				<li class="P-rrafo-b-sico ParaOverride-3"><span class="CharOverride-2">Una vez arriba de tu bici </span><span class="CharOverride-3">no puedes volver a bajarte</span><span class="CharOverride-2"> hasta que nuestro <br />staff te lo indique.</span></li>
+			</ul>
+			<ul>
+				<li class="P-rrafo-b-sico ParaOverride-3"><span class="CharOverride-2">No olvides que </span><span class="CharOverride-3">si quieres cancelar</span><span class="CharOverride-2"> tu ride tienes que hacerlo </span><span class="CharOverride-3">12 horas antes </span><span class="CharOverride-2">para que se te reembolse la clase.</span></li>
+			</ul>
+			<p class="P-rrafo-b-sico ParaOverride-4"><span class="CharOverride-3">DISFRUTA TU RIDE, Y NO OLVIDES COMPARTIR TU EXPERIENCIA EN LAS REDES SOCIALES USANDO NUESTROS HASHTAGS:</span></p>
+			<p class="P-rrafo-b-sico ParaOverride-4"><span class="CharOverride-3"> #3añosbailandosobreruedas #unarodadadealtura #turitmoaotronivel #theskyisthelimit #nbicispinstudio</span></p>
+		</div>
+		<div class="_idGenObjectLayout-1">
+			<div id="_idContainer001" class="_idGenObjectStyleOverride-1">
+				<img class="_idGenObjectAttribute-1" src="<%= ENV['HOST'] %>/booking_aniversario/image/banner.jpg" alt="" />
+			</div>
+		</div>
+		<div class="_idGenObjectLayout-1">
+			<div id="_idContainer002" class="_idGenObjectStyleOverride-1">
+				<img class="_idGenObjectAttribute-1" src="<%= ENV['HOST'] %>/booking_aniversario/image/nbici_logo.png" alt="" />
+			</div>
+		</div>
+	</body>
+</html>
+
