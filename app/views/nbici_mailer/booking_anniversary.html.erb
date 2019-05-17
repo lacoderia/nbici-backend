@@ -3,101 +3,102 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <style type="text/css">
-body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, pre, code, blockquote {
-	margin:0;
-	padding:0;
-	border-width:0;
-}
-body {
-	-epub-hyphens:auto;
-}
-div.Marco-de-texto-b-sico {
-	border-style:solid;
-}
-p.P-rrafo-b-sico, li.P-rrafo-b-sico {
-	color:#000000;
-	font-family:"Minion Pro", serif;
-	font-size:12px;
-	font-style:normal;
-	font-variant:normal;
-	font-weight:normal;
-	line-height:1.2;
-	margin-bottom:0;
-	margin-left:0;
-	margin-right:0;
-	margin-top:0;
-	orphans:1;
-	page-break-after:auto;
-	page-break-before:auto;
-	text-align:left;
-	text-decoration:none;
-	text-indent:0;
-	text-transform:none;
-	widows:1;
-}
-p.ParaOverride-1 {
-	text-align:center;
-}
-p.ParaOverride-2 {
-	-epub-hyphens:none;
-}
-li.ParaOverride-3 {
-	-epub-hyphens:none;
-	list-style-position:outside;
-	list-style-type:disc;
-	margin-left:18px;
-	text-indent:0px;
-}
-p.ParaOverride-4 {
-	-epub-hyphens:none;
-	text-align:center;
-}
-span.CharOverride-1 {
-	font-family:"Avenir Heavy", sans-serif;
-	font-size:11px;
-	font-style:normal;
-	font-weight:900;
-}
-span.CharOverride-2 {
-	font-family:"Avenir Book", sans-serif;
-	font-size:9px;
-	font-style:normal;
-	font-weight:normal;
-}
-span.CharOverride-3 {
-	font-family:"Avenir Black", sans-serif;
-	font-size:9px;
-	font-style:normal;
-	font-weight:800;
-}
-#_idContainer001 {
-	display:inline-block;
-	height:123px;
-	width:339px;
-}
-#_idContainer002 {
-	display:inline-block;
-	height:77px;
-	width:83px;
-}
-img._idGenObjectAttribute-1 {
-	height:100.00%;
-	min-width:100%;
-	width:100.00%;
-}
-div._idGenObjectStyleOverride-1 {
-	border-width:0px;
 
+                  body, div, dl, dt, dd, h1, h2, h3, h4, h5, h6, p, pre, code, blockquote {
+                          margin:0;
+                          padding:0;
+                          border-width:0;
+                  }
+                  body {
+                          -epub-hyphens:auto;
+                  }
+                  div.Marco-de-texto-b-sico {
+                          border-style:solid;
+                  }
+                  p.P-rrafo-b-sico, li.P-rrafo-b-sico {
+                          color:#000000;
+                          font-family:"Minion Pro", serif;
+                          font-size:12px;
+                          font-style:normal;
+                          font-variant:normal;
+                          font-weight:normal;
+                          line-height:1.2;
+                          margin-bottom:0;
+                          margin-left:0;
+                          margin-right:0;
+                          margin-top:0;
+                          orphans:1;
+                          page-break-after:auto;
+                          page-break-before:auto;
+                          text-align:left;
+                          text-decoration:none;
+                          text-indent:0;
+                          text-transform:none;
+                          widows:1;
+                  }
+                  p.ParaOverride-1 {
+                          text-align:center;
+                  }
+                  p.ParaOverride-2 {
+                          -epub-hyphens:none;
+                  }
+                  li.ParaOverride-3 {
+                          -epub-hyphens:none;
+                          list-style-position:outside;
+                          list-style-type:disc;
+                          margin-left:18px;
+                          text-indent:0px;
+                  }
+                  p.ParaOverride-4 {
+                          -epub-hyphens:none;
+                          text-align:center;
+                  }
+                  span.CharOverride-1 {
+                          font-family:"Avenir Heavy", sans-serif;
+                          font-size:11px;
+                          font-style:normal;
+                          font-weight:900;
+                  }
+                  span.CharOverride-2 {
+                          font-family:"Avenir Book", sans-serif;
+                          font-size:9px;
+                          font-style:normal;
+                          font-weight:normal;
+                  }
+                  span.CharOverride-3 {
+                          font-family:"Avenir Black", sans-serif;
+                          font-size:9px;
+                          font-style:normal;
+                          font-weight:800;
+                  }
+                  #_idContainer001 {
+                          display:inline-block;
+                          height:123px;
+                          width:339px;
+                  }
+                  #_idContainer002 {
+                          display:inline-block;
+                          height:77px;
+                          width:83px;
+                  }
+                  img._idGenObjectAttribute-1 {
+                          height:100.00%;
+                          min-width:100%;
+                          width:100.00%;
+                  }
+                  div._idGenObjectStyleOverride-1 {
+                          border-width:0px;
+                  }
                 </style>
-	</head>
-	<body id="rodada_en_altura_3" lang="es-ES">
-		<div id="_idContainer000" class="Marco-de-texto-b-sico">
-			<p class="P-rrafo-b-sico ParaOverride-1"><span class="CharOverride-1"><%= @user.first_name.split.map(&:capitalize).join(' ') %>, ¡tu reservación está lista!</span></p>
-			<p class="P-rrafo-b-sico ParaOverride-1"><span class="CharOverride-1"><%= @appointment.schedule.instructor.first_name %> te espera a las <%= @appointment.start.strftime("%d/%m/%Y %I:%M%p") %> para una rodada en altura.</span></p>
-			<p class="P-rrafo-b-sico ParaOverride-2"><span class="CharOverride-2">Por favor toma en cuenta los siguientes puntos para disfrutar <br />al máximo tu rodada:</span></p>
-			<ul>
-				<li class="P-rrafo-b-sico ParaOverride-3"><span class="CharOverride-2">No olvides llegar </span><span class="CharOverride-3">15 minutos antes de la clase</span><span class="CharOverride-2">, ya que por tu propia <br />seguridad si llegas después no podrás subir al helipuerto .</span></li>
-			</ul>
+                          </head>
+                          <body id="rodada_en_altura_3" lang="es-ES">
+                                  <div id="_idContainer000" class="Marco-de-texto-b-sico">
+                                          <p class="P-rrafo-b-sico ParaOverride-1"><span class="CharOverride-1"><%= @user.first_name.split.map(&:capitalize).join(' ') %>, ¡tu reservación está lista!</span></p>
+                                          <p class="P-rrafo-b-sico ParaOverride-1"><span class="CharOverride-1"><%= @appointment.schedule.instructor.first_name %> te espera a las <%= @appointment.start.strftime("%d/%m/%Y %I:%M%p") %> para una rodada en altura.</span></p>
+                                          <p class="P-rrafo-b-sico ParaOverride-2"><span class="CharOverride-2">Por favor toma en cuenta los siguientes puntos para disfrutar <br />al máximo tu rodada:</span></p>
+                                          <ul>
+                                                  <li class="P-rrafo-b-sico ParaOverride-3"><span class="CharOverride-2">No olvides llegar </span><span class="CharOverride-3">15 minutos antes de la clase</span><span class="CharOverride-2">, ya que por tu propia <br />seguridad si llegas después no podrás subir al helipuerto .</span></li>
+                                          </ul>
 			<ul>
 				<li class="P-rrafo-b-sico ParaOverride-3"><span class="CharOverride-2">Para tomar tu clase debes </span><span class="CharOverride-3">ser mayor de 18 años</span><span class="CharOverride-2">, si aún no lo eres deberás venir </span><span class="CharOverride-3">acompañado de un padre o tutor</span><span class="CharOverride-2">, que se responsabilice <br />de tu aceptación de riesgo, de otra manera no podrás subir al helipuerto,<br /> este acompañante podrá esperarte en nuestro front desk y deberá traer <br />su </span><span class="CharOverride-3">INE (original y copia). </span></li>
 			</ul>
