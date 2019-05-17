@@ -90,6 +90,90 @@ class Appointment < ActiveRecord::Base
     end
   end
 
+  def self.book_and_charge params, current_user
+    #schedule data
+    schedule = Schedule.find(params[:schedule_id])
+    bicycle_number = params[:bicycle_number].to_i
+    description = params[:description]
+    appointment = Appointment.new
+
+    if schedule.datetime <= Time.zone.now
+      raise "La clase ya está fuera de horario."
+    end
+      
+    if not schedule.bicycle_exists?(bicycle_number)
+      raise "Esa bicicleta no existe, por favor intenta nuevamente."
+    end    
+
+    if (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
+
+      if schedule.price.nil?
+        raise "Esta clase especial necesita tener un precio asignado."
+      else
+
+        if(not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
+          
+          #charge data
+          amount = params[:price].to_i * 100
+          card = Card.find_by_uid(params[:uid]) 
+          
+          if not card
+            raise "Tarjeta no encontrada o registrada."
+          end
+          
+          description = "Compra de clase de aniversario"
+          currency = "MXN"
+          params_price = params[:price]
+
+          if params[:price].to_f != schedule.price.to_f
+            raise "El precio enviado es diferente al precio de la clase paquete."
+          end
+
+          charge = Conekta::Charge.create({
+            amount: amount,
+            currency: currency,
+            description: description,
+            card: card.uid,
+            details: {
+              name: card.name,
+              email: current_user.email,
+              phone: card.phone,
+              line_items: [{
+                name: description,
+                description: "Paquete nbici",
+                unit_price: amount,
+                quantity: 1
+              }]
+            }
+          })
+
+          purchase = Purchase.create!(
+            user: current_user,
+            uid: charge.id,
+            object: charge.object, 
+            livemode: charge.livemode, 
+            status: charge.status,
+            description: charge.description,
+            amount: charge.amount,
+            currency: charge.currency,
+            payment_method: charge.payment_method,
+            details: charge.details,
+          )
+
+          schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)
+          return appointment
+          
+        elsif schedule.bookings.find{|station| station.number == station_number}
+          raise "La bicicleta ya fue reservada, por favor intenta con otra."
+        end
+      end
+
+    else
+      raise "La bicicleta ya fue reservada, por favor intenta con otra."
+    end
+    
+  end
+
   def self.book params, current_user
 
     schedule = Schedule.find(params[:schedule_id])

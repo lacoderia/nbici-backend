@@ -1,9 +1,22 @@
 class AppointmentsController < ApiController 
   include ErrorSerializer
   
-  before_action :authenticate_user!, only: [:book, :cancel, :weekly_scope_for_user, :historic_for_user]
+  before_action :authenticate_user!, only: [:book, :cancel, :weekly_scope_for_user, :historic_for_user, :book_and_charge]
   
   before_action :set_appointment, only: [:cancel, :edit_bicycle_number]
+
+  # POST /appointments/book_and_charge
+  def book_and_charge
+    begin
+      appointment = Appointment.book_and_charge(params, current_user)
+      SendEmailJob.perform_later("booking_anniversary", current_user, appointment)
+      render json: appointment
+    rescue Exception => e
+      appointment = Appointment.new
+      appointment.errors.add(:error_creating_anniversary_appointment, e.message)
+      render json: ErrorSerializer.serialize(appointment.errors), status: 500
+    end
+  end
 
   # POST /appointments/book
   def book

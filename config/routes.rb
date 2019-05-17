@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   resources :appointments do
     collection do
       match 'book', :to => "appointments#book", :via => [:post, :options]
+      match 'book_and_charge', :to => "appointments#book_and_charge", :via => [:post, :options]
       get 'weekly_scope_for_user', :to => 'appointments#weekly_scope_for_user'
       get 'historic_for_user', :to => 'appointments#historic_for_user'
     end

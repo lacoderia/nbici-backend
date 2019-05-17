@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190305210719) do
+ActiveRecord::Schema.define(version: 20190517205338) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -248,6 +248,7 @@ ActiveRecord::Schema.define(version: 20190305210719) do
     t.boolean  "free",                    default: false
     t.boolean  "opening",                 default: false
     t.integer  "alternate_instructor_id"
+    t.float    "price"
   end
 
   create_table "users", force: :cascade do |t|
