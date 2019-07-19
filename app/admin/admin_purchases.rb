@@ -61,7 +61,7 @@ ActiveAdmin.register Purchase, :as => "Compras" do
     end
 
     column "Paquete" do |purchase|
-      "#{purchase.pack.description}"
+      "#{purchase.pack.description}" if purchase.pack
     end
 
     column "Precio" do |purchase|
