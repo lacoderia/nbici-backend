@@ -55,25 +55,29 @@ class Purchase < ActiveRecord::Base
       raise "El precio enviado es diferente al precio del paquete."
     end
 
-    if params_price.to_f > 0
+    if params_price.to_f > 0 
 
-      charge = Conekta::Charge.create({
-        amount: amount,
-        currency: currency,
-        description: description,
-        card: card.uid,
-        details: {
-          name: card.name,
-          email: user.email,
-          phone: card.phone,
-          line_items: [{
-            name: description,
-            description: "Paquete nbici",
-            unit_price: amount,
-            quantity: 1
-          }]
-        }
-      })
+      if not user.test?
+
+        charge = Conekta::Charge.create({
+          amount: amount,
+          currency: currency,
+          description: description,
+          card: card.uid,
+          details: {
+            name: card.name,
+            email: user.email,
+            phone: card.phone,
+            line_items: [{
+              name: description,
+              description: "Paquete nbici",
+              unit_price: amount,
+              quantity: 1
+            }]
+          }
+        })
+
+      end
 
       purchase = Purchase.create!(
         user: user,
