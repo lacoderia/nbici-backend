@@ -9,7 +9,8 @@ class AppointmentsController < ApiController
   def book_and_charge
     begin
       appointment = Appointment.book_and_charge(params, current_user)
-      SendEmailJob.perform_later("booking_anniversary", current_user, appointment)
+#      SendEmailJob.perform_later("booking_anniversary", current_user, appointment)
+      SendEmailJob.perform_later("booking", current_user, appointment)
       render json: appointment
     rescue Exception => e
       appointment = Appointment.new
