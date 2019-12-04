@@ -3,6 +3,8 @@ class Purchase < ActiveRecord::Base
   belongs_to :user
   belongs_to :promotion
 
+  accepts_nested_attributes_for :user  
+
   scope :with_users, -> {joins(:user)}
 
   scope :with_users_and_appointments_and_bom_and_eom, -> {select("purchases.*, date_trunc('month', purchases.created_at) AS bom, (date_trunc('month', purchases.created_at) + INTERVAL '1 MONTH - 1 minute' ) AS eom").joins(:user)}

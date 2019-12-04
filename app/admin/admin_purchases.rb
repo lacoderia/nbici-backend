@@ -1,6 +1,6 @@
 ActiveAdmin.register Purchase, :as => "Compras" do
 
-  actions :all, :except => [:show, :new, :destroy, :update, :edit]
+  actions :all, :except => [:show, :destroy, :update, :edit]
 
   filter :user_last_name, :label => "Apellido de cliente", :as => :string
   filter :created_at, :label => "Fecha"
@@ -39,20 +39,49 @@ ActiveAdmin.register Purchase, :as => "Compras" do
       end
     end
 
-#    before_filter only: :index do
+  end
 
-      # if filter button was clicked
-#      if not(params[:commit].blank? && params[:q].blank?)
 
-#        params[:q].each do |k, v|
-#          if k.include?("amount")
-#            binding.pry
-#            v = (v.to_f * 100).to_i.to_s
-#            params[:q][k] = v
-#          end
-#        end
-#      end
-#    end
+  form do |f|
+
+    f.semantic_errors *f.object.errors.keys
+    f.object.created_at = DateTime.now unless f.object.created_at
+
+    f.inputs "Información de la compra" do
+
+      if params[:user_id]
+      
+        f.object.user = User.find(params[:user_id])
+
+        f.inputs "Detalles de usuario" do
+
+          f.input :user_id, label: "email", as: :select, 
+            collection: User.all.sort_by{|user| user.email}.map{|user| ["#{user.email} - #{user.first_name} #{user.last_name}", user.id]}, 
+            include_blank: false
+
+          if not f.object.user.cards.empty?
+            primary_card = f.object.user.cards.where("primary = ?", true).first
+          else
+            primary_card = nil
+          end
+
+          f.input :user_cards, label: "Tarjeta", collection: f.object.cards.map{|g| [g.last4, g.id]}, 
+            input_html: { onchange: "" }, selected: primary_card.id if primary_card
+
+        end
+        
+        f.inputs "Detalles de compra" do
+
+          f.input :description, label: "Descripción"
+          f.input :amount, label: "Cantidad"
+          f.input :amount, label: "Confirmar cantidad"
+        end
+
+      end
+
+    end
+    f.actions
+    
   end
 
   index :title => "Compras" do
@@ -60,8 +89,12 @@ ActiveAdmin.register Purchase, :as => "Compras" do
       "#{purchase.user.first_name} #{purchase.user.last_name}"
     end
 
-    column "Paquete" do |purchase|
-      "#{purchase.pack.description}" if purchase.pack
+    column "Compra" do |purchase|
+      if purchase.pack
+        "#{purchase.pack.description}" 
+      else
+        "#{purchase.description}"
+      end
     end
 
     column "Precio" do |purchase|

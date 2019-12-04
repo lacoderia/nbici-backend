@@ -1,0 +1,22 @@
+<p><%= @user.first_name %>, se han modificado tus créditos o clases desde recepción. </p>
+
+<p>El detalle es el siguiente:</p>
+
+<ul>
+  <li> Descripción: <%= @credit_modification["reason"] %> </li>
+
+<% if @credit_modification["is_money"] == "1" %>
+  
+    <li> Créditos: $ <%= @credit_modification["credits"].to_f %> </li>
+
+<% elsif @credit_modification["pack_id"] != "" %>
+
+    <li> Paquete: <%= Pack.find(@credit_modification["pack_id"]).description %> </li>
+
+<% else %>
+
+    <li> Clases: <%= @credit_modification["credits"] %> </li>
+
+<% end %>
+  
+</ul>

@@ -50,4 +50,10 @@ class NbiciMailer < ActionMailer::Base
     mail(to: referrer.email, subject: "¡Tienes saldo a favor!")
   end
 
+  def credit_modifications user, credit_modification
+    @user = user
+    @credit_modification = credit_modification
+    mail(to: @user.email, subject: "#{@user.first_name}, tus modificaciones desde recepción")    
+  end
+
 end
