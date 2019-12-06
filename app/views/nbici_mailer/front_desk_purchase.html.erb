@@ -1,0 +1,8 @@
+<p><%= @user.first_name %>, has hecho una compra desde recepción. </p>
+
+<p>El detalle es el siguiente:</p>
+
+<ul>
+  <li> Descripción: <%= @purchase.description %> </li>
+  <li> Total: $ <%= (@purchase.amount)/(100.0) %> </li>
+</ul>

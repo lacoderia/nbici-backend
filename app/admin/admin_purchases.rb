@@ -33,10 +33,13 @@ ActiveAdmin.register Purchase, :as => "Compras" do
         card = Card.find(params[:purchase][:user_attributes][:card_ids])
 
         # render error        
-        if amount_initial != amount_confirmation
-          flash[:error] = 'Las cantidades no coinciden'
+        if (amount_initial != amount_confirmation) || (amount_initial.blank?) || (amount_initial.to_f < 3)
+          flash[:error] = 'La cantidad no es válida'
           redirect_to "/admin/compras/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
         
+        elsif description.blank?
+          flash[:error] = 'Se necesita una descripción'
+          redirect_to "/admin/compras/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
         else
 
           amount = (amount_initial.to_f * 100).to_i
@@ -94,6 +97,9 @@ ActiveAdmin.register Purchase, :as => "Compras" do
             )
 
           end        
+        
+          #NbiciMailer.send(:front_desk_purchase, user, purchase).deliver_now
+          SendEmailJob.perform_later("front_desk_purchase", user, purchase)
       
           flash[:notice] = 'La compra se realizó correctamente.'
           redirect_to collection_url
@@ -173,8 +179,7 @@ ActiveAdmin.register Purchase, :as => "Compras" do
           u.input :last_name, label: "Apellido", input_html: { disabled: true, style: "background-color: #d3d3d3;" }
           u.input :email, label: "Email", input_html: { disabled: true, style: "background-color: #d3d3d3;" }
 
-
-          u.input :cards, label: "Tarjeta", collection: f.object.user.cards.map{|g| [g.last4, g.id]}, as: :radio,
+          u.input :cards, label: "Tarjeta", collection: f.object.user.cards.map{|g| ["terminación-#{g.last4}", g.id]}, as: :radio,
             required: true, selected: primary_card.id if primary_card
           
         end
@@ -193,7 +198,7 @@ ActiveAdmin.register Purchase, :as => "Compras" do
       end
 
     end
-    f.actions
+    f.actions if params[:user_id]
     
   end
 
