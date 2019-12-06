@@ -7,13 +7,108 @@ ActiveAdmin.register Purchase, :as => "Compras" do
   filter :amount, :label => "Precio"
   filter :promotion, :label => "Promocion", :collection => Promotion.all.collect {|p| [p.coupon, p.id]}
 
+  permit_params :description, :amount, user_attributes: [:id, :card_ids]
+
   FILTERS = ["user_last_name", "created_at", "amount", "promotion", "user_id"]
 
   config.sort_order = "created_at_desc"
+  config.clear_action_items!  
 
   controller do
     def scoped_collection
       Purchase.with_users
+    end
+
+    def create
+
+      # Make purchase
+      if params[:purchase][:user_attributes] && params[:purchase][:user_attributes][:card_ids]
+
+        user = User.find(params[:purchase][:user_attributes][:id])
+        amount_initial = params[:purchase][:amount]
+        amount_confirmation = params[:purchase][:amount_confirmation]
+        currency = "MXN"
+        description = params[:purchase][:description]
+          
+        card = Card.find(params[:purchase][:user_attributes][:card_ids])
+
+        # render error        
+        if amount_initial != amount_confirmation
+          flash[:error] = 'Las cantidades no coinciden'
+          redirect_to "/admin/compras/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
+        
+        else
+
+          amount = (amount_initial.to_f * 100).to_i
+
+          if not user.test?
+
+            charge = Conekta::Charge.create({
+              amount: amount,
+              currency: currency,
+              description: description,
+              card: card.uid,
+              details: {
+                name: card.name,
+                email: user.email,
+                phone: card.phone,
+                line_items: [{
+                  name: description,
+                  description: "Compra en recepcion",
+                  unit_price: amount,
+                  quantity: 1
+                }]
+              }
+            })
+
+            purchase = Purchase.create!(
+              user: user,
+              pack: nil,
+              uid: charge.id,
+              object: charge.object, 
+              livemode: charge.livemode, 
+              status: charge.status,
+              description: charge.description,
+              amount: charge.amount,
+              currency: charge.currency,
+              payment_method: charge.payment_method,
+              details: charge.details,
+              promotion: nil
+            ) 
+    
+          else
+
+            purchase = Purchase.create!(
+              user: user,
+              pack: nil,
+              uid: nil,
+              object: nil, 
+              livemode: nil, 
+              status: nil,
+              description: description,
+              amount: amount,
+              currency: currency,
+              payment_method: nil,
+              details: nil,
+              promotion: nil
+            )
+
+          end        
+      
+          flash[:notice] = 'La compra se realizó correctamente.'
+          redirect_to collection_url
+
+        end
+
+      # render error
+      else
+        
+        flash[:error] = 'Información incompleta'
+        redirect_to "/admin/compras/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
+
+      end
+      
+
     end
     
     def destroy
@@ -44,37 +139,55 @@ ActiveAdmin.register Purchase, :as => "Compras" do
 
   form do |f|
 
+    script do
+      raw '$(function() { 
+              $("form input[type=submit] ").on("click", function(){
+              var con = confirm("¿Confirmar compra?");
+              if (con == true) {
+                return true;
+              }
+              else
+                return false;           
+              }); 
+          });'
+    end
+
     f.semantic_errors *f.object.errors.keys
     f.object.created_at = DateTime.now unless f.object.created_at
 
-    f.inputs "Información de la compra" do
+    f.inputs "Nueva compra" do
 
       if params[:user_id]
       
         f.object.user = User.find(params[:user_id])
 
-        f.inputs "Detalles de usuario" do
-
-          f.input :user_id, label: "email", as: :select, 
-            collection: User.all.sort_by{|user| user.email}.map{|user| ["#{user.email} - #{user.first_name} #{user.last_name}", user.id]}, 
-            include_blank: false
+        f.inputs "Detalles de usuario", for: [:user, f.object.user] do |u|
 
           if not f.object.user.cards.empty?
-            primary_card = f.object.user.cards.where("primary = ?", true).first
+            primary_card = f.object.user.cards.where(primary: true).first
           else
             primary_card = nil
           end
-
-          f.input :user_cards, label: "Tarjeta", collection: f.object.cards.map{|g| [g.last4, g.id]}, 
-            input_html: { onchange: "" }, selected: primary_card.id if primary_card
-
-        end
         
+          u.input :first_name, label: "Nombre", input_html: { disabled: true, style: "background-color: #d3d3d3;" }
+          u.input :last_name, label: "Apellido", input_html: { disabled: true, style: "background-color: #d3d3d3;" }
+          u.input :email, label: "Email", input_html: { disabled: true, style: "background-color: #d3d3d3;" }
+
+
+          u.input :cards, label: "Tarjeta", collection: f.object.user.cards.map{|g| [g.last4, g.id]}, as: :radio,
+            required: true, selected: primary_card.id if primary_card
+          
+        end
+          
+        para "<br/> <br/>".html_safe
+                
         f.inputs "Detalles de compra" do
 
-          f.input :description, label: "Descripción"
-          f.input :amount, label: "Cantidad"
-          f.input :amount, label: "Confirmar cantidad"
+          f.input :description, label: "Descripción", required: true 
+          f.input :amount, label: "Cantidad", required: true
+          f.input :amount, label: "Confirmar cantidad", required: true,
+            input_html: {id: "purchase_amount_confirmation", name: "purchase[amount_confirmation]"}
+          
         end
 
       end
