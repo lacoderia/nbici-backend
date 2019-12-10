@@ -5,4 +5,5 @@
 <ul>
   <li> Descripción: <%= @purchase.description %> </li>
   <li> Total: $ <%= (@purchase.amount)/(100.0) %> </li>
+  <li> Tarjeta: Terminación-<%= eval(@purchase.payment_method)["last4"] %> </li>
 </ul>
