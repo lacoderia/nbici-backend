@@ -1,6 +1,7 @@
 class Appointment < ActiveRecord::Base
   belongs_to :user
   belongs_to :schedule
+  has_many :menu_purchases
 
   STATUSES = [
     'BOOKED',

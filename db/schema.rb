@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190517205338) do
+ActiveRecord::Schema.define(version: 20200205212039) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -156,6 +156,41 @@ ActiveRecord::Schema.define(version: 20190517205338) do
     t.boolean  "active",     default: true
   end
 
+  create_table "menu_categories", force: :cascade do |t|
+    t.string   "name"
+    t.string   "image_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "menu_items", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "menu_category_id"
+    t.float    "price"
+    t.boolean  "active"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  create_table "menu_purchases", force: :cascade do |t|
+    t.integer  "appointment_id"
+    t.integer  "user_id"
+    t.string   "uid"
+    t.string   "object"
+    t.boolean  "livemode"
+    t.string   "conekta_status"
+    t.string   "description"
+    t.integer  "amount"
+    t.string   "currency"
+    t.text     "payment_method"
+    t.text     "details"
+    t.text     "notes"
+    t.string   "status"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
   create_table "packs", force: :cascade do |t|
     t.string   "description"
     t.integer  "classes"
@@ -191,6 +226,17 @@ ActiveRecord::Schema.define(version: 20190517205338) do
     t.integer "promotion_id"
     t.integer "user_id"
   end
+
+  create_table "purchased_items", force: :cascade do |t|
+    t.integer  "menu_purchase_id"
+    t.integer  "menu_item_id"
+    t.integer  "amount"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "purchased_items", ["menu_item_id"], name: "index_purchased_items_on_menu_item_id", using: :btree
+  add_index "purchased_items", ["menu_purchase_id"], name: "index_purchased_items_on_menu_purchase_id", using: :btree
 
   create_table "purchases", force: :cascade do |t|
     t.integer  "pack_id"
@@ -301,6 +347,8 @@ ActiveRecord::Schema.define(version: 20190517205338) do
 
   add_foreign_key "promotions_users", "promotions"
   add_foreign_key "promotions_users", "users"
+  add_foreign_key "purchased_items", "menu_items"
+  add_foreign_key "purchased_items", "menu_purchases"
   add_foreign_key "roles_users", "roles"
   add_foreign_key "roles_users", "users"
 end

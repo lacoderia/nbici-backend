@@ -45,6 +45,15 @@ Rails.application.routes.draw do
   end
 
   resources :packs, except: [:new, :edit]
+  resources :menu_items, except: [:new, :edit]
+  resources :menu_categories, except: [:new, :edit]
+
+  resources :menu_purchases do
+    collection do
+      match 'charge', :to => "menu_purchases#charge", :via => [:post, :options]
+    end
+  end
+
   resources :purchases do
     collection do
       match 'charge', :to => "purchases#charge", :via => [:post, :options]

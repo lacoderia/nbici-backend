@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  menu_item_id: 1
+  user_id: 1
+  uid: MyString
+  object: MyString
+  livemode: false
+  status: MyString
+  description: MyString
+  amount: 1
+  currency: MyString
+  payment_method: MyText
+  details: MyText
+
+two:
+  menu_item_id: 1
+  user_id: 1
+  uid: MyString
+  object: MyString
+  livemode: false
+  status: MyString
+  description: MyString
+  amount: 1
+  currency: MyString
+  payment_method: MyText
+  details: MyText
