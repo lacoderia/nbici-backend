@@ -16,7 +16,7 @@ gem 'pry-remote', :require => 'pry-remote'
 gem 'activeadmin', github: 'activeadmin'
 gem 'active_admin_datetimepicker'
 #gem 'omniauth'
-gem 'nokogiri', '~> 1.8.1'
+gem 'nokogiri', '~> 1.10.7'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
