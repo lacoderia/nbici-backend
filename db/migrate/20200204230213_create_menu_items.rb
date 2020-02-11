@@ -5,7 +5,7 @@ class CreateMenuItems < ActiveRecord::Migration
       t.text :description
       t.integer :menu_category_id
       t.float :price
-      t.boolean :active
+      t.boolean :active, :default => true
 
       t.timestamps null: false
     end
