@@ -28,6 +28,16 @@ class MenuPurchase < ActiveRecord::Base
     
   end
 
+  def get_items_description
+
+    descriptions = []
+    self.menu_items.each do |menu_item|
+      description << menu_item.name
+    end
+    return description.join(",")
+    
+  end
+
   def add_items menu_items
 
     menu_items.each do |menu_item|
