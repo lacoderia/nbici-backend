@@ -264,3 +264,48 @@ Configuration.create(key: "coupon_discount", value: "40")
 Configuration.create(key: "referral_credit", value: "40")
 Configuration.create(key: "free_classes_start_date", value: (Time.zone.now + 1.month).strftime("%FT%T.%L%:z") )
 Configuration.create(key: "free_classes_end_date", value: (Time.zone.now + 2.month).strftime("%FT%T.%L%:z") )
+
+#MenuCategories
+cat_smoothies = MenuCategory.create(name:"SMOOTHIES", url: "https://n-bici.com/wp-content/uploads/2020/02/SMOOTHIES.jpg")
+cat_sandwiches = MenuCategory.create(name:"SANDWICHES", url: "https://n-bici.com/wp-content/uploads/2020/02/SANDWICHES.jpg")
+cat_juices = MenuCategory.create(name:"JUICES", url: "https://n-bici.com/wp-content/uploads/2020/02/JUGOS.jpg")
+cat_snacks = MenuCategory.create(name:"ENERGY SNACKS", url: "https://n-bici.com/wp-content/uploads/2020/02/ENERGY-SNACKS.jpg")
+cat_toast = MenuCategory.create(name:"ENERGY TOAST", url: "https://n-bici.com/wp-content/uploads/2020/02/ENERGY-TOAST.jpg")
+
+#MenuItems
+#Smoothies
+MenuItem.create(name: "TROPICAL GREEN", description: "espinaca, mango, piña, leche de almandra, proteína de vainilla", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "DARK CHOCO-PEANUT", description: "plátano, crema de cacahuate, cocoa, leche de almendra, proteína de chocolate", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "RED BANANA", description: "plátano, fresa, yogurt griego, leche de almendra, proteína de vainilla", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "RECOVERY CHIA", description: "espinaca, chia, crema de cacahuate, avena, leche de almendra, proteína de vainilla", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "BASIC BERRIES", description: "berries, fresas, yogurt griego, leche de almendra, proteína de vainilla, nuez", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "REFRESH YOURSELF", description: "melón, pepino, menta, leche de almendra,proteína de vainilla", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "BERRY GOOD", description: "berries, fresas, plátano, leche de almendra, proteína de vainilla", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "BEAUTY BREW", description: "café helado, colágeno, leche de almendra, proteína de vainilla", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "DAFIT PEELED", description: "plátano, crema de cacahuate, jarabe de agave, leche de almendra, proteína de vainilla", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "SHAKE IT", description: "berries, crema de cacahuate, jarabe de agave, leche de almendra, proteína de vainilla", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "MANGO RAVE", description: "mango, nuez, leche de almendra, proteína de vainilla", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "TAKE OUT", description: "papaya, mango, nuez, leche de almendra, proteína de vainilla", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "VANILLA LOVER", description: "extracto de vainilla, plátano, avena, leche de almendra, proteína de vainilla", price: 75.0, active: true, menu_category: cat_smoothies)
+MenuItem.create(name: "MAKE YOUR OWN", description: "escoge 3 ingredientes y crea tu smoothie", price: 75.0, active: true, menu_category: cat_smoothies)
+#Sandwiches
+MenuItem.create(name: "PRESSED TURKEY", description: "pechuga de pavo, pan integral, verduras salteadas, queso panela o gouda, aguacate", price: 60.0, active: true, menu_category: cat_sandwiches)
+MenuItem.create(name: "VEGAN SANDWICH", description: "verduras salteadas, aguacate, queso panela, pan integral", price: 60.0, active: true, menu_category: cat_sandwiches)
+MenuItem.create(name: "VEGETARIAN SANDWICH", description: "berenjena, calabaza, queso gouda, pan integral, jitomate, cebolla, lechuga, aderezo de nuez, albahaca", price: 60.0, active: true, menu_category: cat_sandwiches)
+MenuItem.create(name: "SIMPLE SANDWICH", description: "pan integral, queso panela, pechuga de pavo, espinaca, aderezo de chipotle", price: 60.0, active: true, menu_category: cat_sandwiches)
+MenuItem.create(name: "ITALIAN SANDWICH", description: "pechuga de pavo, pepperoni, queso gouda, lechuga, aderezo italiano, aguacate", price: 60.0, active: true, menu_category: cat_sandwiches)
+#JUICES
+MenuItem.create(name: "SPECIAL GREEN JUICE", description: "pepino, apio, perejil, menta, kale, espinaca, kiwi, papaya, mango, piña, jugo de naranja", price: 45.0, active: true, menu_category: cat_juices)
+MenuItem.create(name: "DETOX", description: "kale, espinaca, perejil, piña, hielo", price: 35.0, active: true, menu_category: cat_juices)
+MenuItem.create(name: "BEFORE WORKOUT", description: "albahaca, zanahoria, betabel, limón, pepino", price: 35.0, active: true, menu_category: cat_juices)
+MenuItem.create(name: "AFTER WORKOUT", description: "betabel, apio, pepino, manzana verde, piña espinaca", price: 35.0, active: true, menu_category: cat_juices)
+MenuItem.create(name: "TONING", description: "manzana verde, piña, espinaca", price: 35.0, active: true, menu_category: cat_juices)
+MenuItem.create(name: "BURN FAT", description: "pepino, espinaca, acelga y limón", price: 35.0, active: true, menu_category: cat_juices)
+#ENERGY SNACKS
+MenuItem.create(name: "ENERGY BITES", description: "crema de cacahuate, avena, miel, chispas de chocolate", price: 10.0, active: true, menu_category: cat_snacks)
+MenuItem.create(name: "HOMEMADE PROTEIN BAR", description: "crema de cacahuate, avena, proteina, chocolate, miel", price: 25.0, active: true, menu_category: cat_snacks)
+MenuItem.create(name: "COOKIES", description: "galletas de avena, miel", price: 10.0, active: true, menu_category: cat_snacks)
+#ENERGY TOAST 
+MenuItem.create(name: "SWEET OPTION", description: "crema de cacahuate y/o nutella, chia, miel", price: 10.0, active: true, menu_category: cat_toast)
+MenuItem.create(name: "THE BEST", description: "nutella y/o queso crema, fresa, nuez", price: 10.0, active: true, menu_category: cat_toast)
+MenuItem.create(name: "CLASSIC", description: "nutella y/o crema de cacahuate, plátano", price: 10.0, active: true, menu_category: cat_toast)
