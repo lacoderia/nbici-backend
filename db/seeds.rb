@@ -266,11 +266,11 @@ Configuration.create(key: "free_classes_start_date", value: (Time.zone.now + 1.m
 Configuration.create(key: "free_classes_end_date", value: (Time.zone.now + 2.month).strftime("%FT%T.%L%:z") )
 
 #MenuCategories
-cat_smoothies = MenuCategory.create(name:"SMOOTHIES", url: "https://n-bici.com/wp-content/uploads/2020/02/SMOOTHIES.jpg")
-cat_sandwiches = MenuCategory.create(name:"SANDWICHES", url: "https://n-bici.com/wp-content/uploads/2020/02/SANDWICHES.jpg")
-cat_juices = MenuCategory.create(name:"JUICES", url: "https://n-bici.com/wp-content/uploads/2020/02/JUGOS.jpg")
-cat_snacks = MenuCategory.create(name:"ENERGY SNACKS", url: "https://n-bici.com/wp-content/uploads/2020/02/ENERGY-SNACKS.jpg")
-cat_toast = MenuCategory.create(name:"ENERGY TOAST", url: "https://n-bici.com/wp-content/uploads/2020/02/ENERGY-TOAST.jpg")
+cat_smoothies = MenuCategory.create(name:"SMOOTHIES", image_url: "https://n-bici.com/wp-content/uploads/2020/02/SMOOTHIES.jpg")
+cat_sandwiches = MenuCategory.create(name:"SANDWICHES", image_url: "https://n-bici.com/wp-content/uploads/2020/02/SANDWICHES.jpg")
+cat_juices = MenuCategory.create(name:"JUICES", image_url: "https://n-bici.com/wp-content/uploads/2020/02/JUGOS.jpg")
+cat_snacks = MenuCategory.create(name:"ENERGY SNACKS", image_url: "https://n-bici.com/wp-content/uploads/2020/02/ENERGY-SNACKS.jpg")
+cat_toast = MenuCategory.create(name:"ENERGY TOAST", image_url: "https://n-bici.com/wp-content/uploads/2020/02/ENERGY-TOAST.jpg")
 
 #MenuItems
 #Smoothies
