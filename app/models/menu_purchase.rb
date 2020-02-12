@@ -32,9 +32,9 @@ class MenuPurchase < ActiveRecord::Base
 
     descriptions = []
     self.menu_items.each do |menu_item|
-      description << menu_item.name
+      descriptions << menu_item.name
     end
-    return description.join(",")
+    return descriptions.join(",")
     
   end
 
