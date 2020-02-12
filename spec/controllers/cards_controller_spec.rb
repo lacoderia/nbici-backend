@@ -21,7 +21,7 @@ feature 'CardsController' do
       end
       response = JSON.parse(page.body)
       expect(response["card"]["last4"]).to eql "4242"
-      expect(response["card"]["brand"]).to eql "VISA"
+      expect(response["card"]["brand"]).to eql "visa"
 
       new_card_request = {token: 'tok_test_amex_0005', phone: '55864192'}
       with_rack_test_driver do
@@ -29,7 +29,7 @@ feature 'CardsController' do
       end
       response = JSON.parse(page.body)
       expect(response["card"]["last4"]).to eql "0005"
-      expect(response["card"]["brand"]).to eql "AMERICAN_EXPRESS"
+      expect(response["card"]["brand"]).to eql "american_express"
 
       new_card_request = {token: 'tok_test_mastercard_5100', phone: '55864192'}
       with_rack_test_driver do

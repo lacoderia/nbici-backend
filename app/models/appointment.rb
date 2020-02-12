@@ -41,6 +41,12 @@ class Appointment < ActiveRecord::Base
             self.user.update_attribute(:classes_left, self.user.classes_left + 1) 
           end
         end
+
+        if self.menu_purchases.count > 0
+          self.menu_purchases.each do |menu_purchase|
+            menu_purchase.cancel!
+          end
+        end
       else
         raise "Sólo se pueden cancelar clases con usuario de pruebas con 1 minuto de anticipación."
       end
@@ -55,6 +61,12 @@ class Appointment < ActiveRecord::Base
             end
           else
             self.user.update_attribute(:classes_left, self.user.classes_left + 1) 
+          end
+        end
+        
+        if self.menu_purchases.count > 0
+          self.menu_purchases.each do |menu_purchase|
+            menu_purchase.cancel!
           end
         end
       else
