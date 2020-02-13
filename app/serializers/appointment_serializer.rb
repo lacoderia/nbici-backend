@@ -1,9 +1,13 @@
 class AppointmentSerializer < ActiveModel::Serializer
 
-  attributes :id, :user_id, :schedule, :bicycle_number, :status, :start, :description, :anomaly, :booked_seats
+  attributes :id, :user_id, :schedule, :bicycle_number, :status, :start, :description, :anomaly, :booked_seats, :show_menu
 
   def booked_seats
     object.schedule.bookings
+  end
+
+  def show_menu
+    Configuration.show_menu?    
   end
 
   def schedule

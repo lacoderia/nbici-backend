@@ -264,6 +264,9 @@ Configuration.create(key: "coupon_discount", value: "40")
 Configuration.create(key: "referral_credit", value: "40")
 Configuration.create(key: "free_classes_start_date", value: (Time.zone.now + 1.month).strftime("%FT%T.%L%:z") )
 Configuration.create(key: "free_classes_end_date", value: (Time.zone.now + 2.month).strftime("%FT%T.%L%:z") )
+Configuration.create(key: "dafit_closed_start_date", value: (Time.zone.now - 2.month).strftime("%FT%T.%L%:z") )
+Configuration.create(key: "dafit_closed_end_date", value: (Time.zone.now + 1.hour - 2.month).strftime("%FT%T.%L%:z") )
+
 
 #MenuCategories
 cat_smoothies = MenuCategory.create(name:"SMOOTHIES", image_url: "https://n-bici.com/wp-content/uploads/2020/02/SMOOTHIES.jpg")
@@ -306,6 +309,6 @@ MenuItem.create(name: "ENERGY BITES", description: "crema de cacahuate, avena, m
 MenuItem.create(name: "HOMEMADE PROTEIN BAR", description: "crema de cacahuate, avena, proteina, chocolate, miel", price: 25.0, active: true, menu_category: cat_snacks)
 MenuItem.create(name: "COOKIES", description: "galletas de avena, miel", price: 10.0, active: true, menu_category: cat_snacks)
 #ENERGY TOAST 
-MenuItem.create(name: "SWEET OPTION", description: "crema de cacahuate y/o nutella, chia, miel", price: 10.0, active: true, menu_category: cat_toast)
-MenuItem.create(name: "THE BEST", description: "nutella y/o queso crema, fresa, nuez", price: 10.0, active: true, menu_category: cat_toast)
-MenuItem.create(name: "CLASSIC", description: "nutella y/o crema de cacahuate, plátano", price: 10.0, active: true, menu_category: cat_toast)
+MenuItem.create(name: "SWEET OPTION", description: "crema de cacahuate y/o nutella, chia, miel", price: 35.0, active: true, menu_category: cat_toast)
+MenuItem.create(name: "THE BEST", description: "nutella y/o queso crema, fresa, nuez", price: 40.0, active: true, menu_category: cat_toast)
+MenuItem.create(name: "CLASSIC", description: "nutella y/o crema de cacahuate, plátano", price: 35.0, active: true, menu_category: cat_toast)

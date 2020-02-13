@@ -20,6 +20,32 @@ class Configuration < ActiveRecord::Base
 
   DEFAULT_MAX_PROMOTION_USE = 3
 
+  DEFAULT_DAFIT_CLOSED_START_DATE = "2018-06-18T00:00:00-05:00"
+  DEFAULT_DAFIT_CLOSED_END_DATE = "2018-06-18T07:00:01-05:00"
+  
+  def self.show_menu?
+    dafit_closed_start_date = Configuration.find_by_key("dafit_closed_start_date")    
+    if dafit_closed_start_date
+      dafit_closed_start_date = dafit_closed_start_date.value
+    else
+      dafit_closed_start_date = DEFAULT_DAFIT_CLOSED_START_DATE
+    end
+
+    dafit_closed_end_date = Configuration.find_by_key("dafit_closed_end_date")
+    if dafit_closed_start_date
+      dafit_closed_start_date = dafit_closed_start_date.value
+    else
+      dafit_closed_start_date = DEFAULT_DAFIT_CLOSED_END_DATE
+    end
+
+    if (Time.zone.now >= special_prices_start_date) and (Time.zone.now < special_prices_end_date)
+      return false
+    else
+      return true
+    end
+
+  end
+
   def self.force_special_price?
     special_prices_start_date = Configuration.find_by_key("special_prices_start_date")
     if special_prices_start_date
