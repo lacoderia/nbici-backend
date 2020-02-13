@@ -7,7 +7,7 @@ class AppointmentSerializer < ActiveModel::Serializer
   end
 
   def show_menu
-    Configuration.show_menu?(object) 
+    Configuration.show_menu?(object.start) 
   end
 
   def schedule
