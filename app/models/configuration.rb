@@ -23,7 +23,7 @@ class Configuration < ActiveRecord::Base
   DEFAULT_DAFIT_CLOSED_START_DATE = "2018-06-18T00:00:00-05:00"
   DEFAULT_DAFIT_CLOSED_END_DATE = "2018-06-18T07:00:01-05:00"
   
-  def self.show_menu?
+  def self.show_menu?(appointment_date)
     dafit_closed_start_date = Configuration.find_by_key("dafit_closed_start_date")    
     if dafit_closed_start_date
       dafit_closed_start_date = dafit_closed_start_date.value
@@ -38,7 +38,7 @@ class Configuration < ActiveRecord::Base
       dafit_closed_end_date = DEFAULT_DAFIT_CLOSED_END_DATE
     end
 
-    if (Time.zone.now >= dafit_closed_start_date) and (Time.zone.now < dafit_closed_end_date)
+    if (appointment_date >= dafit_closed_start_date) and (appointment_date < dafit_closed_end_date)
       return false
     else
       return true
