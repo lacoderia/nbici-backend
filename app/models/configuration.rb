@@ -32,13 +32,13 @@ class Configuration < ActiveRecord::Base
     end
 
     dafit_closed_end_date = Configuration.find_by_key("dafit_closed_end_date")
-    if dafit_closed_start_date
-      dafit_closed_start_date = dafit_closed_start_date.value
+    if dafit_closed_end_date
+      dafit_closed_end_date = dafit_closed_end_date.value
     else
-      dafit_closed_start_date = DEFAULT_DAFIT_CLOSED_END_DATE
+      dafit_closed_end_date = DEFAULT_DAFIT_CLOSED_END_DATE
     end
 
-    if (Time.zone.now >= special_prices_start_date) and (Time.zone.now < special_prices_end_date)
+    if (Time.zone.now >= dafit_closed_start_date) and (Time.zone.now < dafit_closed_end_date)
       return false
     else
       return true
