@@ -31,8 +31,8 @@ class MenuPurchase < ActiveRecord::Base
   def get_items_description
 
     descriptions = []
-    self.menu_items.each do |menu_item|
-      descriptions << menu_item.name
+    self.purchased_items.each do |purchased_item|
+      descriptions << "#{purchased_item.amount}" + " #{purchased_item.menu_item.name}"
     end
     return descriptions.join(",")
     
@@ -119,7 +119,7 @@ class MenuPurchase < ActiveRecord::Base
         livemode: nil, 
         conekta_status: nil,
         description: description,
-        amount: amount,
+        amount: conekta_amount,
         currency: currency,
         payment_method: nil,
         details: nil,
