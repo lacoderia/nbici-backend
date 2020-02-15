@@ -134,6 +134,7 @@ class MenuPurchase < ActiveRecord::Base
 
     menu_purchase.add_items(menu_items)
 
+    SendEmailJob.perform_later("menu_purchase_admin", Configuration.dafit_email, menu_purchase)
     return menu_purchase    
 
   end

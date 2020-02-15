@@ -8,7 +8,6 @@ class MenuPurchasesController < ApiController
     begin
       menu_purchase = MenuPurchase.charge(params, current_user)
       SendEmailJob.perform_later("menu_purchase", current_user, menu_purchase)
-      SendEmailJob.perform_later("menu_purchase_admin", Configuration.dafit_email, menu_purchase)
       render json: menu_purchase
     rescue Exception => e
       menu_purchase = MenuPurchase.new
