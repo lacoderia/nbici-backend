@@ -1,0 +1,8 @@
+<p><%= "#{@user.first_name} #{@user.last_name}" %>, ha hecho una compra para la clase <%= @purchase.schedule.datetime.strftime("%d/%m/%Y %I:%M%p") %> </p>
+
+<p>El detalle es el siguiente:</p>
+
+<ul>
+  <li> Productos: <%= @purchase.get_items_description %> </li>
+  <li> Total: $ <%= (@purchase.amount)/(100.0) %> </li>
+</ul>

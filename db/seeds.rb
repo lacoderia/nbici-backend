@@ -266,6 +266,7 @@ Configuration.create(key: "free_classes_start_date", value: (Time.zone.now + 1.m
 Configuration.create(key: "free_classes_end_date", value: (Time.zone.now + 2.month).strftime("%FT%T.%L%:z") )
 Configuration.create(key: "dafit_closed_start_date", value: (Time.zone.now - 2.month).strftime("%FT%T.%L%:z") )
 Configuration.create(key: "dafit_closed_end_date", value: (Time.zone.now + 1.hour - 2.month).strftime("%FT%T.%L%:z") )
+Configuration.create(key: "dafit_email", value: "damalvarado151289@gmail.com" )
 
 
 #MenuCategories

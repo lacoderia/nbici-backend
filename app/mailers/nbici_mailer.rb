@@ -68,4 +68,10 @@ class NbiciMailer < ActionMailer::Base
     mail(to: @user.email, subject: "#{@user.first_name}, tu compra Dafit")
   end
 
+  def menu_purchase_admin user, menu_purchase
+    @user = user
+    @purchase = menu_purchase
+    mail(to: Configuration.dafit_email, subject: "#{@user.first_name}, hizo una compra para #{@purchase.schedule.datetime.strftime("%d/%m/%Y %I:%M%p")}")
+  end
+
 end

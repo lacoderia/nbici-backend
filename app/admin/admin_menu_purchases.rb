@@ -7,8 +7,8 @@ ActiveAdmin.register MenuPurchase, :as => "Menu Compras" do
   config.sort_order = "created_at_desc"  
   
   filter :status, :label => "Status", as: :select, :collection => MenuPurchase::STATUSES
-  filter :schedule, :label => "Clase", :collection => Schedule.recent.collect{|s| [s.datetime.strftime("%d/%m/%Y %I:%M%p"), s.id]}
-  #filter :appointment, :label => "Clase", :collection => Appointment.all.collect {|a| [a.start.strftime("%d/%m/%Y %I:%M%p"), a.id]}
+  filter :schedule, :label => "Clase reciente", :collection => Schedule.recent.collect{|s| [s.datetime.strftime("%d/%m/%Y %I:%M%p"), s.id]}
+  filter :schedule_datetime, :label => "Clase por fecha", :as => :date_time_range
 
   index :title => "Compras" do
 
