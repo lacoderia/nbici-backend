@@ -29,7 +29,7 @@ class Configuration < ActiveRecord::Base
 
     dafit_email = Configuration.find_by_key("dafit_email")
     if dafit_email
-      return dafit_email
+      return dafit_email.value
     else
       return DEFAULT_DAFIT_EMAIL
     end
