@@ -22,6 +22,19 @@ class Configuration < ActiveRecord::Base
 
   DEFAULT_DAFIT_CLOSED_START_DATE = "2018-06-18T00:00:00-05:00"
   DEFAULT_DAFIT_CLOSED_END_DATE = "2018-06-18T07:00:01-05:00"
+
+  DEFAULT_DAFIT_EMAIL = "damalvarado151289@gmail.com"
+
+  def self.dafit_email
+
+    dafit_email = Configuration.find_by_key("dafit_email")
+    if dafit_email
+      return dafit_email
+    else
+      return DEFAULT_DAFIT_EMAIL
+    end
+    
+  end
   
   def self.show_menu?(appointment_date)
     dafit_closed_start_date = Configuration.find_by_key("dafit_closed_start_date")    

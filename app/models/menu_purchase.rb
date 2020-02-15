@@ -1,6 +1,7 @@
 class MenuPurchase < ActiveRecord::Base
   belongs_to :user
   belongs_to :appointment
+  belongs_to :schedule
   has_many :purchased_items
   has_many :menu_items, :through => :purchased_items
 
@@ -96,6 +97,7 @@ class MenuPurchase < ActiveRecord::Base
       menu_purchase = MenuPurchase.create!(
         user: user,
         appointment: appointment,
+        schedule: appointment.schedule,
         uid: charge.id,
         object: charge.object, 
         livemode: charge.livemode, 
@@ -114,6 +116,7 @@ class MenuPurchase < ActiveRecord::Base
       menu_purchase = MenuPurchase.create!(
         user: user,
         appointment: appointment,
+        schedule: appointment.schedule,
         uid: nil,
         object: nil, 
         livemode: nil, 
