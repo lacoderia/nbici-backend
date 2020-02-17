@@ -15,6 +15,10 @@ class AdminAbility
     elsif admin_user.role? :niumedia
       can :read, ActiveAdmin::Page, :name => "Dashboard"
       can :manage, Instructor
+    elsif admin_user.role? :dafit
+      can :read, ActiveAdmin::Page, :name => "Dashboard"
+      can :manage, MenuPurchase 
+      can :manage, MenuItem
     end
  
   end
