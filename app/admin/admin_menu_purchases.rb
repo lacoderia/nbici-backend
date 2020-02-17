@@ -1,6 +1,6 @@
 ActiveAdmin.register MenuPurchase, :as => "Menu Compras" do
 
-  menu parent: 'Dafit', priority: 1
+  menu parent: 'Dafit', priority: 1, if: proc {current_admin_user.role? :super_admin or current_admin_user.role? :dafit}
 
   actions :all, :except => [:show, :new, :destroy, :update, :edit]
 

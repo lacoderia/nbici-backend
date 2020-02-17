@@ -1,6 +1,6 @@
 ActiveAdmin.register MenuItem, :as => "Productos" do
 
-  menu parent: 'Dafit', priority: 0 
+  menu parent: 'Dafit', priority: 0, if: proc {current_admin_user.role? :super_admin or current_admin_user.role? :dafit}
 
   actions :all, :except => [:show, :destroy]
   

@@ -14,6 +14,11 @@ role_instructor = Role.create(name: 'instructor')
 role_super_admin = Role.create(name: 'super_admin')
 role_front_desk = Role.create(name: 'front_desk')
 role_niumedia = Role.create(name: 'niumedia')
+role_dafit = Role.create(name: "dafit")
+
+#Dafit owner
+
+dafit_owner = AdminUser.create!(email: 'damalvarado151289@gmail.com', password: 'dafit2020', password_confirmation: 'dafit2020', roles: [role_dafit])
 
 #Instructors
 
