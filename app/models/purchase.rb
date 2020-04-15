@@ -138,10 +138,12 @@ class Purchase < ActiveRecord::Base
       user.save!
     end
     
-    user.update_attributes(classes_left: (user.classes_left.nil? ? 0 : user.classes_left)  + pack.classes,
+    if pack.classes != nil
+      user.update_attributes(classes_left: (user.classes_left.nil? ? 0 : user.classes_left)  + pack.classes,
                             last_class_purchased: Time.zone.now,
                             expiration_date: expiration_date,
                             credits: credits)
+    end
 
     return purchase
     
