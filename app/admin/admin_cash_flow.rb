@@ -50,12 +50,14 @@ ActiveAdmin.register Purchase, :as => "Control_de_ingresos" do
 
     column "Disponibles" do |purchase|
       appointments_in_month = purchase.user.appointments.finalized.where("start BETWEEN ? and ?", purchase.bom, purchase.eom)
-      if purchase.pack.classes == nil
-        "NA"
-      elsif appointments_in_month.count < purchase.pack.classes
-        purchase.pack.classes - appointments_in_month.count
+      if purchase.pack and purchase.pack.classes != nil
+        if appointments_in_month.count < purchase.pack.classes
+          purchase.pack.classes - appointments_in_month.count
+        else
+          0
+        end
       else
-        0
+        "NA"
       end
     end
 
