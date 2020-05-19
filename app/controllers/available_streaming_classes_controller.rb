@@ -1,0 +1,2 @@
+class AvailableStreamingClassesController < ApplicationController
+end

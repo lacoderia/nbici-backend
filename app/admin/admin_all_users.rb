@@ -4,7 +4,7 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
 
   actions :all, :except => [:new, :show, :destroy]
 
-  permit_params :classes_left, :last_class_purchased, :credits, :expiration_date, credit_modifications_attributes: [:user_id, :reason, :credits, :pack_id, :is_money], purchases_attributes: [:user_id, :pack_id, :object, :livemode, :status, :description, :amount, :currency, :payment_method, :details]
+  permit_params :classes_left, :streaming_classes_left, :last_class_purchased, :credits, :expiration_date, credit_modifications_attributes: [:user_id, :reason, :credits, :pack_id, :is_money, :is_streaming], purchases_attributes: [:user_id, :pack_id, :object, :livemode, :status, :description, :amount, :currency, :payment_method, :details]
   
   filter :first_name, :as => :string, :label => "Nombre"
   filter :last_name, :as => :string, :label => "Apellido"
@@ -33,6 +33,8 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
 
         if params[:user][:credit_modifications_attributes].first[1][:is_money] == "1"
           params[:user][:credits] = user.credits + (params[:user][:credit_modifications_attributes].first[1][:credits].to_f)
+        elsif params[:user][:credit_modifications_attributes].first[1][:is_streaming] == "1" 
+          params[:user][:streaming_classes_left] = user.streaming_classes_left + (params[:user][:credit_modifications_attributes].first[1][:credits].to_i)
         else
           params[:user][:classes_left] = params[:user][:classes_left].to_i + (params[:user][:credit_modifications_attributes].first[1][:credits].to_i)
         end
@@ -118,9 +120,10 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
     column "Apellido", :last_name
     column "Email", :email
     column "Clases restantes", :classes_left
+    column "Streaming restantes", :streaming_classes_left
     column "Créditos", :credits
     column "Ligada", :linked
-    column "Fecha de creación", :created_at 
+#    column "Fecha de creación", :created_at 
 
     actions defaults: false do |user|
       links = "#{link_to "View Credits", "#{admin_modificaciones_de_creditos_path}?q%5Buser_id_equals%5D=#{user.id}&commit=Filter&order=id_desc"} "
@@ -145,9 +148,10 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
       f.fields_for :credit_modifications do |t|
         if t.object.new_record?
           t.inputs do
-            t.input :pack, label: "Purchased pack", :collection => Pack.active.collect {|pack| [pack.classes, pack.id]}, :as => :select, input_html: { id: "pack_id", onchange: "if(!this.value){ $('#credit_id')[0].readOnly=false; $('#credit_id')[0].style = 'background-color: #FFFFFF;'; $('#money_id')[0].disabled = false; } else {$('#credit_id').val(this.options[this.selectedIndex].text); $('#credit_id')[0].readOnly=true; $('#credit_id')[0].style = 'background-color: #d3d3d3;'; $('#money_id')[0].checked = false; $('#money_id')[0].disabled = true; }" }
+            t.input :pack, label: "Purchased pack", :collection => Pack.active.face_to_face.collect {|pack| [pack.classes, pack.id]}, :as => :select, input_html: { id: "pack_id", onchange: "if(!this.value){ $('#credit_id')[0].readOnly=false; $('#credit_id')[0].style = 'background-color: #FFFFFF;'; $('#money_id')[0].disabled = false;  $('#streaming_id')[0].disabled = false; } else {$('#credit_id').val(this.options[this.selectedIndex].text); $('#credit_id')[0].readOnly=true; $('#credit_id')[0].style = 'background-color: #d3d3d3;'; $('#money_id')[0].checked = false; $('#money_id')[0].disabled = true; $('#streaming_id')[0].checked = false; $('#streaming_id')[0].disabled = true; }" }
             t.input :credits, :as => :number, input_html: {id: "credit_id"}
-            t.input :is_money, label: "Money?", input_html: {id: "money_id"}
+            t.input :is_money, label: "Money?", input_html: {id: "money_id", onchange: "if(this.checked){ $('#streaming_id')[0].disabled = true; $('#streaming_id')[0].checked = false;}else{ $('#streaming_id')[0].disabled = false; }" }
+            t.input :is_streaming, label: "Streaming?", input_html: {id: "streaming_id", onchange: "if(this.checked){ $('#money_id')[0].disabled = true; $('#money_id')[0].checked = false;}else{ $('#money_id')[0].disabled = false; }"}
             t.input :reason, input_html: {id: "reason_id"}
           end
         end

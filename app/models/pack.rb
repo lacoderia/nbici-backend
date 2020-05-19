@@ -4,6 +4,8 @@ class Pack < ActiveRecord::Base
   has_many :promotions, through: :promotion_amounts
 
   scope :active, -> {where(active: true)}
+  scope :face_to_face, -> {where("classes is not null")}
+  scope :streaming, -> {where("streaming_classes is not null")}
   
   def price_or_special_price_for_user user  
 

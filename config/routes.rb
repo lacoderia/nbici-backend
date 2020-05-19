@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   
+  resources :available_streaming_classes
+  resources :streaming_classes
   resources :promotion_amounts
   resources :promotions
   resources :configurations

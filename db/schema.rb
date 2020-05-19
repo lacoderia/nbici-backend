@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200215000958) do
+ActiveRecord::Schema.define(version: 20200519062954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,17 @@ ActiveRecord::Schema.define(version: 20200215000958) do
     t.datetime "updated_at",     null: false
   end
 
+  create_table "available_streaming_classes", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "streaming_class_id"
+    t.datetime "start"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "available_streaming_classes", ["streaming_class_id"], name: "index_available_streaming_classes_on_streaming_class_id", using: :btree
+  add_index "available_streaming_classes", ["user_id"], name: "index_available_streaming_classes_on_user_id", using: :btree
+
   create_table "cards", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "uid"
@@ -98,7 +109,8 @@ ActiveRecord::Schema.define(version: 20200215000958) do
     t.integer  "pack_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_money",   default: false
+    t.boolean  "is_money",     default: false
+    t.boolean  "is_streaming", default: false
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -195,12 +207,13 @@ ActiveRecord::Schema.define(version: 20200215000958) do
   create_table "packs", force: :cascade do |t|
     t.string   "description"
     t.integer  "classes"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.float    "special_price"
     t.float    "price"
     t.integer  "expiration"
-    t.boolean  "active",        default: true
+    t.boolean  "active",            default: true
+    t.integer  "streaming_classes"
   end
 
   create_table "promotion_amounts", force: :cascade do |t|
@@ -298,6 +311,18 @@ ActiveRecord::Schema.define(version: 20200215000958) do
     t.float    "price"
   end
 
+  create_table "streaming_classes", force: :cascade do |t|
+    t.integer  "instructor_id"
+    t.string   "description"
+    t.string   "length"
+    t.text     "insetion_code"
+    t.boolean  "active"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "streaming_classes", ["instructor_id"], name: "index_streaming_classes_on_instructor_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "first_name"
     t.string   "last_name"
@@ -333,6 +358,7 @@ ActiveRecord::Schema.define(version: 20200215000958) do
     t.boolean  "linked",                 default: false
     t.string   "u_password"
     t.text     "headers"
+    t.integer  "streaming_classes_left", default: 0
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
@@ -346,10 +372,13 @@ ActiveRecord::Schema.define(version: 20200215000958) do
     t.datetime "updated_at",  null: false
   end
 
+  add_foreign_key "available_streaming_classes", "streaming_classes"
+  add_foreign_key "available_streaming_classes", "users"
   add_foreign_key "promotions_users", "promotions"
   add_foreign_key "promotions_users", "users"
   add_foreign_key "purchased_items", "menu_items"
   add_foreign_key "purchased_items", "menu_purchases"
   add_foreign_key "roles_users", "roles"
   add_foreign_key "roles_users", "users"
+  add_foreign_key "streaming_classes", "instructors"
 end
