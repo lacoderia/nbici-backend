@@ -30,7 +30,7 @@ class Configuration < ActiveRecord::Base
   def self.playable_hours
     playable_hours = Configuration.find_by_key("playable_hours")
     if playable_hours
-      return playable_hours.value
+      return playable_hours.value.to_i
     else
       return DEFAULT_PLAYABLE_HOURS
     end
