@@ -18,6 +18,8 @@ gem 'active_admin_datetimepicker'
 #gem 'omniauth'
 gem 'nokogiri', '~> 1.8.1'
 
+gem 'paperclip'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   has_many :credit_modifications
   has_many :referrals, :foreign_key => "owner_id", :class_name => "Referral"
   has_many :menu_purchases
+  has_many :available_streaming_classes
   
   accepts_nested_attributes_for :credit_modifications
   accepts_nested_attributes_for :purchases

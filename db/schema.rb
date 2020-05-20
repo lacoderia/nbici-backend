@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200519062954) do
+ActiveRecord::Schema.define(version: 20200520010329) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -180,9 +180,9 @@ ActiveRecord::Schema.define(version: 20200519062954) do
     t.text     "description"
     t.integer  "menu_category_id"
     t.float    "price"
-    t.boolean  "active"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.boolean  "active",           default: true
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   create_table "menu_purchases", force: :cascade do |t|
@@ -315,10 +315,16 @@ ActiveRecord::Schema.define(version: 20200519062954) do
     t.integer  "instructor_id"
     t.string   "description"
     t.string   "length"
-    t.text     "insetion_code"
-    t.boolean  "active"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.text     "insertion_code"
+    t.boolean  "active",             default: true
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.integer  "intensity"
+    t.string   "title"
+    t.string   "photo_file_name"
+    t.string   "photo_content_type"
+    t.integer  "photo_file_size"
+    t.datetime "photo_updated_at"
   end
 
   add_index "streaming_classes", ["instructor_id"], name: "index_streaming_classes_on_instructor_id", using: :btree

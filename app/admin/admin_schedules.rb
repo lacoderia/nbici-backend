@@ -1,4 +1,6 @@
-ActiveAdmin.register Schedule, :as => "Clases" do
+ActiveAdmin.register Schedule, :as => "Presenciales" do
+
+  menu parent: 'Clases', priority: 0    
 
   actions :all
 
@@ -39,10 +41,10 @@ ActiveAdmin.register Schedule, :as => "Clases" do
     column "Costo aniversario", :price
     
     actions defaults: false do |schedule|
-      links = "#{link_to "View", admin_clase_path(schedule.id)} "
-      links += "#{link_to "Edit", "#{admin_clase_path(schedule.id)}/edit"} "
+      links = "#{link_to "View", admin_presenciale_path(schedule.id)} "
+      links += "#{link_to "Edit", "#{admin_presenciale_path(schedule.id)}/edit"} "
       if schedule.appointments.not_cancelled.empty?
-        links += "#{link_to "Delete", admin_clase_path(schedule.id), method: :delete, data: {:confirm => "Eliminarás la clase. ¿Estás seguro?"} }"
+        links += "#{link_to "Delete", admin_presenciale_path(schedule.id), method: :delete, data: {:confirm => "Eliminarás la clase. ¿Estás seguro?"} }"
       end
       links.html_safe
     end
@@ -107,7 +109,7 @@ ActiveAdmin.register Schedule, :as => "Clases" do
   form do |f|
     f.inputs "Detalles de clases" do
       f.input :datetime, label: "Horario"
-      f.input :instructor, label: "Instructor", :collection => Instructor.active.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select 
+      f.input :instructor, label: "Instructor", :collection => Instructor.active.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select, :include_blank => false 
       f.input :alternate_instructor, label: "Suple a", :collection => Instructor.active.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select 
       f.input :room, label: "Cuarto", :collection => Room.all.collect{|room| [room.description, room.id]}, :as => :select, :include_blank => false 
       f.input :description, label: "Descripción"

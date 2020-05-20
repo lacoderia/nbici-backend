@@ -4,6 +4,9 @@ class Schedule < ActiveRecord::Base
   belongs_to :alternate_instructor, :foreign_key => "alternate_instructor_id", :class_name => "Instructor"
   has_many :appointments, :dependent => :delete_all
   
+  validates :instructor, presence: true
+  validates :datetime, presence: true
+  
   scope :recent, -> {where("datetime >= ? AND datetime <= ?", Time.zone.now.beginning_of_day - 2.days, Time.zone.now.beginning_of_day + 7.days)}
 
   #scope :for_instructor_payments, -> {select("schedules.*, COUNT(appointments.*) as app_num").joins(:appointments, :instructor).where("appointments.status = ?", "FINALIZED").group("schedules.id").group_by{|schedule| schedule.datetime.to_date.to_s}}

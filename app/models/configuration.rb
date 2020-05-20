@@ -25,6 +25,17 @@ class Configuration < ActiveRecord::Base
 
   DEFAULT_DAFIT_EMAIL = "damalvarado151289@gmail.com"
 
+  DEFAULT_PLAYABLE_HOURS = 24
+
+  def self.playable_hours
+    playable_hours = Configuration.find_by_key("playable_hours")
+    if playable_hours
+      return playable_hours.value
+    else
+      return DEFAULT_PLAYABLE_HOURS
+    end
+  end
+
   def self.dafit_email
 
     dafit_email = Configuration.find_by_key("dafit_email")
