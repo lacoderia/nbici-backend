@@ -2,8 +2,8 @@ feature 'AvailableStreamingClassesController' do
   include ActiveJob::TestHelper
 
   let!(:starting_datetime){Time.zone.parse('01 Jan 2016 00:00:00')}
-  let!(:user_with_streaming_classes){create(:user, streaming_classes_left: 2)}
-  let!(:user_with_no_streaming_classes){create(:user)}
+  let!(:user_with_streaming_classes){create(:user, streaming_classes_left: 2, classes_left: 1)}
+  let!(:user_with_no_streaming_classes){create(:user, classes_left: 0)}
   
 
   #Streaming classes
@@ -45,6 +45,7 @@ feature 'AvailableStreamingClassesController' do
       response = JSON.parse(page.body)
       expect(response["streaming_classes"].size).to eql 6
       
+      #buying first class with streaming credits
       streaming_class_purchase = {streaming_class_id: streaming_class_01.id}
       with_rack_test_driver do
         page.driver.post purchase_available_streaming_classes_path, streaming_class_purchase
@@ -55,9 +56,10 @@ feature 'AvailableStreamingClassesController' do
       expect(response["available_streaming_class"]["start"]).to eql starting_datetime.strftime("%FT%T.%L%:z")
       user_with_streaming_classes.reload
       expect(user_with_streaming_classes.streaming_classes_left).to eql 1
+      expect(user_with_streaming_classes.classes_left).to eql 1
 
+      #buying second class with streaming credits
       Timecop.freeze(starting_datetime + 1.hour)
-      
       streaming_class_purchase = {streaming_class_id: streaming_class_02.id}
       with_rack_test_driver do
         page.driver.post purchase_available_streaming_classes_path, streaming_class_purchase
@@ -66,14 +68,29 @@ feature 'AvailableStreamingClassesController' do
       expect(response["available_streaming_class"]["start"]).to eql (starting_datetime + 1.hour).strftime("%FT%T.%L%:z")      
       user_with_streaming_classes.reload
       expect(user_with_streaming_classes.streaming_classes_left).to eql 0
+      expect(user_with_streaming_classes.classes_left).to eql 1
+
+      #buying third class with regular credits
+      Timecop.freeze(starting_datetime + 2.hour)
+      streaming_class_purchase = {streaming_class_id: streaming_class_03.id}
+      with_rack_test_driver do
+        page.driver.post purchase_available_streaming_classes_path, streaming_class_purchase
+      end      
+      response = JSON.parse(page.body)
+      expect(response["available_streaming_class"]["start"]).to eql (starting_datetime + 2.hour).strftime("%FT%T.%L%:z")      
+      user_with_streaming_classes.reload
+      expect(user_with_streaming_classes.streaming_classes_left).to eql 0
+      expect(user_with_streaming_classes.classes_left).to eql 0
     
       #querying available streaming classes
       visit available_streaming_classes_path
       response = JSON.parse(page.body)
-      expect(response["available_streaming_classes"].size).to eql 2
+      expect(response["available_streaming_classes"].size).to eql 3
       expect(response["available_streaming_classes"][0]["user"]["id"]).to eql user_with_streaming_classes.id
       expect(response["available_streaming_classes"][0]["streaming_class"]["id"]).to eql streaming_class_01.id
+      available_streaming_class_01_id = response["available_streaming_classes"][0]["id"]
       expect(response["available_streaming_classes"][1]["streaming_class"]["id"]).to eql streaming_class_02.id
+      available_streaming_class_02_id = response["available_streaming_classes"][1]["id"]
 
       #TODO: email count
       
@@ -82,14 +99,46 @@ feature 'AvailableStreamingClassesController' do
       #querying available streaming classes
       visit available_streaming_classes_path
       response = JSON.parse(page.body)
-      expect(response["available_streaming_classes"].size).to eql 1      
+      expect(response["available_streaming_classes"].size).to eql 2      
+      expect(response["available_streaming_classes"][0]["insertion_code"]).to be nil
+      
+      #querying available streaming class show for first class
+      visit available_streaming_class_path(available_streaming_class_01_id)
+      response = JSON.parse(page.body)
+      expect(page.status_code).to be 500
+      expect(response["errors"][0]["title"]).to eql "La clase ya cumplió su periodo de 24 horas de disponibilidad desde que la compraste."
+
+      #querying available streaming class show for second class
+      visit available_streaming_class_path(available_streaming_class_02_id)
+      response = JSON.parse(page.body)
+      expect(response["available_streaming_class"]["streaming_class"]["insertion_code"]).not_to be nil
 
       Timecop.travel(starting_datetime + 25.hours)
 
       #querying available streaming classes
       visit available_streaming_classes_path
       response = JSON.parse(page.body)
+      expect(response["available_streaming_classes"].size).to eql 1
+
+      Timecop.travel(starting_datetime + 26.hours)
+
+      #querying available streaming classes
+      visit available_streaming_classes_path
+      response = JSON.parse(page.body)
       expect(response["available_streaming_classes"].size).to eql 0
+
+      logout
+
+      #Login
+      page = login_with_service user = { email: user_with_no_streaming_classes[:email], password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      #querying available streaming class show for first class
+      visit available_streaming_class_path(available_streaming_class_01_id)
+      response = JSON.parse(page.body)
+      expect(page.status_code).to be 500
+      expect(response["errors"][0]["title"]).to eql "La clase no está disponible para este usuario."    
 
     end
 
@@ -133,7 +182,7 @@ feature 'AvailableStreamingClassesController' do
       end
       response = JSON.parse(page.body)
       expect(page.status_code).to be 500
-      expect(response["errors"][0]["title"]).to eql "Ya no tienes clases streaming disponibles, adquiere más para continuar."
+      expect(response["errors"][0]["title"]).to eql "Ya no tienes clases disponibles, adquiere más para continuar."
 
       user_with_no_streaming_classes.update_attribute("streaming_classes_left", 2)
 

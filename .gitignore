@@ -19,6 +19,7 @@
 
 
 #Local temp files
+/public/system/streaming_classes/*
 /.sass-cache
 *.keep
 *.swp
