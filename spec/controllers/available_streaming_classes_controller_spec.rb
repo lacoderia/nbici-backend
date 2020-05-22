@@ -58,6 +58,9 @@ feature 'AvailableStreamingClassesController' do
       expect(user_with_streaming_classes.streaming_classes_left).to eql 1
       expect(user_with_streaming_classes.classes_left).to eql 1
 
+      expect(SendEmailJob).to have_been_enqueued.with("streaming_booking", global_id(user_with_streaming_classes), global_id(AvailableStreamingClass.last))
+      perform_enqueued_jobs { SendEmailJob.perform_later("streaming_booking", user_with_streaming_classes, AvailableStreamingClass.last) } 
+
       #buying second class with streaming credits
       Timecop.freeze(starting_datetime + 1.hour)
       streaming_class_purchase = {streaming_class_id: streaming_class_02.id}
@@ -69,6 +72,9 @@ feature 'AvailableStreamingClassesController' do
       user_with_streaming_classes.reload
       expect(user_with_streaming_classes.streaming_classes_left).to eql 0
       expect(user_with_streaming_classes.classes_left).to eql 1
+      
+      expect(SendEmailJob).to have_been_enqueued.with("streaming_booking", global_id(user_with_streaming_classes), global_id(AvailableStreamingClass.last))
+      perform_enqueued_jobs { SendEmailJob.perform_later("streaming_booking", user_with_streaming_classes, AvailableStreamingClass.last) } 
 
       #buying third class with regular credits
       Timecop.freeze(starting_datetime + 2.hour)
@@ -81,6 +87,9 @@ feature 'AvailableStreamingClassesController' do
       user_with_streaming_classes.reload
       expect(user_with_streaming_classes.streaming_classes_left).to eql 0
       expect(user_with_streaming_classes.classes_left).to eql 0
+      
+      expect(SendEmailJob).to have_been_enqueued.with("streaming_booking", global_id(user_with_streaming_classes), global_id(AvailableStreamingClass.last))
+      perform_enqueued_jobs { SendEmailJob.perform_later("streaming_booking", user_with_streaming_classes, AvailableStreamingClass.last) } 
     
       #querying available streaming classes
       visit available_streaming_classes_path
@@ -89,8 +98,6 @@ feature 'AvailableStreamingClassesController' do
       expect(response["available_streaming_classes"][0]["user"]["id"]).to eql user_with_streaming_classes.id
       expect(response["available_streaming_classes"][0]["streaming_class"]["id"]).to eql streaming_class_01.id
       expect(response["available_streaming_classes"][1]["streaming_class"]["id"]).to eql streaming_class_02.id
-
-      #TODO: email count
       
       Timecop.travel(starting_datetime + 24.hours)
 
@@ -126,6 +133,8 @@ feature 'AvailableStreamingClassesController' do
       visit available_streaming_classes_path
       response = JSON.parse(page.body)
       expect(response["available_streaming_classes"].size).to eql 0
+      
+      expect(Email.count).to eql 3
 
       logout
 

@@ -1,5 +1,6 @@
 class StreamingClass < ActiveRecord::Base
   belongs_to :instructor
+  has_many :available_streaming_classes  
   
   has_attached_file :photo, styles: { original: "300x300>", thumb: "100x100>" }
   validates_attachment_content_type :photo, content_type: /\Aimage\/.*\z/

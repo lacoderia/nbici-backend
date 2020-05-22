@@ -7,7 +7,6 @@ class PurchasesController < ApiController
   def charge
     begin
       purchase = Purchase.charge(params, current_user)
-      SendEmailJob.perform_later("purchase", current_user, purchase)
       render json: purchase
     rescue Exception => e
       purchase = Purchase.new

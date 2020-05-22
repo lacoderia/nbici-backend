@@ -128,11 +128,11 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
     actions defaults: false do |user|
       links = "#{link_to "View Credits", "#{admin_modificaciones_de_creditos_path}?q%5Buser_id_equals%5D=#{user.id}&commit=Filter&order=id_desc"} "
       links += "#{link_to "Edit Credits", "#{admin_todos_los_cliente_path(user.id)}/edit"} "
-      links += "#{link_to "New Purchase", "#{new_admin_compra_path}?user_id=#{user.id}"} "
+      links += "#{link_to "New Purchase", "#{new_admin_compras_paquete_path}?user_id=#{user.id}"} "
       if user.purchases.empty?
         links += "#{link_to "Delete", admin_todos_los_cliente_path(user.id), method: :delete, data: {:confirm => "Eliminarás al usuario. ¿Estás seguro?"} }"
       else
-        links += (link_to "Purchase List", "#{admin_compras_path}?q%5Buser_id_equals%5D=#{user.id}").to_s
+        links += (link_to "Purchase List", "#{admin_compras_paquetes_path}?q%5Buser_id_equals%5D=#{user.id}").to_s
       end
       links.html_safe
     end

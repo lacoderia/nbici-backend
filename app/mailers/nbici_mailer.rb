@@ -12,6 +12,12 @@ class NbiciMailer < ActionMailer::Base
     mail(to: @user.email, subject: "Tu clase ha sido reservada")
   end
 
+  def streaming_booking user, available_streaming_class
+    @user = user
+    @available_streaming_class = available_streaming_class
+    mail(to: @user.email, subject: "Tu clase en streaming con #{@available_streaming_class.streaming_class.instructor.first_name} está disponible")
+  end
+
   def booking_anniversary user, appointment
     @user = user
     @appointment = appointment
@@ -19,6 +25,12 @@ class NbiciMailer < ActionMailer::Base
   end
 
   def purchase user, purchase
+    @user = user
+    @purchase = purchase
+    mail(to: @user.email, subject: "Confirmación de compra")
+  end
+
+  def streaming_purchase user, purchase
     @user = user
     @purchase = purchase
     mail(to: @user.email, subject: "Confirmación de compra")

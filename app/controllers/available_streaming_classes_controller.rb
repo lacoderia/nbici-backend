@@ -12,8 +12,7 @@ class AvailableStreamingClassesController < ApiController
   def purchase 
     begin
       @available_streaming_class = AvailableStreamingClass.purchase(params[:streaming_class_id], current_user)
-      # TODO: stream_purchase email
-      #SendEmailJob.perform_later("stream_purchase", current_user, @available_streaming_class)
+      SendEmailJob.perform_later("streaming_booking", current_user, @available_streaming_class)
       render json: @available_streaming_class
     rescue Exception => e
       @available_streaming_class = AvailableStreamingClass.new

@@ -1,4 +1,6 @@
-ActiveAdmin.register Purchase, :as => "Compras" do
+ActiveAdmin.register Purchase, :as => "Compras Paquetes" do
+
+  menu parent: 'Compras', priority: 0 
 
   actions :all, :except => [:show, :destroy, :update, :edit]
 
@@ -37,11 +39,11 @@ ActiveAdmin.register Purchase, :as => "Compras" do
           # render error        
           if (amount_initial != amount_confirmation) || (amount_initial.blank?) || (amount_initial.to_f < 3)
             flash[:error] = 'La cantidad no es válida'
-            redirect_to "/admin/compras/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
+            redirect_to "/admin/compras_paquetes/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
           
           elsif description.blank?
             flash[:error] = 'Se necesita una descripción'
-            redirect_to "/admin/compras/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
+            redirect_to "/admin/compras_paquetes/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
           else
 
             amount = (amount_initial.to_f * 100).to_i
@@ -112,7 +114,7 @@ ActiveAdmin.register Purchase, :as => "Compras" do
         else
           
           flash[:error] = 'Información incompleta'
-          redirect_to "/admin/compras/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
+          redirect_to "/admin/compras_paquetes/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
 
         end
 
@@ -125,7 +127,7 @@ ActiveAdmin.register Purchase, :as => "Compras" do
         end
         
         flash[:error] = error
-        redirect_to "/admin/compras/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
+        redirect_to "/admin/compras_paquetes/new?user_id=#{params[:purchase][:user_attributes][:id]}" 
         
       end      
 
@@ -133,7 +135,7 @@ ActiveAdmin.register Purchase, :as => "Compras" do
     
     def destroy
       super do |success,failure|
-        redirect_path = admin_compras_path
+        redirect_path = admin_compras_paquetes_path
         
         counter = 1
         params.each do |k, v|
@@ -216,7 +218,7 @@ ActiveAdmin.register Purchase, :as => "Compras" do
     
   end
 
-  index :title => "Compras" do
+  index :title => "Compras Paquetes" do
     column "Cliente" do |purchase|
       "#{purchase.user.first_name} #{purchase.user.last_name}"
     end
@@ -236,7 +238,7 @@ ActiveAdmin.register Purchase, :as => "Compras" do
     column "Fecha", :created_at 
 
     actions defaults: false do |purchase|
-      link_path = admin_compra_path(purchase.id)
+      link_path = admin_compras_paquete_path(purchase.id)
       if params[:q]
         counter = 1
         params[:q].each do |k, v|

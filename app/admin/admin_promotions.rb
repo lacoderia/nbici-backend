@@ -19,7 +19,7 @@ ActiveAdmin.register Promotion, :as => "Promociones" do
     column "Descripción", :description
     column "Activo", :active
     column "Uso" do |promotion|
-      link_to "#{promotion.purchases.count} compras", "#{admin_compras_path}?q%5Bpromotion_id_eq%5D=#{promotion.id}"
+      link_to "#{promotion.purchases.count} compras", "#{admin_compras_paquetes_path}?q%5Bpromotion_id_eq%5D=#{promotion.id}"
     end
     actions :defaults => true
   end

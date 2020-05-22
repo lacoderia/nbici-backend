@@ -143,11 +143,13 @@ class Purchase < ActiveRecord::Base
                             last_class_purchased: Time.zone.now,
                             expiration_date: expiration_date,
                             credits: credits)
+      SendEmailJob.perform_later("purchase", user, purchase)
     elsif pack.streaming_classes != nil
       user.update_attributes(streaming_classes_left: user.streaming_classes_left  + pack.streaming_classes,
                             last_class_purchased: Time.zone.now,
                             expiration_date: expiration_date,
                             credits: credits)
+      SendEmailJob.perform_later("streaming_purchase", user, purchase)
     end
 
     return purchase
