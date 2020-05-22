@@ -88,9 +88,7 @@ feature 'AvailableStreamingClassesController' do
       expect(response["available_streaming_classes"].size).to eql 3
       expect(response["available_streaming_classes"][0]["user"]["id"]).to eql user_with_streaming_classes.id
       expect(response["available_streaming_classes"][0]["streaming_class"]["id"]).to eql streaming_class_01.id
-      available_streaming_class_01_id = response["available_streaming_classes"][0]["id"]
       expect(response["available_streaming_classes"][1]["streaming_class"]["id"]).to eql streaming_class_02.id
-      available_streaming_class_02_id = response["available_streaming_classes"][1]["id"]
 
       #TODO: email count
       
@@ -103,15 +101,16 @@ feature 'AvailableStreamingClassesController' do
       expect(response["available_streaming_classes"][0]["insertion_code"]).to be nil
       
       #querying available streaming class show for first class
-      visit available_streaming_class_path(available_streaming_class_01_id)
+      visit streaming_class_path(streaming_class_01.id)
       response = JSON.parse(page.body)
       expect(page.status_code).to be 500
       expect(response["errors"][0]["title"]).to eql "La clase ya cumplió su periodo de 24 horas de disponibilidad desde que la compraste."
 
       #querying available streaming class show for second class
-      visit available_streaming_class_path(available_streaming_class_02_id)
+      visit streaming_class_path(streaming_class_02.id)
       response = JSON.parse(page.body)
-      expect(response["available_streaming_class"]["streaming_class"]["insertion_code"]).not_to be nil
+      expect(response["streaming_class"]["insertion_code"]).not_to be nil
+      expect(response["available_streaming_class"]["streaming_class_id"]).to eql streaming_class_02.id
 
       Timecop.travel(starting_datetime + 25.hours)
 
@@ -135,7 +134,7 @@ feature 'AvailableStreamingClassesController' do
       set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
 
       #querying available streaming class show for first class
-      visit available_streaming_class_path(available_streaming_class_01_id)
+      visit streaming_class_path(streaming_class_01.id)
       response = JSON.parse(page.body)
       expect(page.status_code).to be 500
       expect(response["errors"][0]["title"]).to eql "La clase no está disponible para este usuario."    

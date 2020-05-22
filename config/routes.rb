@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   
-  resources :streaming_classes, only: :index
-  resources :available_streaming_classes, only: [:index, :show] do
+  resources :streaming_classes, only: [:index, :show]
+  resources :available_streaming_classes, only: :index do
     collection do
       match 'purchase', to: "available_streaming_classes#purchase", via: [:post, :options]
     end
