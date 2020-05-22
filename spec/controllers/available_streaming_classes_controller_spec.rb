@@ -110,6 +110,7 @@ feature 'AvailableStreamingClassesController' do
       visit streaming_class_path(streaming_class_02.id)
       response = JSON.parse(page.body)
       expect(response["streaming_class"]["insertion_code"]).not_to be nil
+      expect(response["streaming_class"]["instructor"]["active"]).to be true
       expect(response["available_streaming_class"]["streaming_class_id"]).to eql streaming_class_02.id
 
       Timecop.travel(starting_datetime + 25.hours)
