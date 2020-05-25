@@ -76,25 +76,10 @@ feature 'AvailableStreamingClassesController' do
       expect(SendEmailJob).to have_been_enqueued.with("streaming_booking", global_id(user_with_streaming_classes), global_id(AvailableStreamingClass.last))
       perform_enqueued_jobs { SendEmailJob.perform_later("streaming_booking", user_with_streaming_classes, AvailableStreamingClass.last) } 
 
-      #buying third class with regular credits
-      Timecop.freeze(starting_datetime + 2.hour)
-      streaming_class_purchase = {streaming_class_id: streaming_class_03.id}
-      with_rack_test_driver do
-        page.driver.post purchase_available_streaming_classes_path, streaming_class_purchase
-      end      
-      response = JSON.parse(page.body)
-      expect(response["available_streaming_class"]["start"]).to eql (starting_datetime + 2.hour).strftime("%FT%T.%L%:z")      
-      user_with_streaming_classes.reload
-      expect(user_with_streaming_classes.streaming_classes_left).to eql 0
-      expect(user_with_streaming_classes.classes_left).to eql 0
-      
-      expect(SendEmailJob).to have_been_enqueued.with("streaming_booking", global_id(user_with_streaming_classes), global_id(AvailableStreamingClass.last))
-      perform_enqueued_jobs { SendEmailJob.perform_later("streaming_booking", user_with_streaming_classes, AvailableStreamingClass.last) } 
-    
       #querying available streaming classes
       visit available_streaming_classes_path
       response = JSON.parse(page.body)
-      expect(response["available_streaming_classes"].size).to eql 3
+      expect(response["available_streaming_classes"].size).to eql 2
       expect(response["available_streaming_classes"][0]["user"]["id"]).to eql user_with_streaming_classes.id
       expect(response["available_streaming_classes"][0]["streaming_class"]["id"]).to eql streaming_class_01.id
       expect(response["available_streaming_classes"][1]["streaming_class"]["id"]).to eql streaming_class_02.id
@@ -104,7 +89,7 @@ feature 'AvailableStreamingClassesController' do
       #querying available streaming classes
       visit available_streaming_classes_path
       response = JSON.parse(page.body)
-      expect(response["available_streaming_classes"].size).to eql 2      
+      expect(response["available_streaming_classes"].size).to eql 1      
       expect(response["available_streaming_classes"][0]["insertion_code"]).to be nil
       
       #querying available streaming class show for first class
@@ -125,16 +110,31 @@ feature 'AvailableStreamingClassesController' do
       #querying available streaming classes
       visit available_streaming_classes_path
       response = JSON.parse(page.body)
-      expect(response["available_streaming_classes"].size).to eql 1
-
-      Timecop.travel(starting_datetime + 26.hours)
-
-      #querying available streaming classes
-      visit available_streaming_classes_path
-      response = JSON.parse(page.body)
       expect(response["available_streaming_classes"].size).to eql 0
+
+      #buying third class with regular credits
+      Timecop.freeze(starting_datetime + 26.hour)
+      streaming_class_purchase = {streaming_class_id: streaming_class_01.id}
+      with_rack_test_driver do
+        page.driver.post purchase_available_streaming_classes_path, streaming_class_purchase
+      end      
+      response = JSON.parse(page.body)
+      expect(response["available_streaming_class"]["start"]).to eql (starting_datetime + 26.hour).strftime("%FT%T.%L%:z")      
+      user_with_streaming_classes.reload
+      expect(user_with_streaming_classes.streaming_classes_left).to eql 0
+      expect(user_with_streaming_classes.classes_left).to eql 0
       
+      expect(SendEmailJob).to have_been_enqueued.with("streaming_booking", global_id(user_with_streaming_classes), global_id(AvailableStreamingClass.last))
+      perform_enqueued_jobs { SendEmailJob.perform_later("streaming_booking", user_with_streaming_classes, AvailableStreamingClass.last) } 
+    
       expect(Email.count).to eql 3
+
+      #querying available streaming class show for last class
+      visit streaming_class_path(streaming_class_01.id)
+      response = JSON.parse(page.body)
+      expect(response["streaming_class"]["insertion_code"]).not_to be nil
+      expect(response["streaming_class"]["instructor"]["active"]).to be true
+      expect(response["available_streaming_class"]["streaming_class_id"]).to eql streaming_class_01.id
 
       logout
 

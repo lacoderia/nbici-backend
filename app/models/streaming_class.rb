@@ -21,11 +21,12 @@ class StreamingClass < ActiveRecord::Base
 
   def validate_availability(user)
 
-    available_streaming_class = user.available_streaming_classes.find{|asc| asc.streaming_class == self}
+    available_streaming_classes = user.available_streaming_classes.where(streaming_class: self) 
+    available_streaming_class = available_streaming_classes.find{|asc| (asc.start + 24.hours) > Time.zone.now }
 
-    if not available_streaming_class 
+    if available_streaming_classes.empty? 
       raise "La clase no está disponible para este usuario."
-    elsif (available_streaming_class.start + 24.hours) < Time.zone.now
+    elsif not available_streaming_class
       raise "La clase ya cumplió su periodo de 24 horas de disponibilidad desde que la compraste."
     end
 
