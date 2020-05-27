@@ -1,6 +1,6 @@
 class StreamingClassSerializer <  ActiveModel::Serializer
 
-  attributes :id, :title, :description, :intensity, :length, :instructor, :active, :photo 
+  attributes :id, :title, :description, :intensity, :length, :instructor, :active, :photo, :featured 
 
   def instructor
     if object.instructor

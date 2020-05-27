@@ -4,7 +4,7 @@ ActiveAdmin.register StreamingClass, as: "Streaming" do
 
   actions :all, except: :destroy
   
-  permit_params :title, :description, :instructor_id, :photo, :length, :insertion_code, :active, :intensity 
+  permit_params :title, :description, :instructor_id, :photo, :length, :insertion_code, :active, :intensity, :featured 
 
   filter :title, :label => "Título"
   filter :description, :label => "Descripción"
@@ -25,6 +25,7 @@ ActiveAdmin.register StreamingClass, as: "Streaming" do
     column "Foto", :photo do |streaming|
       image_tag streaming.photo.url(:thumb)
     end
+    column "Especial", :featured
     column "Activo", :active
     actions defaults: true
   end
@@ -38,6 +39,7 @@ ActiveAdmin.register StreamingClass, as: "Streaming" do
       f.input :insertion_code, label: "Código inserción"
       f.input :intensity, label: "Intensidad"
       f.input :photo, :as => :file
+      f.input :featured, label: "Especial"
       f.input :active, label: "Activo"
     end
     f.actions

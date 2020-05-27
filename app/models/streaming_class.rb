@@ -17,7 +17,9 @@ class StreamingClass < ActiveRecord::Base
     "60 minutos"
   ]
 
-  scope :active, -> {where(active: true)}  
+  after_save :verify_featured
+
+  scope :active, -> {where(active: true).order(featured: :desc, created_at: :desc)}  
 
   def validate_availability(user)
 
@@ -31,6 +33,21 @@ class StreamingClass < ActiveRecord::Base
     end
 
     available_streaming_class
+  end
+
+  private
+
+  def verify_featured
+    if self.featured
+      featured_classes = StreamingClass.where("featured = ? AND id != ?", true, self.id)
+      if not featured_classes.empty?
+        if featured_classes.size > 1
+          featured_classes.update_all(featured: false)
+        else
+          featured_classes.first.update_attribute("featured", false)
+        end
+      end
+    end
   end
 
 end

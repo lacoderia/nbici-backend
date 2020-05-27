@@ -10,7 +10,7 @@ feature 'AvailableStreamingClassesController' do
   let!(:streaming_class_01){create(:streaming_class)}
   let!(:streaming_class_02){create(:streaming_class)}
   let!(:streaming_class_03){create(:streaming_class)}
-  let!(:streaming_class_04){create(:streaming_class)}
+  let!(:streaming_class_04){create(:streaming_class, featured: true)}
   let!(:streaming_class_05){create(:streaming_class)}
   let!(:streaming_class_06){create(:streaming_class)}
   let!(:streaming_class_07){create(:streaming_class, :inactive)}
