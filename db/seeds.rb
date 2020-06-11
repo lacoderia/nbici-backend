@@ -79,6 +79,7 @@ pack_5 = Pack.create(description: "50 clases", classes: 50, price: 5000.00, expi
 #Venues
 venue = Venue.create(name: "Gimnasio SLP", description: "Gimnasio original")
 venue_2 = Venue.create(name: "Gimnasio Aniversario", description: "Gimnasio aniversario")
+venue_3 = Venue.create(name: "Gimnasio Distanciamiento", description: "Gimnasio para covid")
 
 #Bicycles
 bicycle1 = Bicycle.new(position:1, number:1)
@@ -107,15 +108,30 @@ bicycle23 = Bicycle.new(position:84, number:23)
 bicycle24 = Bicycle.new(position:74, number:24)
 bicycle25 = Bicycle.new(position:64, number:25)
 
+new_bicycle1 = Bicycle.new(position:1, number:1) 
+new_bicycle2 = Bicycle.new(position:35, number:2) 
+new_bicycle3 = Bicycle.new(position:26, number:3) 
+new_bicycle4 = Bicycle.new(position:40, number:4) 
+new_bicycle5 = Bicycle.new(position:31, number:5) 
+new_bicycle6 = Bicycle.new(position:55, number:6) 
+new_bicycle7 = Bicycle.new(position:67, number:7) 
+new_bicycle8 = Bicycle.new(position:70, number:8) 
+new_bicycle9 = Bicycle.new(position:74, number:9) 
+new_bicycle10 = Bicycle.new(position:87, number:10) 
+
 #Distributions
 distribution = Distribution.create(height: 8, width: 11, description: "distribucion actual", inactive_seats: "", active_seats: Bicycle.to_string_array([bicycle1,bicycle2,bicycle3,bicycle4,bicycle5,bicycle6,bicycle7,bicycle8,bicycle9,bicycle10,bicycle11,bicycle12,bicycle13,bicycle14,bicycle15,bicycle16,bicycle17,bicycle18,bicycle19]), total_seats: 19)
 
 distribution_2 = Distribution.create(height: 9, width: 11, description: "distribucion aniversario", inactive_seats: "", active_seats: Bicycle.to_string_array([bicycle1,bicycle2,bicycle3,bicycle4,bicycle5,bicycle6,bicycle7,bicycle8,bicycle9,bicycle10,bicycle11,bicycle12,bicycle13,bicycle14,bicycle15,bicycle16,bicycle17,bicycle18,bicycle19,bicycle20,bicycle21,bicycle22,bicycle23,bicycle24,bicycle25]), total_seats: 25)
 
+distribution_3 = Distribution.create(height: 8, width: 11, description: "distribucion covid", inactive_seats: "", active_seats: Bicycle.to_string_array([new_bicycle1, new_bicycle2, new_bicycle3, new_bicycle4, new_bicycle5, new_bicycle6, new_bicycle7, new_bicycle8, new_bicycle9, new_bicycle10]), total_seats: 10)
+
 #Room
 room = Room.create(venue: venue, distribution: distribution, description: "Salón original")
 
 room_2 = Room.create(venue: venue_2, distribution: distribution_2, description: "Salón aniversario")
+
+room_3 = Room.create(venue: venue_3, distribution: distribution_3, description: "Salón distanciamiento") 
 
 #Schedules
 
