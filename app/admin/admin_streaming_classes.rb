@@ -3,8 +3,8 @@ ActiveAdmin.register StreamingClass, as: "Streaming" do
   menu parent: 'Clases', priority: 1
 
   actions :all, except: :destroy
-  
-  permit_params :title, :description, :instructor_id, :photo, :length, :insertion_code, :active, :intensity, :featured 
+
+  permit_params :title, :description, :instructor_id, :photo, :length, :insertion_code, :active, :intensity, :featured
 
   filter :title, :label => "Título"
   filter :description, :label => "Descripción"
@@ -34,7 +34,7 @@ ActiveAdmin.register StreamingClass, as: "Streaming" do
     f.inputs "Detalles de streaming" do
       f.input :title, label: "Título"
       f.input :description, label: "Descripción"
-      f.input :instructor, label: "Instructor", :collection => Instructor.active.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select, :include_blank => false 
+      f.input :instructor, label: "Instructor", :collection => Instructor.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select, :include_blank => false
       f.input :length, label: "Duración", as: :select, collection: StreamingClass::LENGTHS, :include_blank => false
       f.input :insertion_code, label: "Código inserción"
       f.input :intensity, label: "Intensidad"
@@ -43,7 +43,7 @@ ActiveAdmin.register StreamingClass, as: "Streaming" do
       f.input :active, label: "Activo"
     end
     f.actions
-  end	
+  end
 
 
 end
