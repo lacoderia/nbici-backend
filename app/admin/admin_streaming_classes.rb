@@ -34,7 +34,7 @@ ActiveAdmin.register StreamingClass, as: "Streaming" do
     f.inputs "Detalles de streaming" do
       f.input :title, label: "Título"
       f.input :description, label: "Descripción"
-      f.input :instructor, label: "Instructor", :collection => Instructor.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select, :include_blank => false
+      f.input :instructor, label: "Instructor", :collection => Instructor.all.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select, :include_blank => false
       f.input :length, label: "Duración", as: :select, collection: StreamingClass::LENGTHS, :include_blank => false
       f.input :insertion_code, label: "Código inserción"
       f.input :intensity, label: "Intensidad"
