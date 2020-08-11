@@ -19,7 +19,7 @@ class StreamingClass < ActiveRecord::Base
 
   after_save :verify_featured
 
-  scope :active, -> {where(active: true).order(featured: :desc, created_at: :desc)}
+  scope :active, -> {where(active: true).order(featured: :desc, updated_at: :desc)}
 
   def validate_availability(user)
 
