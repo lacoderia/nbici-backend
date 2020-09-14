@@ -124,7 +124,7 @@ cv2 = Bicycle.new(position:34, number:2)
 cv3 = Bicycle.new(position:25, number:3)
 cv4 = Bicycle.new(position:39, number:4)
 cv5 = Bicycle.new(position:19, number:5)
-cv6 = Bicycle.new(position:6, number:6)
+cv6 = Bicycle.new(position:11, number:6)
 cv7 = Bicycle.new(position:67, number:7)
 cv8 = Bicycle.new(position:69, number:8)
 cv9 = Bicycle.new(position:71, number:9)
@@ -148,6 +148,8 @@ room = Room.create(venue: venue, distribution: distribution, description: "Saló
 room_2 = Room.create(venue: venue_2, distribution: distribution_2, description: "Salón aniversario")
 
 room_3 = Room.create(venue: venue_3, distribution: distribution_3, description: "Salón distanciamiento")
+
+room_4 = Room.create(venue: venue_3, distribution: distribution_4, description: "Salón distanciamiento 2")
 
 #Schedules
 
