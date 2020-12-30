@@ -80,6 +80,7 @@ pack_5 = Pack.create(description: "50 clases", classes: 50, price: 5000.00, expi
 venue = Venue.create(name: "Gimnasio SLP", description: "Gimnasio original")
 venue_2 = Venue.create(name: "Gimnasio Aniversario", description: "Gimnasio aniversario")
 venue_3 = Venue.create(name: "Gimnasio Distanciamiento", description: "Gimnasio para covid")
+venue_4 = Venue.create(name: "Gimnasio Distanciamiento 2", description: "Gimnasio para covid")
 
 #Bicycles
 bicycle1 = Bicycle.new(position:1, number:1)
@@ -133,6 +134,24 @@ cv11 = Bicycle.new(position:52, number:11)
 cv12 = Bicycle.new(position:84, number:12)
 cv13 = Bicycle.new(position:87, number:13)
 
+cvv1 = Bicycle.new(position:3, number:1)
+cvv2 = Bicycle.new(position:26, number:2)
+cvv3 = Bicycle.new(position:38, number:3)
+cvv4 = Bicycle.new(position:40, number:4)
+cvv5 = Bicycle.new(position:30, number:5)
+cvv6 = Bicycle.new(position:21, number:6)
+cvv7 = Bicycle.new(position:11, number:7)
+cvv8 = Bicycle.new(position:1, number:8)
+cvv9 = Bicycle.new(position:24, number:9)
+cvv10 = Bicycle.new(position:58, number:10)
+cvv11 = Bicycle.new(position:72, number:11)
+cvv12 = Bicycle.new(position:64, number:12)
+cvv13 = Bicycle.new(position:43, number:13)
+cvv14 = Bicycle.new(position:67, number:14)
+cvv15 = Bicycle.new(position:80, number:15)
+cvv16 = Bicycle.new(position:82, number:16)
+cvv17 = Bicycle.new(position:84, number:17)
+
 #Distributions
 distribution = Distribution.create(height: 8, width: 11, description: "distribucion actual", inactive_seats: "", active_seats: Bicycle.to_string_array([bicycle1,bicycle2,bicycle3,bicycle4,bicycle5,bicycle6,bicycle7,bicycle8,bicycle9,bicycle10,bicycle11,bicycle12,bicycle13,bicycle14,bicycle15,bicycle16,bicycle17,bicycle18,bicycle19]), total_seats: 19)
 
@@ -142,6 +161,8 @@ distribution_3 = Distribution.create(height: 8, width: 11, description: "distrib
 
 distribution_4 = Distribution.create(height: 8, width: 11, description: "distribucion covid 2", inactive_seats: "", active_seats: Bicycle.to_string_array([cv1, cv2, cv3, cv4, cv5, cv6, cv7, cv8, cv9, cv10, cv11, cv12, cv13]), total_seats: 13)
 
+distribution_5 = Distribution.create(height: 8, width: 11, description: "distribucion covid 3", inactive_seats: "", active_seats: Bicycle.to_string_array([cvv1, cvv2, cvv3, cvv4, cvv5, cvv6, cvv7, cvv8, cvv9, cvv10, cvv11, cvv12, cvv13, cvv14, cvv15, cvv16, cvv17]), total_seats: 17)
+
 #Room
 room = Room.create(venue: venue, distribution: distribution, description: "Salón original")
 
@@ -150,6 +171,8 @@ room_2 = Room.create(venue: venue_2, distribution: distribution_2, description: 
 room_3 = Room.create(venue: venue_3, distribution: distribution_3, description: "Salón distanciamiento")
 
 room_4 = Room.create(venue: venue_3, distribution: distribution_4, description: "Salón distanciamiento 2")
+
+room_5 = Room.create(venue: venue_4, distribution: distribution_5, description: "Salón distanciamiento 3")
 
 #Schedules
 
