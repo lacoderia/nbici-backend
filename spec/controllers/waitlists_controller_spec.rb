@@ -30,7 +30,7 @@ feature 'AppointmentsController' do
 
       new_waitlist_request = {schedule_id: schedule.id}      
       with_rack_test_driver do
-        page.driver.post waitlists_path, new_waitlist_request
+        page.driver.post waitlists_create_path, new_waitlist_request
       end
 
       response = JSON.parse(page.body)
