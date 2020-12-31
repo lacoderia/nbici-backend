@@ -28,10 +28,11 @@ feature 'AppointmentsController' do
       access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
       set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
 
-      new_waitlist_request = {schedule_id: schedule.id}      
-      with_rack_test_driver do
-        page.driver.post waitlists_book_path, new_waitlist_request
-      end
+      #new_waitlist_request = {schedule_id: schedule.id}      
+      #with_rack_test_driver do
+      #  page.driver.post waitlists_book_path, new_waitlist_request
+      #end
+      visit "#{waitlists_book_path}?schedule_id=#{schedule.id}"
 
       response = JSON.parse(page.body)
       expect(response["waitlist"]["user_id"]).to eq user_with_classes.id
