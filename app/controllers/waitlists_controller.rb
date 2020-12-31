@@ -3,7 +3,7 @@ class WaitlistsController < ApiController
 
   before_action :authenticate_user!
 
-  def book 
+  def create 
     begin
       @waitlist = Waitlist.create_and_send_email(params[:schedule_id], current_user)
       render json: @waitlist

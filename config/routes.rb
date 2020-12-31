@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     end
   end
   
-  get 'waitlists/book', :to => "waitlists#book"#, :via => [:post, :options]
+  match 'waitlists', :to => "waitlists#create", :via => [:post, :options]
   
   resources :promotion_amounts
   resources :promotions

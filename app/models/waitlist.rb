@@ -19,6 +19,7 @@ class Waitlist < ActiveRecord::Base
     
     schedule = Schedule.find(schedule_id)
     
+    # TODO: manejarlo diferente
     if not schedule.price.nil?
       raise "No puedes unirte a lista de espera en clases especiales."
     end
@@ -31,6 +32,11 @@ class Waitlist < ActiveRecord::Base
     #full validation
     if schedule.available_seats > 0
       raise "La clase todavía tiene asientos disponibles."
+    end
+
+    #already in wishlist validation
+    if not schedule.waitlists.where(user: user).empty?
+      raise "Ya estás registrado en la lista de espera."
     end
 
     #time validation
