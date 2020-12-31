@@ -6,7 +6,9 @@ Rails.application.routes.draw do
       match 'purchase', to: "available_streaming_classes#purchase", via: [:post, :options]
     end
   end
-  resources :waitlists, only: [:create]
+
+  match 'waitlists', :to => "waitlists#create", :via => [:post, :options]    
+  
   resources :promotion_amounts
   resources :promotions
   resources :configurations

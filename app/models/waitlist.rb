@@ -17,12 +17,16 @@ class Waitlist < ActiveRecord::Base
 
   def self.create_and_send_email(schedule_id, user) 
     
-    #credit validation
-    if not user.classes_left or user.classes_left == 0 
-      raise "Ya no tienes clases disponibles, adquiere más para continuar."
+    schedule = Schedule.find(schedule_id)
+    
+    if not schedule.price.nil?
+      raise "No puedes unirte a lista de espera en clases especiales."
     end
 
-    schedule = Schedule.find(schedule_id)
+    #credit validation
+    if (not schedule.free) and (not user.classes_left or user.classes_left == 0)
+      raise "Ya no tienes clases disponibles, adquiere más para continuar."
+    end
 
     #full validation
     if schedule.available_seats > 0
