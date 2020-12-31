@@ -47,6 +47,16 @@ class Appointment < ActiveRecord::Base
             menu_purchase.cancel!
           end
         end
+
+        #First user in waitlist assigned
+        waitlist = self.schedule.waitlists.where("status = ?", "WAITING")
+        if not waitlist.empty?
+          fifo_user = waitlist.first.user
+          self.schedule.appointments << appointment = Appointment.create!(user: fifo_user, schedule: self.schedule, bicycle_number: self.bicycle_number, status: "BOOKED", start: self.schedule.datetime, description: self.description)
+          waitlis.firstt.assign!
+          SendEmailJob.perform_later("booking", fifo_user, appointment)
+        end
+        
       else
         raise "Sólo se pueden cancelar clases con usuario de pruebas con 1 minuto de anticipación."
       end
@@ -69,6 +79,16 @@ class Appointment < ActiveRecord::Base
             menu_purchase.cancel!
           end
         end
+
+        #First user in waitlist assigned
+        waitlist = self.schedule.waitlists.where("status = ?", "WAITING")
+        if not waitlist.empty?
+          fifo_user = waitlist.first.user
+          self.schedule.appointments << appointment = Appointment.create!(user: fifo_user, schedule: self.schedule, bicycle_number: self.bicycle_number, status: "BOOKED", start: self.schedule.datetime, description: self.description)
+          waitlis.firstt.assign!
+          SendEmailJob.perform_later("booking", fifo_user, appointment)
+        end
+        
       else
         raise "Sólo se pueden cancelar clases con 12 horas de anticipación."
       end

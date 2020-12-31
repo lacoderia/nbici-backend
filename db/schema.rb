@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200520010329) do
+ActiveRecord::Schema.define(version: 20201230042506) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -317,14 +317,15 @@ ActiveRecord::Schema.define(version: 20200520010329) do
     t.string   "length"
     t.text     "insertion_code"
     t.boolean  "active",             default: true
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.integer  "intensity"
     t.string   "title"
     t.string   "photo_file_name"
     t.string   "photo_content_type"
     t.integer  "photo_file_size"
     t.datetime "photo_updated_at"
+    t.boolean  "featured",           default: false
   end
 
   add_index "streaming_classes", ["instructor_id"], name: "index_streaming_classes_on_instructor_id", using: :btree
@@ -378,6 +379,17 @@ ActiveRecord::Schema.define(version: 20200520010329) do
     t.datetime "updated_at",  null: false
   end
 
+  create_table "waitlists", force: :cascade do |t|
+    t.integer  "schedule_id"
+    t.integer  "user_id"
+    t.string   "status"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "waitlists", ["schedule_id"], name: "index_waitlists_on_schedule_id", using: :btree
+  add_index "waitlists", ["user_id"], name: "index_waitlists_on_user_id", using: :btree
+
   add_foreign_key "available_streaming_classes", "streaming_classes"
   add_foreign_key "available_streaming_classes", "users"
   add_foreign_key "promotions_users", "promotions"
@@ -387,4 +399,6 @@ ActiveRecord::Schema.define(version: 20200520010329) do
   add_foreign_key "roles_users", "roles"
   add_foreign_key "roles_users", "users"
   add_foreign_key "streaming_classes", "instructors"
+  add_foreign_key "waitlists", "schedules"
+  add_foreign_key "waitlists", "users"
 end

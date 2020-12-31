@@ -3,6 +3,7 @@ class Schedule < ActiveRecord::Base
   belongs_to :room
   belongs_to :alternate_instructor, :foreign_key => "alternate_instructor_id", :class_name => "Instructor"
   has_many :appointments, :dependent => :delete_all
+  has_many :waitlists
   
   validates :instructor, presence: true
   validates :datetime, presence: true

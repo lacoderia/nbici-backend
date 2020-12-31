@@ -12,6 +12,12 @@ class NbiciMailer < ActionMailer::Base
     mail(to: @user.email, subject: "Tu clase ha sido reservada")
   end
 
+  def waitlist user, waitlist
+    @user = user
+    @waitlist = waitlist
+    mail(to: @user.email, subject: "Te has unido a la lista de espera")
+  end
+
   def streaming_booking user, available_streaming_class
     @user = user
     @available_streaming_class = available_streaming_class
