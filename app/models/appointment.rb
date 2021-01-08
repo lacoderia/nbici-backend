@@ -53,7 +53,7 @@ class Appointment < ActiveRecord::Base
         if not waitlist.empty?
           fifo_user = waitlist.first.user
           self.schedule.appointments << appointment = Appointment.create!(user: fifo_user, schedule: self.schedule, bicycle_number: self.bicycle_number, status: "BOOKED", start: self.schedule.datetime, description: self.description)
-          waitlis.firstt.assign!
+          waitlist.first.assign!
           SendEmailJob.perform_later("booking", fifo_user, appointment)
         end
 
@@ -85,7 +85,7 @@ class Appointment < ActiveRecord::Base
         if not waitlist.empty?
           fifo_user = waitlist.first.user
           self.schedule.appointments << appointment = Appointment.create!(user: fifo_user, schedule: self.schedule, bicycle_number: self.bicycle_number, status: "BOOKED", start: self.schedule.datetime, description: self.description)
-          waitlis.firstt.assign!
+          waitlist.first.assign!
           SendEmailJob.perform_later("booking", fifo_user, appointment)
         end
 

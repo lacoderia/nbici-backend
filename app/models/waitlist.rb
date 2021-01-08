@@ -15,6 +15,19 @@ class Waitlist < ActiveRecord::Base
     transition 'WAITING' => 'REIMBURSED', on: :reimburse
   end
 
+  def self.reimburse_classes
+    waitlists_to_reimburse = Waitlist.joins(:schedule).where("waitlists.status = ? AND schedules.datetime < ?", "WAITING", Time.zone.now - 1.hour)
+    waitlists_to_reimburse.each do |waitlist|
+      if waitlist.schedule.price?
+        waitlist.user.update_attribute("credits", waitlist.user.credits + waitlist.schedule.price)
+      else
+        waitlist.user.update_attribute("classes_left", waitlist.user.classes_left + 1)
+      end
+      waitlist.reimburse!
+      SendEmailJob.perform_later("reimburse", waitlist.user, waitlist)
+    end
+  end
+
   def self.create_charge_and_send_email(schedule_id, price, uid, user)
 
     schedule = Schedule.find(schedule_id)
@@ -32,7 +45,7 @@ class Waitlist < ActiveRecord::Base
     #time validation
     if Time.zone.now < (schedule.datetime - 12.hours)
 
-      if not current_user.test?
+      if not user.test?
 
         #charge data
         amount = price.to_i * 100

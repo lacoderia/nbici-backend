@@ -18,6 +18,12 @@ class NbiciMailer < ActionMailer::Base
     mail(to: @user.email, subject: "Te has unido a la lista de espera")
   end
 
+  def reimburse user, waitlist
+    @user = user
+    @waitlist = waitlist
+    mail(to: @user.email, subject: "Se te ha reembolsado tu crédito de la lista de espera")
+  end
+
   def streaming_booking user, available_streaming_class
     @user = user
     @available_streaming_class = available_streaming_class
