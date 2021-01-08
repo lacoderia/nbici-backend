@@ -9,9 +9,9 @@ class Appointment < ActiveRecord::Base
     'FINALIZED',
     'ANOMALY'
   ]
-  
+
   validates :status, inclusion: {in: STATUSES}
-  
+
   state_machine :status, :initial => 'BOOKED' do
     transition 'BOOKED' => 'FINALIZED', on: :finalize
     transition 'BOOKED' => 'CANCELLED', on: :cancel
@@ -32,13 +32,13 @@ class Appointment < ActiveRecord::Base
       if Time.zone.now < (self.start - 1.minute)
         self.cancel!
         if self.user.classes_left and (not self.schedule.free)
-          if self.schedule.opening 
+          if self.schedule.opening
             future_free_appointments = current_user.appointments.not_cancelled.joins(:schedule).where("schedules.datetime between ? and ? and schedules.opening = ?", Configuration.free_classes_start_date, Configuration.free_classes_end_date, true)
             if not future_free_appointments.empty?
-              self.user.update_attribute(:classes_left, self.user.classes_left + 1) 
+              self.user.update_attribute(:classes_left, self.user.classes_left + 1)
             end
           else
-            self.user.update_attribute(:classes_left, self.user.classes_left + 1) 
+            self.user.update_attribute(:classes_left, self.user.classes_left + 1)
           end
         end
 
@@ -56,7 +56,7 @@ class Appointment < ActiveRecord::Base
           waitlis.firstt.assign!
           SendEmailJob.perform_later("booking", fifo_user, appointment)
         end
-        
+
       else
         raise "Sólo se pueden cancelar clases con usuario de pruebas con 1 minuto de anticipación."
       end
@@ -64,16 +64,16 @@ class Appointment < ActiveRecord::Base
       if Time.zone.now < (self.start - 12.hours)
         self.cancel!
         if self.user.classes_left and (not self.schedule.free)
-          if self.schedule.opening 
+          if self.schedule.opening
             future_free_appointments = current_user.appointments.not_cancelled.joins(:schedule).where("schedules.datetime between ? and ? and schedules.opening = ?", Configuration.free_classes_start_date, Configuration.free_classes_end_date, true)
             if not future_free_appointments.empty?
-              self.user.update_attribute(:classes_left, self.user.classes_left + 1) 
+              self.user.update_attribute(:classes_left, self.user.classes_left + 1)
             end
           else
-            self.user.update_attribute(:classes_left, self.user.classes_left + 1) 
+            self.user.update_attribute(:classes_left, self.user.classes_left + 1)
           end
         end
-        
+
         if self.menu_purchases.count > 0
           self.menu_purchases.each do |menu_purchase|
             menu_purchase.cancel!
@@ -88,20 +88,20 @@ class Appointment < ActiveRecord::Base
           waitlis.firstt.assign!
           SendEmailJob.perform_later("booking", fifo_user, appointment)
         end
-        
+
       else
         raise "Sólo se pueden cancelar clases con 12 horas de anticipación."
       end
     end
-        
+
   end
 
   def edit_bicycle_number bicycle_number
-    
+
     if not self.schedule.bicycle_exists?(bicycle_number)
       raise "Esa bicicleta no existe, por favor intenta nuevamente."
     end
-      
+
     if self.schedule.bookings.find{|bicycle| bicycle.number == bicycle_number}
       raise "La bicicleta ya fue reservada, por favor intenta con otra."
     end
@@ -128,15 +128,16 @@ class Appointment < ActiveRecord::Base
     schedule = Schedule.find(params[:schedule_id])
     bicycle_number = params[:bicycle_number].to_i
     description = params[:description]
+    params_credits = params[:credits]
     appointment = Appointment.new
 
     if schedule.datetime <= Time.zone.now
       raise "La clase ya está fuera de horario."
     end
-      
+
     if not schedule.bicycle_exists?(bicycle_number)
       raise "Esa bicicleta no existe, por favor intenta nuevamente."
-    end    
+    end
 
     if (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
 
@@ -147,21 +148,35 @@ class Appointment < ActiveRecord::Base
         if(not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
 
           if not current_user.test?
-          
+
             #charge data
             amount = params[:price].to_i * 100
-            card = Card.find_by_uid(params[:uid]) 
-          
+            card = Card.find_by_uid(params[:uid])
+
             if not card
               raise "Tarjeta no encontrada o registrada."
             end
-          
-            description = "Compra de clase de aniversario"
+
+            description = "Compra de clase especial"
             currency = "MXN"
             params_price = params[:price]
 
+            # TODO: implement charging with credits
+            # if params_credits
+            #   price_and_credits = {final_price: final_price, initial_price: schedule.price, final_credits: final_credits, initial_credits: user.credits}
+            #   validated_price = price_and_credits[:final_price]
+            #   credits = price_and_credits[:final_credits]
+            #   description = "#{description} con crédito a favor"
+
+            #   if params_credits.to_f != price_and_credits[:initial_credits] or params_price.to_f != validated_price
+            #     raise "Hay un error calculando el precio final con los créditos a favor."
+            #   end
+            # elsif (pack.price_or_special_price_for_user user) != params_price.to_f
+            #   raise "El precio enviado es diferente al precio del paquete."
+            # else
+
             if params[:price].to_f != schedule.price.to_f
-              raise "El precio enviado es diferente al precio de la clase paquete."
+              raise "El precio enviado es diferente al precio de la clase."
             end
 
             charge = Conekta::Charge.create({
@@ -185,8 +200,8 @@ class Appointment < ActiveRecord::Base
             purchase = Purchase.create!(
               user: current_user,
               uid: charge.id,
-              object: charge.object, 
-              livemode: charge.livemode, 
+              object: charge.object,
+              livemode: charge.livemode,
               status: charge.status,
               description: charge.description,
               amount: charge.amount,
@@ -199,7 +214,7 @@ class Appointment < ActiveRecord::Base
 
           schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)
           return appointment
-          
+
         elsif schedule.bookings.find{|station| station.number == station_number}
           raise "La bicicleta ya fue reservada, por favor intenta con otra."
         end
@@ -208,7 +223,7 @@ class Appointment < ActiveRecord::Base
     else
       raise "La bicicleta ya fue reservada, por favor intenta con otra."
     end
-    
+
   end
 
   def self.book params, current_user
@@ -217,15 +232,15 @@ class Appointment < ActiveRecord::Base
     bicycle_number = params[:bicycle_number].to_i
     description = params[:description]
     appointment = Appointment.new
-    
+
     if schedule.datetime <= Time.zone.now
       raise "La clase ya está fuera de horario."
     end
-      
+
     if not schedule.bicycle_exists?(bicycle_number)
       raise "Esa bicicleta no existe, por favor intenta nuevamente."
     end
-    
+
     if (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
       if schedule.opening
         future_free_appointments = current_user.appointments.not_cancelled.joins(:schedule).where("schedules.datetime between ? and ? and schedules.opening = ?", Configuration.free_classes_start_date, Configuration.free_classes_end_date, true)
@@ -234,9 +249,9 @@ class Appointment < ActiveRecord::Base
         else
           #The second opening class will be deducted
           if (current_user.classes_left and current_user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
-            schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
+            schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)
             current_user.update_attribute(:classes_left, current_user.classes_left - 1)
-          elsif not current_user.classes_left or current_user.classes_left == 0 
+          elsif not current_user.classes_left or current_user.classes_left == 0
             raise "Ya no tienes clases disponibles, adquiere más para continuar."
           elsif schedule.bookings.find{|station| station.number == station_number}
             raise "La bicicleta ya fue reservada, por favor intenta con otra."
@@ -252,9 +267,9 @@ class Appointment < ActiveRecord::Base
         end
       else
         if (current_user.classes_left and current_user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
-          schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)      
+          schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)
           current_user.update_attribute(:classes_left, current_user.classes_left - 1)
-        elsif not current_user.classes_left or current_user.classes_left == 0 
+        elsif not current_user.classes_left or current_user.classes_left == 0
           raise "Ya no tienes clases disponibles, adquiere más para continuar."
         elsif schedule.bookings.find{|station| station.number == station_number}
           raise "La bicicleta ya fue reservada, por favor intenta con otra."
@@ -263,7 +278,7 @@ class Appointment < ActiveRecord::Base
     else
       raise "La bicicleta ya fue reservada, por favor intenta con otra."
     end
-    
+
     appointment
   end
 
@@ -274,6 +289,6 @@ class Appointment < ActiveRecord::Base
 
   def self.historic_for_user current_user
     start_day = Time.zone.now
-    Appointment.where("user_id = ? AND start < ?", current_user.id, start_day).limit(25).order(id: :desc).to_a    
+    Appointment.where("user_id = ? AND start < ?", current_user.id, start_day).limit(25).order(id: :desc).to_a
   end
 end

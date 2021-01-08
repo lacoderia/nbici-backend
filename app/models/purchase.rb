@@ -3,22 +3,22 @@ class Purchase < ActiveRecord::Base
   belongs_to :user
   belongs_to :promotion
 
-  accepts_nested_attributes_for :user  
+  accepts_nested_attributes_for :user
 
   scope :with_users, -> {joins(:user)}
 
   scope :with_users_and_appointments_and_bom_and_eom, -> {select("purchases.*, date_trunc('month', purchases.created_at) AS bom, (date_trunc('month', purchases.created_at) + INTERVAL '1 MONTH - 1 minute' ) AS eom").joins(:user)}
 
   def self.charge params, user
-    
+
     pack = Pack.find(params[:pack_id])
     amount = params[:price].to_i * 100
-    card = Card.find_by_uid(params[:uid]) 
+    card = Card.find_by_uid(params[:uid])
 
     if not card
       raise "Tarjeta no encontrada o registrada."
     end
- 
+
     description = pack.description
     currency = "MXN"
     credits = user.credits
@@ -37,9 +37,9 @@ class Purchase < ActiveRecord::Base
       validated_price = validated_discount[:final_price]
       coupon = validated_discount[:coupon]
       description = "#{description} con cupón de descuento"
-      
+
       promotion = Promotion.find_by_coupon(coupon)
-      
+
       if params_price.to_f != validated_price
         raise "El precio enviado es diferente al precio con descuento."
       end
@@ -50,14 +50,14 @@ class Purchase < ActiveRecord::Base
       credits = price_and_credits[:final_credits]
       description = "#{description} con crédito a favor"
 
-      if params_credits.to_f != price_and_credits[:initial_credits] or params_price.to_f != validated_price 
+      if params_credits.to_f != price_and_credits[:initial_credits] or params_price.to_f != validated_price
         raise "Hay un error calculando el precio final con los créditos a favor."
       end
     elsif (pack.price_or_special_price_for_user user) != params_price.to_f
       raise "El precio enviado es diferente al precio del paquete."
     end
 
-    if params_price.to_f > 0 
+    if params_price.to_f > 0
 
       if not user.test?
 
@@ -85,8 +85,8 @@ class Purchase < ActiveRecord::Base
         user: user,
         pack: pack,
         uid: charge.id,
-        object: charge.object, 
-        livemode: charge.livemode, 
+        object: charge.object,
+        livemode: charge.livemode,
         status: charge.status,
         description: charge.description,
         amount: charge.amount,
@@ -101,8 +101,8 @@ class Purchase < ActiveRecord::Base
       purchase = Purchase.create!(
         user: user,
         pack: pack,
-        object: "charge", 
-        livemode: true, 
+        object: "charge",
+        livemode: true,
         status: "paid",
         description: description,
         amount: amount,
@@ -111,7 +111,7 @@ class Purchase < ActiveRecord::Base
         details: "pago gratis",
         promotion: promotion
       )
-      
+
     end
 
     if user.expiration_date
@@ -124,10 +124,10 @@ class Purchase < ActiveRecord::Base
       expiration_date = Time.zone.now + pack.expiration.days
     end
 
-    if params_coupon and referrer = User.find_by_coupon(params_coupon.upcase) 
+    if params_coupon and referrer = User.find_by_coupon(params_coupon.upcase)
       if not referrer.staff?
         #Add credit
-        referrer.update_attribute(:credits, referrer.credits + Configuration.referral_credit) 
+        referrer.update_attribute(:credits, referrer.credits + Configuration.referral_credit)
       end
       #Add referral
       Referral.create!(owner: referrer, referred: user, credits: Configuration.referral_credit, used: false)
@@ -137,7 +137,7 @@ class Purchase < ActiveRecord::Base
       user.promotions << promotion
       user.save!
     end
-    
+
     if pack.classes != nil
       user.update_attributes(classes_left: (user.classes_left.nil? ? 0 : user.classes_left)  + pack.classes,
                             last_class_purchased: Time.zone.now,
@@ -153,6 +153,6 @@ class Purchase < ActiveRecord::Base
     end
 
     return purchase
-    
+
   end
 end

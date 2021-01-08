@@ -1,14 +1,15 @@
 Rails.application.routes.draw do
-  
+
   resources :streaming_classes, only: [:index, :show]
   resources :available_streaming_classes, only: :index do
     collection do
       match 'purchase', to: "available_streaming_classes#purchase", via: [:post, :options]
     end
   end
-  
+
   match 'waitlists', :to => "waitlists#create", :via => [:post, :options]
-  
+  match 'waitlists/charge', :to => "waitlists#charge", :via => [:post, :options]
+
   resources :promotion_amounts
   resources :promotions
   resources :configurations
@@ -43,7 +44,7 @@ Rails.application.routes.draw do
     end
   end
   resources :emails, except: [:new, :edit]
-  resources :cards do 
+  resources :cards do
     collection do
       match 'register_for_user', :to => 'cards#register_for_user', :via => [:post, :options]
       match 'delete_for_user', :to => 'cards#delete_for_user', :via => [:post, :options]
@@ -68,10 +69,10 @@ Rails.application.routes.draw do
       match 'charge', :to => "purchases#charge", :via => [:post, :options]
     end
   end
-  
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  
+
   mount_devise_token_auth_for 'User', at: 'auth', :controllers => {:registrations => "registrations", :sessions => "sessions", :passwords => "passwords"}, defaults: { format: :json }#, :skip => [:registrations]
 
   devise_scope :user do
@@ -81,13 +82,13 @@ Rails.application.routes.draw do
     get 'logout', :to => "sessions#destroy"
     get 'session', :to => "sessions#get"
   end
-  
+
   resources :users do
     member do
       match 'send_coupon_by_email', :to => "users#send_coupon_by_email", :via => [:post, :options]
     end
     collection do
-      #Called from the front end 
+      #Called from the front end
       match 'remote_authenticate', :to => 'users#remote_authenticate', :via => [:post, :options]
       match 'synchronize_accounts', :to => 'users#synchronize_accounts', :via => [:post, :options]
       #Called from system to system
@@ -101,10 +102,10 @@ Rails.application.routes.draw do
   end
 
   resources :roles, except: [:new, :edit]
-    
+
   match 'discounts/validate_with_coupon', :to => "discounts#validate_with_coupon", :via => [:post, :options]
   match 'discounts/validate_with_credits', :to => "discounts#validate_with_credits", :via => [:post, :options]
-  
+
   # root 'welcome#index'
   root to: "admin/dashboard#index"
 
