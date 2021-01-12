@@ -9,6 +9,8 @@ class Schedule < ActiveRecord::Base
   validates :datetime, presence: true
   
   scope :recent, -> {where("datetime >= ? AND datetime <= ?", Time.zone.now.beginning_of_day - 2.days, Time.zone.now.beginning_of_day + 7.days)}
+  scope :incoming, ->{where("datetime > ?", Time.zone.now + 12.hours)}
+  scope :special, ->{where("price IS NOT NULL")}
 
   #scope :for_instructor_payments, -> {select("schedules.*, COUNT(appointments.*) as app_num").joins(:appointments, :instructor).where("appointments.status = ?", "FINALIZED").group("schedules.id").group_by{|schedule| schedule.datetime.to_date.to_s}}
   

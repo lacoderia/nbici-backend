@@ -3,12 +3,14 @@ class Waitlist < ActiveRecord::Base
   belongs_to :user
 
   STATUSES = [
-    'WAITING',
-    'ASSIGNED',
-    'REIMBURSED'
+    ['EN ESPERA', 'WAITING'],
+    ['ASIGNADA', 'ASSIGNED'],
+    ['REEMBOLSADA', 'REIMBURSED']
   ]
 
-  validates :status, inclusion: {in: STATUSES}
+  validates :status, inclusion: {in: STATUSES.map{|pairs| pairs[1]}}
+
+  accepts_nested_attributes_for :user
 
   state_machine :status, :initial => 'WAITING' do
     transition 'WAITING' => 'ASSIGNED', on: :assign
