@@ -1,6 +1,10 @@
 class WaitlistSerializer < ActiveModel::Serializer
 
-  attributes :id, :user_id, :schedule, :status
+  attributes :id, :user_id, :schedule, :status, :show_menu
+
+  def show_menu
+    Configuration.show_menu?(object.datetime)
+  end
 
   def schedule
     sch_obj = {}

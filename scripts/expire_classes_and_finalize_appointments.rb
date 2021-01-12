@@ -11,5 +11,3 @@ begin
 rescue Exception => e
   logger.error("Errored #{e.message}")
 end
-
-

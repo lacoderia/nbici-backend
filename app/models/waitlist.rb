@@ -40,6 +40,7 @@ class Waitlist < ActiveRecord::Base
     end
 
     #already in wishlist validation
+    #TODO: check if status is only WAITING
     if not schedule.waitlists.where(user: user).empty?
       raise "Ya estás registrado en la lista de espera."
     end
