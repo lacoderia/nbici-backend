@@ -28,13 +28,13 @@ ActiveAdmin.register Waitlist, :as => "Waitlist" do
           #validatios
           #available seats
           if schedule.available_seats > 0
-            #raise "La clase todavía tiene asientos disponibles."
+            raise "La clase todavía tiene asientos disponibles."
           end
 
-          #already in wishlist 
-          if not schedule.waitlists.where(user: user).empty?
-            raise "Usuario ya está registrado en la lista de espera."
-          end
+          #already in waitlist 
+          #if not schedule.waitlists.where(user: user).empty?
+          #  raise "Usuario ya está registrado en la lista de espera."
+          #end
           
           #time 
           if Time.zone.now >= (schedule.datetime - 12.hours)

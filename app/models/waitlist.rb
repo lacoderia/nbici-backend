@@ -40,10 +40,9 @@ class Waitlist < ActiveRecord::Base
     end
 
     #already in wishlist validation
-    #TODO: check if status is only WAITING
-    if not schedule.waitlists.where(user: user).empty?
-      raise "Ya estás registrado en la lista de espera."
-    end
+    #if not schedule.waitlists.where(user: user).empty?
+    #  raise "Ya estás registrado en la lista de espera."
+    #end
 
     #time validation
     if Time.zone.now < (schedule.datetime - 12.hours)
@@ -126,9 +125,9 @@ class Waitlist < ActiveRecord::Base
     end
 
     #already in wishlist validation
-    if not schedule.waitlists.where(user: user).empty?
-      raise "Ya estás registrado en la lista de espera."
-    end
+    #if not schedule.waitlists.where(user: user).empty?
+    #  raise "Ya estás registrado en la lista de espera."
+    #end
 
     #time validation
     if Time.zone.now < (schedule.datetime - 12.hours)

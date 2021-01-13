@@ -68,8 +68,10 @@ feature 'AppointmentsController' do
         page.driver.post waitlists_path, new_waitlist_request
       end
       response = JSON.parse(page.body)
-      expect(page.status_code).to be 500
-      expect(response["errors"][0]["title"]).to eql "Ya estás registrado en la lista de espera."
+      expect(User.find(user_with_classes.id).classes_left).to eql (initial_credits - 2)
+      #There was a previous restriction to only be registrered once
+      #expect(page.status_code).to be 500
+      #expect(response["errors"][0]["title"]).to eql "Ya estás registrado en la lista de espera."
 
       #Special class
       new_waitlist_request = {schedule_id: special_schedule.id}
@@ -141,16 +143,17 @@ feature 'AppointmentsController' do
         page.driver.post waitlists_charge_path, new_special_waitlist_request
       end
       response = JSON.parse(page.body)
-      expect(page.status_code).to be 500
-      expect(response["errors"][0]["title"]).to eql "Ya estás registrado en la lista de espera."
+      #There was a previous restriction to only be registrered once
+      #expect(page.status_code).to be 500
+      #expect(response["errors"][0]["title"]).to eql "Ya estás registrado en la lista de espera."
 
       #reimbursing
       Timecop.travel(starting_datetime + 15.hours)
       Waitlist.reimburse_classes
-      expect(User.find(user_with_no_classes.id).credits).to eql (initial_credits + special_schedule.price)
+      expect(User.find(user_with_no_classes.id).credits).to eql (initial_credits + (special_schedule.price * 2))
       expect(Waitlist.first.status).to eql "REIMBURSED"
       Waitlist.reimburse_classes
-      expect(User.find(user_with_no_classes.id).credits).to eql (initial_credits + special_schedule.price)
+      expect(User.find(user_with_no_classes.id).credits).to eql (initial_credits + (special_schedule.price* 2))
     end
 
     it 'should join a waitlist and join if cancelled' do
