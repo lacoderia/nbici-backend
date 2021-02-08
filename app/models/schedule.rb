@@ -17,17 +17,17 @@ class Schedule < ActiveRecord::Base
   def self.weekly_scope
     start_day = Time.zone.now.beginning_of_day
     end_day = start_day + 7.days
-    schedules = Schedule.where("datetime >= ? AND datetime < ?", start_day, end_day)
+    schedules = Schedule.includes(:room => :venue).where("datetime >= ? AND datetime < ?", start_day, end_day)
 
     #If thare are no schedules next week
     if schedules.empty?
       start_day = nil
       #Check if there are schedules anyday in the future
-      schedules = Schedule.where("datetime >= ?", end_day).order(datetime: :asc)
+      schedules = Schedule.includes(:room => :venue).where("datetime >= ?", end_day).order(datetime: :asc)
       if not schedules.empty?
         start_day = schedules.first.datetime.beginning_of_day
         end_day = start_day + 8.days
-        schedules = Schedule.where("datetime >= ? AND datetime < ?", start_day, end_day)
+        schedules = Schedule.includes(:room => :venue).where("datetime >= ? AND datetime < ?", start_day, end_day)
       end
     end
 
@@ -36,17 +36,17 @@ class Schedule < ActiveRecord::Base
 
   def self.weekly_scope_with_parameters schedules, start_day, end_day
 
-    result_schedules = schedules.where("datetime >= ? AND datetime <= ?", start_day, end_day).order(datetime: :asc)
+    result_schedules = schedules.includes(:room => :venue).where("datetime >= ? AND datetime <= ?", start_day, end_day).order(datetime: :asc)
 
     #If thare are no schedules next week
     if result_schedules.empty?
       start_day = nil
       #Check if there are schedules anyday in the future
-      result_schedules = schedules.where("datetime >= ?", end_day).order(datetime: :asc)
+      result_schedules = schedules.includes(:room => :venue).where("datetime >= ?", end_day).order(datetime: :asc)
       if not result_schedules.empty?
         start_day = result_schedules.first.datetime
         end_day = start_day + 7.days
-        result_schedules = schedules.where("datetime >= ? AND datetime <= ?", start_day, end_day).order(datetime: :asc)
+        result_schedules = schedules.includes(:room => :venue).where("datetime >= ? AND datetime <= ?", start_day, end_day).order(datetime: :asc)
       end
 
     end

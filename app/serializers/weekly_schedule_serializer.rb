@@ -9,6 +9,7 @@ module WeeklyScheduleSerializer
       result[:schedules] = ActiveModel::ArraySerializer.new(schedules_with_start_date[:schedules], each_serializer: ScheduleSerializer, except: :instructor) 
     end
     result[:start_day] = schedules_with_start_date[:start_day]
+    result[:venues] = Venue.all.select(:id, :name)
     result
   end
 
