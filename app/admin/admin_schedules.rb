@@ -111,7 +111,7 @@ ActiveAdmin.register Schedule, :as => "Presenciales" do
       f.input :datetime, label: "Horario"
       f.input :instructor, label: "Instructor", :collection => Instructor.active.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select, :include_blank => false 
       f.input :alternate_instructor, label: "Suple a", :collection => Instructor.active.collect{|i| [ "#{i.first_name} #{i.last_name}", i.id]}, :as => :select 
-      f.input :room, label: "Cuarto", :collection => Room.all.collect{|room| [room.description, room.id]}, :as => :select, :include_blank => false 
+      f.input :room, label: "Cuarto", :collection => Room.all.collect{|room| ["#{room.venue.name} - #{room.description}", room.id]}, :as => :select, :include_blank => false 
       f.input :description, label: "Descripción"
       f.input :free, label: "Gratis"
       f.input :opening, label: "Apertura"
