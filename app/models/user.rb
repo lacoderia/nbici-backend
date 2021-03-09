@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
 
   before_create :assign_coupon
   before_update :check_staff
+  after_update :check_credits
 
   has_and_belongs_to_many :roles
   has_and_belongs_to_many :promotions
@@ -263,6 +264,12 @@ class User < ActiveRecord::Base
     def check_staff
       if self.staff?
         self.credits = 0.0
+      end
+    end
+
+    def check_credits
+      if self.classes_left == 0
+        self.update_columns(expiration_date:  Time.zone.now)
       end
     end
  

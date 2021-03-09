@@ -66,7 +66,13 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
             if user.expiration_date <= Time.zone.now
               expiration_date = Time.zone.now + pack.expiration.days
             else
-              expiration_date = user.expiration_date + pack.expiration.days
+
+              if user.expiration_date < (Time.zone.now + pack.expiration.days)
+                expiration_date = Time.zone.now + pack.expiration.days
+              else
+                expiration_date = user.expiration_date
+              end
+
             end
           else
             expiration_date = Time.zone.now + pack.expiration.days
@@ -97,13 +103,19 @@ ActiveAdmin.register User, :as => "Todos_los_clientes" do
             if user.expiration_date <= Time.zone.now
               expiration_date = Time.zone.now + expiration.days
             else
-              expiration_date = user.expiration_date + expiration.days
+
+              if user.expiration_date < (Time.zone.now + expiration.days)
+                expiration_date = Time.zone.now + expiration.days
+              else
+                expiration_date = user.expiration_date
+              end
+
             end
 
           elsif not user.expiration_date and expiration > 0
             expiration_date = Time.zone.now + expiration.days
           end
-
+          
         end
         
         params[:user][:last_class_purchased] = Time.zone.now if expiration_date

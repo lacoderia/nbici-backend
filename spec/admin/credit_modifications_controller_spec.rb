@@ -42,7 +42,7 @@ feature 'CreditModificationsController' do
       click_button 'Update User'
 
       user.reload
-      expect(user.expiration_date).to eql starting_datetime + pack.expiration.days + pack.expiration.days
+      expect(user.expiration_date).to eql starting_datetime + 15.days
       expect(user.classes_left).to be 2 
       expect(user.last_class_purchased).to eql starting_datetime
       expect(user.purchases.last.amount).to eql 14000
@@ -50,6 +50,7 @@ feature 'CreditModificationsController' do
       #ONE WEEK LATER
       one_week_after = starting_datetime + 8.days
       Timecop.travel(one_week_after)
+      Timecop.freeze(one_week_after)
 
       # Buy 50 pack
       visit(edit_admin_todos_los_cliente_path(user.id))
@@ -59,7 +60,7 @@ feature 'CreditModificationsController' do
       click_button 'Update User'
 
       user.reload
-      expect(user.expiration_date).to eql starting_datetime + pack.expiration.days + pack.expiration.days + pack_50.expiration.days
+      expect(user.expiration_date).to eql one_week_after + pack_50.expiration.days
       expect(user.classes_left).to be 52
       expect(user.last_class_purchased).to be_within(2.seconds).of one_week_after
       expect(user.purchases.last.amount).to eql 500000
@@ -120,6 +121,7 @@ feature 'CreditModificationsController' do
       #ONE WEEK LATER
       one_week_after = starting_datetime + 8.days
       Timecop.travel(one_week_after)
+      Timecop.freeze(one_week_after)
       
       #Delete 2 credits
       visit(edit_admin_todos_los_cliente_path(user.id))
@@ -139,13 +141,14 @@ feature 'CreditModificationsController' do
       click_button 'Update User'
 
       user.reload
-      expect(user.expiration_date).to eql starting_datetime + 15.days + 30.days
+      expect(user.expiration_date).to eql one_week_after + 30.days
       expect(user.classes_left).to be 7
       expect(user.last_class_purchased).to be_within(2.seconds).of one_week_after
 
       #TWO YEARS LATER
       two_years_later = one_week_after + 2.years
       Timecop.travel(two_years_later)
+      Timecop.freeze(two_years_later)
 
       User.expire_classes
       
