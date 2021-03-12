@@ -16,7 +16,7 @@ CSV.open("export_expired_users.csv", "wb") do |csv|
       last_expiration_str += (purchase.created_at + purchase.pack.expiration.days).strftime("%d/%m/%Y %I:%M%p") + "\n"
     end
 
-    last_credit_modifications = user.credit_modifications.where("is_money = ? and is_streaming ?", false, false).order(created_at: :desc)[0..2]
+    last_credit_modifications = user.credit_modifications.where("is_money = ? and is_streaming = ?", false, false).order(created_at: :desc)[0..2]
     last_cm_str = ""
     last_cm_expiration_str = ""
     last_credit_modifications.each do |cm|
