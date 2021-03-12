@@ -46,7 +46,7 @@ CSV.open("export_expired_users.csv", "wb") do |csv|
       end
     end
 
-    user_txt = [user.email, user.classes_left, users.expiration_date.strftime("%d/%m/%Y %I:%M%p"), last_classes_str, last_expiration_str, last_cm_str, last_cm_expiration_str]
+    user_txt = [user.email, user.classes_left, user.expiration_date.strftime("%d/%m/%Y %I:%M%p"), last_classes_str, last_expiration_str, last_cm_str, last_cm_expiration_str]
     csv << user_txt
   end
 
