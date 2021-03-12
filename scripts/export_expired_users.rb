@@ -26,6 +26,8 @@ CSV.open("export_expired_users.csv", "wb") do |csv|
       else
         credits = cm.credits
         expiration = 0
+        less_or_equal_to_zero = ->(x) { x <= 0 }
+
         case credits
             when less_or_equal_to_zero
               expiration = 0
