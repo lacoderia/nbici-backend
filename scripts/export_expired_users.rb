@@ -46,7 +46,11 @@ CSV.open("export_expired_users.csv", "wb") do |csv|
             else
               expiration = 360
             end
-        last_cm_expiration_str += (cm.created_at + expiration.days).strftime("%d/%m/%Y %I:%M%p") + "\n"
+        if cm.created_at
+          last_cm_expiration_str += (cm.created_at + expiration.days).strftime("%d/%m/%Y %I:%M%p") + "\n"
+        else
+          last_cm_expiration_str += " \n"
+        end
       end
     end
 
