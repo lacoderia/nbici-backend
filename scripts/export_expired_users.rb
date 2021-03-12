@@ -22,7 +22,7 @@ CSV.open("export_expired_users.csv", "wb") do |csv|
     last_credit_modifications.each do |cm|
       last_cm_str += cm.reason + "\n"
       if cm.pack_id
-        if cm.pack.expiration
+        if cm.created_at
           last_cm_expiration_str += (cm.created_at + cm.pack.expiration.days).strftime("%d/%m/%Y %I:%M%p") + "\n"
         else
           last_cm_expiration_str += " \n"
