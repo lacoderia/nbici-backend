@@ -218,7 +218,7 @@ feature 'PurchasesController' do
       #Reload user
       user_01.reload
       expect(user_01.classes_left).to eql 2
-      expect(user_01.expiration_date).to be_within(1.second).of (new_expiration_date + pack.expiration.days)
+      expect(user_01.expiration_date).to be_within(1.second).of (new_expiration_date)
 
     end
 

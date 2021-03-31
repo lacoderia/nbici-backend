@@ -35,9 +35,15 @@ class Appointment < ActiveRecord::Base
           if self.schedule.opening
             future_free_appointments = current_user.appointments.not_cancelled.joins(:schedule).where("schedules.datetime between ? and ? and schedules.opening = ?", Configuration.free_classes_start_date, Configuration.free_classes_end_date, true)
             if not future_free_appointments.empty?
+              if self.user.classes_left == 0
+                self.user.update_attribute(:expiration_date, Time.zone.now + 7.days)
+              end
               self.user.update_attribute(:classes_left, self.user.classes_left + 1)
             end
           else
+            if self.user.classes_left == 0
+              self.user.update_attribute(:expiration_date, Time.zone.now + 7.days)
+            end
             self.user.update_attribute(:classes_left, self.user.classes_left + 1)
           end
         end
@@ -67,9 +73,15 @@ class Appointment < ActiveRecord::Base
           if self.schedule.opening
             future_free_appointments = current_user.appointments.not_cancelled.joins(:schedule).where("schedules.datetime between ? and ? and schedules.opening = ?", Configuration.free_classes_start_date, Configuration.free_classes_end_date, true)
             if not future_free_appointments.empty?
+              if self.user.classes_left == 0
+                self.user.update_attribute(:expiration_date, Time.zone.now + 7.days)
+              end
               self.user.update_attribute(:classes_left, self.user.classes_left + 1)
             end
           else
+            if self.user.classes_left == 0
+              self.user.update_attribute(:expiration_date, Time.zone.now + 7.days)
+            end
             self.user.update_attribute(:classes_left, self.user.classes_left + 1)
           end
         end
