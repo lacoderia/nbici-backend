@@ -81,6 +81,7 @@ venue = Venue.create(name: "Gimnasio SLP", description: "Gimnasio original")
 venue_2 = Venue.create(name: "Gimnasio Aniversario", description: "Gimnasio aniversario")
 venue_3 = Venue.create(name: "Gimnasio Distanciamiento", description: "Gimnasio para covid")
 venue_4 = Venue.create(name: "Gimnasio Distanciamiento 2", description: "Gimnasio para covid")
+venue_5 = Venue.create(name: "Aire Libre", description: "Aire libre")
 
 #Bicycles
 bicycle1 = Bicycle.new(position:1, number:1)
@@ -152,6 +153,58 @@ cvv15 = Bicycle.new(position:80, number:15)
 cvv16 = Bicycle.new(position:82, number:16)
 cvv17 = Bicycle.new(position:84, number:17)
 
+cvd1 = Bicycle.new(position:1, number:1)
+cvd2 = Bicycle.new(position:16, number:3)
+cvd3 = Bicycle.new(position:20, number:5)
+cvd4 = Bicycle.new(position:47, number:2)
+cvd5 = Bicycle.new(position:51, number:4)
+cvd6 = Bicycle.new(position:55, number:6)
+cvd7 = Bicycle.new(position:82, number:7)
+
+sz1 = Bicycle.new(position:2, number:1)
+sz2 = Bicycle.new(position:11, number:7)
+sz3 = Bicycle.new(position:12, number:8)
+sz4 = Bicycle.new(position:21, number:6)
+sz5 = Bicycle.new(position:25, number:2)
+sz6 = Bicycle.new(position:30, number:5)
+sz7 = Bicycle.new(position:34, number:9)
+sz8 = Bicycle.new(position:38, number:3)
+sz9 = Bicycle.new(position:40, number:4)
+sz10 = Bicycle.new(position:43, number:13)
+sz11 = Bicycle.new(position:46, number:11)
+sz12 = Bicycle.new(position:55, number:19)
+sz13 = Bicycle.new(position:58, number:10)
+sz14 = Bicycle.new(position:62, number:20)
+sz15 = Bicycle.new(position:64, number:12)
+sz16 = Bicycle.new(position:67, number:14)
+sz17 = Bicycle.new(position:79, number:15)
+sz18 = Bicycle.new(position:81, number:16)
+sz19 = Bicycle.new(position:83, number:17)
+sz20 = Bicycle.new(position:85, number:18)
+sz21 = Bicycle.new(position:88, number:21)
+
+zu1 = Bicycle.new(position:12, number:1)
+zu2 = Bicycle.new(position:3, number:2)
+zu3 = Bicycle.new(position:16, number:3)
+zu4 = Bicycle.new(position:29, number:4)
+zu5 = Bicycle.new(position:20, number:5)
+zu6 = Bicycle.new(position:33, number:6)
+zu7 = Bicycle.new(position:36, number:7)
+zu8 = Bicycle.new(position:50, number:8)
+zu9 = Bicycle.new(position:53, number:9)
+zu10 = Bicycle.new(position:56, number:10)
+zu11 = Bicycle.new(position:59, number:11)
+zu12 = Bicycle.new(position:74, number:12)
+zu13 = Bicycle.new(position:66, number:13)
+zu14 = Bicycle.new(position:80, number:14)
+zu15 = Bicycle.new(position:83, number:15)
+
+zun1 = Bicycle.new(position:3, number:1)
+zun2 = Bicycle.new(position:16, number:2)
+zun3 = Bicycle.new(position:29, number:3)
+zun4 = Bicycle.new(position:20, number:4)
+zun5 = Bicycle.new(position:33, number:5)
+
 #Distributions
 distribution = Distribution.create(height: 8, width: 11, description: "distribucion actual", inactive_seats: "", active_seats: Bicycle.to_string_array([bicycle1,bicycle2,bicycle3,bicycle4,bicycle5,bicycle6,bicycle7,bicycle8,bicycle9,bicycle10,bicycle11,bicycle12,bicycle13,bicycle14,bicycle15,bicycle16,bicycle17,bicycle18,bicycle19]), total_seats: 19)
 
@@ -163,6 +216,16 @@ distribution_4 = Distribution.create(height: 8, width: 11, description: "distrib
 
 distribution_5 = Distribution.create(height: 8, width: 11, description: "distribucion covid 3", inactive_seats: "", active_seats: Bicycle.to_string_array([cvv1, cvv2, cvv3, cvv4, cvv5, cvv6, cvv7, cvv8, cvv9, cvv10, cvv11, cvv12, cvv13, cvv14, cvv15, cvv16, cvv17]), total_seats: 17)
 
+distribution_6 = Distribution.create(height: 8, width: 11, description: "distribucion covid 4", inactive_seats: "", active_seats: Bicycle.to_string_array([cvd1, cvd2, cvd3, cvd4, cvd5, cvd6, cvd7]), total_seats: 7)
+
+distribution_7 = Distribution.create(height: 8, width: 11, description: "distribucion aire libre", inactive_seats: "", active_seats: Bicycle.to_string_array([sz1,sz2,sz3,sz4,sz5,sz6,sz7,sz8,sz9,sz10,sz11,sz12,sz13,sz14,sz15,sz16,sz17,sz18,sz19,sz20,sz21]), total_seats: 21)
+
+distribution_8 = Distribution.create(height: 8, width: 11, description: "distribucion zonauno 15", inactive_seats: "", active_seats: Bicycle.to_string_array([zu1,zu2,zu3,zu4,zu5,zu6,zu7,zu8,zu9,zu10,zu11,zu12,zu13,zu14,zu15]), total_seats: 15)
+
+distribution_9 = Distribution.create(height: 8, width: 11, description: "distribucion estudio 15", inactive_seats: "", active_seats: Bicycle.to_string_array([zu1,zu2,zu3,zu4,zu5,zu6,zu7,zu8,zu9,zu10,zu11,zu12,zu13,zu14,zu15]), total_seats: 15)
+
+distribution_10 = Distribution.create(height: 8, width: 11, description: "distribucion zonauno 5", inactive_seats: "", active_seats: Bicycle.to_string_array([zun1, zun2, zun3, zun4, zun5]), total_seats: 5)
+
 #Room
 room = Room.create(venue: venue, distribution: distribution, description: "Salón original")
 
@@ -173,6 +236,16 @@ room_3 = Room.create(venue: venue_3, distribution: distribution_3, description: 
 room_4 = Room.create(venue: venue_3, distribution: distribution_4, description: "Salón distanciamiento 2")
 
 room_5 = Room.create(venue: venue_4, distribution: distribution_5, description: "Salón distanciamiento 3")
+
+room_6 = Room.create(venue: venue_4, distribution: distribution_6, description: "Salón distanciamiento 4")
+
+room_7 = Room.create(venue: venue_5, distribution: distribution_7, description: "Zona uno")
+
+room_8 = Room.create(venue: venue_5, distribution: distribution_8, description: "Zona uno 15")
+
+room_9 = Room.create(venue: venue_4, distribution: distribution_9, description: "15 bicis")
+
+room_10 = Room.create(venue: Venue.last, distribution: distribution_10, description: "5 bicis")
 
 #Schedules
 
