@@ -161,67 +161,72 @@ class Appointment < ActiveRecord::Base
 
           if not current_user.test?
 
-            #charge data
-            amount = params[:price].to_i * 100
-            card = Card.find_by_uid(params[:uid])
+            # IF NO UID? - USE CREDITS
+            if not params[:uid]
 
-            if not card
-              raise "Tarjeta no encontrada o registrada."
+              if schedule.price > Configuration.reference_class_cost 
+                raise "Esta clase no se puede pagar con créditos"
+              end
+  
+              if (current_user.classes_left and current_user.classes_left >= 1) and (not schedule.bookings.find{|bicycle| bicycle.number == bicycle_number})
+                schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)
+                current_user.update_attribute(:classes_left, current_user.classes_left - 1)
+              elsif not current_user.classes_left or current_user.classes_left == 0
+                raise "Ya no tienes clases disponibles, adquiere más para continuar."
+              elsif schedule.bookings.find{|station| station.number == station_number}
+                raise "La bicicleta ya fue reservada, por favor intenta con otra."
+              end
+
+            else
+
+              #charge data
+              amount = params[:price].to_i * 100
+              card = Card.find_by_uid(params[:uid])
+
+              if not card
+                raise "Tarjeta no encontrada o registrada."
+              end
+
+              description = "Compra de clase especial"
+              currency = "MXN"
+              params_price = params[:price]
+
+              if params[:price].to_f != schedule.price.to_f
+                raise "El precio enviado es diferente al precio de la clase."
+              end
+
+              charge = Conekta::Charge.create({
+                amount: amount,
+                currency: currency,
+                description: description,
+                card: card.uid,
+                details: {
+                  name: card.name,
+                  email: current_user.email,
+                  phone: card.phone,
+                  line_items: [{
+                    name: description,
+                    description: "Paquete nbici",
+                    unit_price: amount,
+                    quantity: 1
+                  }]
+                }
+              })
+
+              purchase = Purchase.create!(
+                user: current_user,
+                uid: charge.id,
+                object: charge.object,
+                livemode: charge.livemode,
+                status: charge.status,
+                description: charge.description,
+                amount: charge.amount,
+                currency: charge.currency,
+                payment_method: charge.payment_method,
+                details: charge.details,
+              )
+
             end
-
-            description = "Compra de clase especial"
-            currency = "MXN"
-            params_price = params[:price]
-
-            # TODO: implement charging with credits
-            # if params_credits
-            #   price_and_credits = {final_price: final_price, initial_price: schedule.price, final_credits: final_credits, initial_credits: user.credits}
-            #   validated_price = price_and_credits[:final_price]
-            #   credits = price_and_credits[:final_credits]
-            #   description = "#{description} con crédito a favor"
-
-            #   if params_credits.to_f != price_and_credits[:initial_credits] or params_price.to_f != validated_price
-            #     raise "Hay un error calculando el precio final con los créditos a favor."
-            #   end
-            # elsif (pack.price_or_special_price_for_user user) != params_price.to_f
-            #   raise "El precio enviado es diferente al precio del paquete."
-            # else
-
-            if params[:price].to_f != schedule.price.to_f
-              raise "El precio enviado es diferente al precio de la clase."
-            end
-
-            charge = Conekta::Charge.create({
-              amount: amount,
-              currency: currency,
-              description: description,
-              card: card.uid,
-              details: {
-                name: card.name,
-                email: current_user.email,
-                phone: card.phone,
-                line_items: [{
-                  name: description,
-                  description: "Paquete nbici",
-                  unit_price: amount,
-                  quantity: 1
-                }]
-              }
-            })
-
-            purchase = Purchase.create!(
-              user: current_user,
-              uid: charge.id,
-              object: charge.object,
-              livemode: charge.livemode,
-              status: charge.status,
-              description: charge.description,
-              amount: charge.amount,
-              currency: charge.currency,
-              payment_method: charge.payment_method,
-              details: charge.details,
-            )
-
           end
 
           schedule.appointments << appointment = Appointment.create!(user: current_user, schedule: schedule, bicycle_number: bicycle_number, status: "BOOKED", start: schedule.datetime, description: description)

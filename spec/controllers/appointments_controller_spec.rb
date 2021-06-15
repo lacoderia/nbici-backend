@@ -91,7 +91,9 @@ feature 'AppointmentsController' do
   context 'Creating, editing and cancelling anniversary appointments' do
 
     let!(:schedule) { create(:schedule, datetime: starting_datetime + 13.hours, price: 160.00) }
+    let!(:schedule_pricey) { create(:schedule, datetime: starting_datetime + 13.hours, price: 260.00) }
     let!(:user_01) { create(:user, classes_left: 0, last_class_purchased: starting_datetime) }
+    let!(:user_02) { create(:user, classes_left: 2, last_class_purchased: starting_datetime) }
     let!(:card){create(:card, user: user_01)}
 
     before do
@@ -122,6 +124,54 @@ feature 'AppointmentsController' do
       expect(user.classes_left).to eql 1
       appointment = Appointment.find(response["appointment"]["id"])
       expect(appointment.status).to eql "CANCELLED"      
+
+    end
+
+    it 'should test that the anniversary appointment can be paid with credits' do 
+
+      login_with_service user = { email: user_02.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      expect(user_02.classes_left).to eq 2      
+
+      new_anniversary_purchase_request = {price: 160.00, schedule_id: schedule.id, bicycle_number: 4, description: "Mi primera clase" }
+      with_rack_test_driver do
+        page.driver.post book_and_charge_appointments_path, new_anniversary_purchase_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["appointment"]["booked_seats"][0]["number"]).to eq 4
+      expect(response["appointment"]["status"]).to eq "BOOKED"
+      user_02.reload
+      expect(user_02.classes_left).to eq 1
+      appointment = Appointment.find(response["appointment"]["id"])
+
+      visit cancel_appointment_path(appointment.id)
+      response = JSON.parse(page.body)
+      user = User.find(response["appointment"]["user_id"])
+      #credits added
+      expect(user.classes_left).to eql 2
+      appointment = Appointment.find(response["appointment"]["id"])
+      expect(appointment.status).to eql "CANCELLED"
+
+    end
+
+    it 'should test that the anniversary appointment can not be paid with credits if price is higher than tolerance' do 
+
+      login_with_service user = { email: user_02.email, password: "12345678" }
+      access_token_1, uid_1, client_1, expiry_1, token_type_1 = get_headers
+      set_headers access_token_1, uid_1, client_1, expiry_1, token_type_1
+
+      expect(user_02.classes_left).to eq 2      
+
+      new_anniversary_purchase_request = {price: 260.00, schedule_id: schedule_pricey.id, bicycle_number: 4, description: "Mi primera clase" }
+      with_rack_test_driver do
+        page.driver.post book_and_charge_appointments_path, new_anniversary_purchase_request
+      end
+      
+      response = JSON.parse(page.body)
+      expect(response["errors"][0]["title"]).to eql "Esta clase no se puede pagar con créditos"      
 
     end
 

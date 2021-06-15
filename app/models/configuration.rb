@@ -27,6 +27,17 @@ class Configuration < ActiveRecord::Base
 
   DEFAULT_PLAYABLE_HOURS = 24
 
+  DEFAUlT_REFERENCE_CLASS_COST = 180.00
+
+  def self.reference_class_cost
+    reference_class_cost = Configuration.find_by_key("reference_class_cost")
+    if reference_class_cost
+      return reference_class_cost.value.to_f
+    else
+      return DEFAUlT_REFERENCE_CLASS_COST
+    end
+  end
+
   def self.playable_hours
     playable_hours = Configuration.find_by_key("playable_hours")
     if playable_hours
